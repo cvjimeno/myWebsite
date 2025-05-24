@@ -1,11 +1,61 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const pageTitle = "Página de Inicio"; // Or "Homepage"
 ---
+<BaseLayout title={pageTitle}>
+  <div class="container mx-auto p-8"> {/* Basic container and padding */}
 
-<Layout>
-	<Welcome />
-</Layout>
+    {/* Test H1 with arbitrary values based on your Figma H1 style */}
+    <h1 class="text-8xl leading-tight font-he font-bold tracking-[-0.02em] text-text-primary mb-6">
+      ¡Hola Mundo! (H1 Test)
+    </h1>
+
+
+
+    {/* Test Body Text (should inherit from body or use Tailwind's base) */}
+    <p class="text-lg leading-relaxed text-[var(--color-text-secondary)] mb-6"> {/* text-lg is 18px, leading-relaxed is ~1.625 line height */}
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Usando <span class="font-bold text-accent-blue">color de acento azul</span> y también 
+      <span class="font-semibold text-accent-orange">color de acento naranja</span> para probar.
+      El fondo de la página debería ser tu color `bg-primary`.
+    </p>
+
+    {/* Test Background Colors */}
+    <div class="p-4 mb-2 bg-bg-secondary">
+      Esto tiene el fondo secundario (bg-secondary).
+            Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+      Este es un párrafo de prueba con el color de texto secundario. 
+
+    </div>
+    <div class="p-4 mb-2 bg-accent-blue text-white"> {/* Assuming white text on blue accent */}
+      Esto tiene el fondo de acento azul.
+    </div>
+    <div class="p-4 mb-2 bg-accent-orange text-text-primary"> {/* Assuming primary text on orange accent */}
+      Esto tiene el fondo de acento naranja.
+    </div>
+    <div class="p-4 border border-border-card rounded-lg">
+      Esto es un contenedor con borde de tarjeta y esquinas redondeadas.
+    </div>
+
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+// filepath: /Users/carlos/Documents/Website/myWebsite/src/components/common/Icon.astro
+import { getIcon } from '../../utils/icons';
+
+export interface Props {
+  name: string;
+  class?: string;
+  size?: string; // Add a size prop
+}
+
+const { name, class: className, size = 'w-5 h-5' } = Astro.props; // Default size
+
+const { svgContent, viewBox } = await getIcon(name);
+---
+
+<svg 
+  class:list={["inline-block fill-current", className, size]} 
+  viewBox={viewBox}  
+  xmlns="http://www.w3.org/2000/svg" 
+>
+  <Fragment set:html={svgContent} />
+</svg>

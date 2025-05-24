@@ -1,0 +1,38 @@
+---
+// src/components/Footer.astro
+import Icon from './common/Icon.astro'; // We'll create this simple Icon component next
+
+const currentYear = new Date().getFullYear();
+const socialLinks = [
+  { href: "#", icon: "instagram", label: "Instagram" }, // Example if you add more
+  { href: "https://x.com/yourprofile", icon: "x", label: "X/Twitter" }, // Replace with your X profile
+  { href: "https://linkedin.com/in/yourprofile", icon: "linkedin", label: "LinkedIn" }, // Replace with your LinkedIn profile
+];
+---
+<footer class="border-t border-[var(--color-border-subtle)] mt-16 md:mt-24"> {/* Added margin-top */}
+  <div class="container mx-auto px-4 py-4 md:py-6 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm"> {/* Adjusted padding & text size */}
+    
+    {/* Left Side: Copyright and Made with */}
+    <div class="text-center md:text-left text-[var(--color-text-secondary)] mb-4 md:mb-0">
+      <span>Hecho con café y Astro 🚀</span>
+      <span class="mx-1">·</span> {/* Separator */}
+      <span>© {currentYear} Carlos Velasco. Sin derechos reservados :)</span>
+    </div>
+
+    {/* Right Side: Social Icons */}
+    <div class="flex space-x-4">
+      {socialLinks.map(social => (
+        <a 
+          href={social.href} 
+          aria-label={social.label}
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-blue)] transition-colors duration-150 ease-in-out"
+        >
+          <Icon name={social.icon} size="w-5 h-5 md:w-6 md:h-6" /> {/* Icon size */}
+        </a>
+      ))}
+    </div>
+
+  </div>
+</footer>

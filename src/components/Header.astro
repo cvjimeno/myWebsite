@@ -1,0 +1,46 @@
+---
+// src/components/Header.astro
+const navLinks = [
+  { href: "/", text: "Inicio" },
+  { href: "/#about-me-snapshot", text: "Sobre mí" }, // Scrolls to section with id="about-me-snapshot" on homepage
+  { href: "/trayectoria", text: "Trayectoria" },
+  { href: "/blog", text: "Blog" },
+  { href: "/contacto", text: "Contacto" }, // We'll create this page later
+];
+---
+<header class="sticky top-0 z-50 
+              py-6 px-8 
+              backdrop-blur-lg 
+              backdrop-saturate-100
+              bg-[var(--color-bg-primary)]/10
+              bg-opacity-80">
+
+  <nav class="container mx-auto flex justify-between items-center">
+    {/* Logo */}
+    <a 
+      href="/" 
+      class="text-[var(--color-text-primary)] font-bold text-[42px] leading-none tracking-[-0.02em]"
+    >
+      CV
+    </a>
+
+    {/* Navigation Links */}
+    {/* Adjust space-x-8 (32px) or space-x-10 (40px) based on your Figma spacing */}
+    <ul class="flex space-x-8"> 
+      {navLinks.map(link => (
+        <li>
+        <a 
+          href={link.href} 
+          class="text-[var(--color-text-secondary)] 
+          hover:text-[var(--color-accent-blue)] hover:underline 
+          underline-offset-4
+          text-lg font-medium 
+          transition-colors duration-150 ease-in-out"
+        >
+          {link.text}
+        </a>
+      </li>
+      ))}
+    </ul>
+  </nav>
+</header>
