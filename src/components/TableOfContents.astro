@@ -1,0 +1,27 @@
+---
+// src/components/TableOfContents.astro
+const { headings } = Astro.props; // Expects an array of heading objects
+
+// Filter for h2 and h3 headings, for example
+const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+
+{filteredHeadings && filteredHeadings.length > 0 && (
+  <nav aria-label="Tabla de contenido">
+    <ul class="space-y-2">
+      {filteredHeadings.map(heading => (
+        <li class:list={[
+          'font-medium text-sm', 
+          { 'ml-4': heading.depth === 3 } // Indent h3 headings
+        ]}>
+          <a 
+            href={`#${heading.slug}`} 
+            class="hover:text-accent-blue transition-colors duration-150"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

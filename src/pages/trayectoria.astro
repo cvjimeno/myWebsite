@@ -139,9 +139,26 @@ const introText = "Aquí puedes encontrar un resumen de mi camino profesional y 
 
 <style is:global>
   /* If you are using Tailwind typography plugin and want to style its output further specifically for this page */
-  .prose { /* Example general prose adjustment */
-    /* color: var(--color-text-secondary); */
-  }
+    .prose {
+      font-family: base('fontFamily.inter'); /* Should pick up 'inter' from global.css @theme */
+      color: 'color-text-primary'; /* Corrected path */
+
+      --tw-prose-body: 'color-text-primary';
+      --tw-prose-headings: 'color-text-primary';
+      --tw-prose-lead: 'color-text-secondary';
+      --tw-prose-links: 'color-accent-blue';
+      --tw-prose-bold: 'color-text-primary';
+      --tw-prose-counters: 'color-text-secondary';
+      --tw-prose-bullets: 'color-text-secondary';
+      /* Use the gray shades defined in your global.css @theme block */
+      --tw-prose-hr: 'color-text-primary';
+      --tw-prose-quotes: 'color-text-primary';
+      --tw-prose-quote-borders: 'color-accent-orange';
+      --tw-prose-captions: 'color-text-secondary';
+      --tw-prose-code: 'color-accent-blue';
+
+
+    }
   /* Your H1 font size is 84px, which is quite large. Tailwind's text-7xl is 72px, text-8xl is 96px.
      You might need a custom utility or arbitrary value like `text-[84px] leading-[100px] tracking-[-0.02em]` for the H1 */
   h1 {

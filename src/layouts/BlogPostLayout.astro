@@ -1,0 +1,134 @@
+---
+// src/layouts/BlogPostLayout.astro
+import TableOfContents from '../components/TableOfContents.astro'; // We'll create this next
+import BaseLayout from './BaseLayout.astro';
+// Props come from the Markdown frontmatter
+const { frontmatter, headings } = Astro.props;
+
+// Helper function to format date (optional, you can do this inline too)
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-ES', { // 'es-ES' for Spanish date format
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+const formattedDate = frontmatter.pubDate ? formatDate(frontmatter.pubDate) : 'Fecha no disponible';
+const readingTime = frontmatter.readingTime || 'N/A'; // Assuming readingTime is in your frontmatter
+---
+
+
+<BaseLayout title={frontmatter.title}>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>{frontmatter.title} | El Blog de CV</title>
+  <meta name="description" content={frontmatter.description} />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-primary-bg text-primary-text font-inter">
+  <main> 
+    <!-- Centered Title and Metadata Section -->
+    <section class="max-w-screen-xl mx-auto px-4 text-center pt-8 pb-10 md:pt-24 md:pb-12">
+      <h2 class="mb-4 text-2xl md:text-3xl font-semibold text-primary-text">El Blog de CV</h2>
+
+      {/* "Blog Post" breadcrumb-like text */}
+      
+      <!-- Article Title -->
+      {/* 
+        For the title, you can use your custom font utility from global.css 
+        if you defined one like .font-h2-section or use Tailwind's responsive text sizes.
+        Your Figma H2: Inter Semibold, 64px / 78px lh, -1.5% ls
+        Equivalent Tailwind JIT: text-[64px] leading-[78px] tracking-[-0.015em] font-semibold
+        Let's use Tailwind classes that are close, or your custom utility if available.
+      */}
+      <h1 class="mb-6 text-4xl font-bold tracking-tight text-primary-text md:text-5xl lg:text-section-h2 lg:leading-tight">
+        {frontmatter.title}
+      </h1>
+      
+      <!-- Metadata -->
+      <div class="flex items-center justify-center space-x-4 text-sm text-secondary-text">
+        <span>{formattedDate}</span>
+        <span>•</span> {/* Or use the word 'mineral' if intended as a category/keyword */}
+        <span>{readingTime}</span>
+      </div>
+    </section>
+    
+    <!-- Full-Width Hero Image Section -->
+    {frontmatter.heroImage && (
+      <div class="mb-8 md:mb-12"> {/* Add some margin below the image */}
+        <img 
+          src={frontmatter.heroImage} 
+          alt={frontmatter.imageAlt || `Imagen destacada para ${frontmatter.title}`}
+          class="w-full h-auto max-h-[400px] object-cover" {/* Adjust max-h as needed */}
+        />
+      </div>
+    )}
+
+
+    <!-- Main Content Area with TOC and Article Body -->
+    <div class="flex flex-col lg:flex-row justify-between px-4 mx-auto max-w-screen-xl pt-8 pb-16 lg:pt-10 lg:pb-24">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="lg:w-1/4 lg:pr-8 mb-8 lg:mb-0 order-first lg:order-none">
+        <div class="sticky top-24"> {/* Adjust top value based on your sticky header's height */}
+          <h2 class="mb-4 text-xl font-semibold text-primary-text">En este post...</h2>
+          {headings && headings.length > 0 ? (
+            <TableOfContents headings={headings} />
+          ) : (
+            <p class="text-secondary-text text-sm">No hay secciones en este post.</p>
+          )}
+        </div>
+      </aside>
+
+      <!-- Right Main Content: Article Body -->
+      <article class="w-full lg:w-3/4 mx-auto prose lg:prose-lg">
+        {/* The <slot /> is where your Markdown content will be injected */}
+        <slot />
+      </article>
+    </div>
+  </main>
+
+
+  <!-- <script>
+    // Optional: Smooth scrolling for TOC links
+    // ... (your script remains the same) ...
+  </script> -->
+</body>
+</html>
+</BaseLayout>
+
+<style>
+  @import '../styles/global.css'; /* Ensure your global styles are imported */
+  .prose {
+    /* Paths inside theme() MUST match keys in your @theme block in global.css */
+    font-family: base('fontFamily.inter');
+    color: theme('color-text-primary'); /* Corrected: 'color-text-primary' */
+
+    --tw-prose-body: theme('color-text-primary');
+    --tw-prose-headings: theme('color-text-primary');
+    --tw-prose-lead: theme('color-text-secondary');
+    --tw-prose-links: theme('colors.accent-blue');
+    --tw-prose-bold: theme('color-text-primary');
+    --tw-prose-counters: theme('color-text-secondary');
+    --tw-prose-bullets: theme('color-text-secondary');
+    --tw-prose-hr: theme('colors.gray-300'); 
+    --tw-prose-quotes: theme('color-text-primary');
+    --tw-prose-quote-borders: theme('colors.accent-orange');
+    --tw-prose-captions: theme('color-text-secondary');
+    --tw-prose-code: theme('colors.accent-blue');
+    --tw-prose-pre-code: theme('colors.gray-100');
+    --tw-prose-pre-bg: theme('colors.gray-800');
+  }
+/* 
+  .prose h2 { @apply font-semibold text-section-h2; }
+  .prose h3 { @apply font-semibold text-section-h3; }
+  .prose p, .prose li, .prose blockquote { @apply text-body-text; } */
+</style>

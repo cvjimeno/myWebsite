@@ -1,0 +1,102 @@
+---
+# src/content/blog/01-la-inteligencia-artificial-esta-cambiando-el-mundo.md
+
+# IMPORTANT: The layout property is NO LONGER NEEDED HERE
+# when using content collections and a dynamic [slug].astro route.
+# The [slug].astro file will apply the layout.
+
+title: '¿Por qué la Inteligencia Artificial está cambiando el mundo (y tú deberías sumarte al cambio)?'
+description: 'Un análisis profundo sobre el impacto transformador de la IA en la sociedad moderna y cómo puedes adaptarte y prosperar.'
+pubDate: '2025-05-15' # Use YYYY-MM-DD or a full ISO 8601 date string
+heroImage: '/src/assets/images/blog/hero/01.jpg' # Path relative to the `public` folder. Create this image.
+imageAlt: 'Red abstracta de conexiones neuronales representando la inteligencia artificial'
+tags: ["IA", "Tecnología", "Futuro", "Innovación"] # An array of strings
+readingTime: '18 min' # Or calculate this later
+# slug: '01-la-inteligencia-artificial-esta-cambiando-el-mundo' # Optional: Astro uses filename by default
+# draft: false # Optional: set to true to hide from production builds
+---
+
+Mayo de 2025. La Inteligencia Artificial ya no es un concepto futurista. Es una realidad cotidiana que se está integrando en nuestras vidas a una velocidad asombrosa. Hoy, millones de personas usan ChatGPT y otras herramientas cada día para trabajar, aprender, crear o resolver problemas. Todo el mundo la utiliza en mayor o menor medida, consciente o inconscientemente.  ¿Quién, en los últimos meses, no ha *preguntado a chatGPT* alguna duda que hace algunos años habría googleado?
+¿O quién no ha visto en las últimas semanas una imagen de lo que sea en formato “Studio Ghibli”?. [Según el propio Sam Altman](https://x.com/sama/status/1906771292390666325), creador de OpenAI, ChatGPT alcanzó el millón de usuarios tan sólo 5 días después de su lanzamiento, allá por Noviembre de 2022. En Marzo de 2025 crecía al ritmo 1 millón en sólo una hora. Ya son cientos de millones de personas los que usan ChatGPT, y eso sin contar Copilot, Claude, Perplexity, Gemini, DeepSeek, Notion AI, Fireflies, ElevenLabs, Midjourney...
+     
+
+Pero lo más interesante es que esto no ha hecho más que empezar. Estamos en un momento clave de nuestra historia, un punto de inflexión donde el uso de la IA se va a extender hasta un nivel que aún no concebimos.
+
+## La mayor revolución desde la aparición de Internet
+
+Este tipo de transformaciones no son nuevas. En los años 90, poca gente entendía qué era Internet. En 1999, aún 10 años después del nacimiento de la web, y a pesar de que Internet Explorer, Google, Yahoo, Amazon, y muchas otra ya existían, nadie podía pensar en el avance que supondría para la humanidad durante los 25 próximo años. Empezábamos a ver páginas web (más o menos feas) y podíamos ver que las grandes multinacionales se estaba apuntando a tener un escaparate en la red, por si acaso. Pero aún muchos lo veían como una moda o una rareza. Sólo un grupo pequeño de personas —curiosas, inquietas, exploradoras— empezó a usarlo antes y sacar partido antes que el resto. 
+
+Hoy es evidente que Internet lo cambió todo. No solo la tecnología: cambió la educación, la economía, la cultura, el trabajo, las relaciones. ¿Quién de aquí pensaba en 1999 (si estaba vivo entonces!) que internet evolucionaría a poder hacer una videollamada con tu familia desde la otra punta del mundo? ¿O a tener un mapa infinito en el bolsillo con Google Maps? ¿O comprar acciones de tu empresa favorita en la Bolsa de Nueva York en un solo click?.
+
+ Ahora, estamos ante un fenómeno similar. Quizá aún no seamos conscientes de las posibilidaddes de la IA ni cómo estará con nosotros en 20 años. Pero la inteligencia artificial —especialmente la IA generativa y los modelos de lenguaje como ChatGPT— está marcando el inicio de una nueva era. El futuro que nos espera es emocionante. Y, como cada vez que aparece una nueva tecnología tan disruptiva, los primeros en comprenderla y usarla tendrán una ventaja descomunal.
+
+## ¿En qué punto estamos?
+
+Como hemos visto, no todo el mundo se adhiere en el mismo momento a una innovación. La [Teoría de difusión de innovaciones](https://es.wikipedia.org/wiki/Difusi%C3%B3n_de_innovaciones) nos explica cómo una nueva idea, prácitca o producto (una *innovación*) se propaga a través de una sociedad. Esta teoría sociológica, popularizada por Everett Rogers en 1962, nos dice que la gente se puede dividir en cinco categorías distintas, en base a cómo perciben y adoptan una innovación (como está siendo ahora la IA generativa). Tenemos a los:
+
+- Innovadores
+- Adoptantes Tempranos
+- Mayoría Temprana
+- Mayoría Tardía
+- Rezagados
+
+(insertar aqui imagen html de teoria de difusion)
+![Teoria de difusion de innovaciones](</src/assets/images/blog/01-TeoriaInnovadores.png>)
+
+Aplicando esta teoría a la IA Generativa, los Innovadores fueron aquellos investigadores y desarrolladores que crearon los modelos y quienes, al momento de su lanzamiento público, se lanzaron de inmediato a explorar sus capacidades. Los Adoptantes Tempranos, visionarios en campos creativos, tecnológicos y de servicios, la incorporaron experimentalmente en sus flujos de trabajo para obtener una ventaja competitiva o explorar nuevas formas de crear, a menudo sirviendo de ejemplo y fuente de información para sus pares. Ahora, ¿en qué punto estamos tú y yo? Muchos nos encontramos en la Mayoría Temprana, empezando a ver que esto va en serio, que las herramientas son más fáciles y que los beneficios son tangibles. La Mayoría Tardía la incorporará más adelante, casi por obligación, cuando su uso sea requerido sus profesiones o se integre de manera transparente en el software que ya utilizan habitualmente. Finalmente, los Rezagados serán aquellos que se resistan a su uso por escepticismo, desconfianza en sus resultados o una fuerte preferencia por métodos tradicionales, siendo los últimos, si es que lo hacen, en experimentar con estas capacidades generativas. Entender esto no es solo teoría; es clave para posicionarte y no dejar pasar esta oportunidad única.
+
+> Estás a tiempo de subirte a esta ola como alguien que aprende, experimenta y lidera el cambio.
+
+
+## ¿Cómo sacar el máximo partido?
+
+Una idea clave: no necesitas saber programar ni ser un experto para aprovechar la IA.
+
+- Puedes usar ChatGPT para redactar ideas, corregir textos o preparar clases.
+- Puedes usar Copilot para ayudarte a escribir código si estás aprendiendo.
+- Puedes usar Notion AI para organizar tus proyectos o tomar mejores notas.
+- Puedes usar Fireflies para resumir reuniones automáticamente.
+
+Lo importante no es solo qué herramienta usas, sino cómo la integras en tu día a día y cómo aprendes a pensar con ella. Cuando hablo a gente que no conoce nada de la IA sobre las posibilidades que tiene. Me preguntan "¿y qué puedes preguntarle?", o me dicen "pero lo que me puede contestar ya lo encuentro con Google". Como mucho, se quedan sorprendidos por que sea capaz de darte un plan de nutrición semanal, o cambiar el tono de un email.
+
+### Dos ejemplos reales
+> **Ejemplo 1: Aprender mejor (y más rápido)**  
+Juan, 16 años, tiene examen de filosofía. Pero el libro no le ayuda, los vídeos de YouTube se le hacen eternos y no sabe cómo estudiar.
+Con ChatGPT, puede pedir explicaciones personalizadas, ejemplos claros, podcasts a medida e incluso tarjetas de memoria para repasar.
+¿El resultado? Aprende mejor, en menos tiempo, y sin frustración.
+
+<--((poner snippet de conversacion ))-->
+
+>  **Ejemplo 2: Practicar inglés para un futuro profesional**  
+Marta, 18 años, estudia medicina y quiere perfeccionar su inglés clínico.
+Con la IA, puede simular consultas médicas, recibir correcciones gramaticales en tiempo real, y practicar hablando en voz alta. Todo sin pagar academias ni depender de horarios.
+
+<--((poner snippet de conversacion ))-->
+
+Para sara el máximo partido, no tenemos que pensar en "qué podemos preguntar a la IA" sino "qué puede hacer la IA por mi". No tenemos que ver a un chatbot como ChatGPT, Gemini o Claude como algo que simplemente responde tus preguntas con tablas o iconos. Tenemos que verlos en términos de colaboración, como superherramientas que pueden hacer todo lo que le pidas en una fracción de tiempo que te costaría hacerlo, si es que sabes cómo. La diferencia puede parece sutil, pero hay un mundo entre ambos enfoques.
+
+
+## Preparado para lo que nos espera? 
+
+En definitiva, la IA han venido para quedarse. Cuanto antes entendamos que esto no es la última moda pasajera tecnológica, y adoptemos esta innovación, antes podremos disfrutar de sus beneficios. Estamos viviendo una revolución parecida a la de Internet, el desarrollo del transistor y el microchip, o la revolución industrial. **El salto tecnológico y social que nos espera en los próximos años es aún inconcebible. Y apasionante**. Este blog nace con la idea de explorar esta nueva era, y en él empezaré a escribir y compartir cómo voy entendiendo, explorando y descubriendo la IA y todos los avances relacionados que aún están por llegar.
+
+Yo estoy decidido a ser un adoptador temprano y voy a documentar mi camino de aprendizaje. ¿Te apuntas al viaje?
+
+--- 
+
+## 🤖 IA en acción (en este post)
+
+En cada nuevo post, estará esta sección donde iré mostrando cómo aplico la IA de forma concreta, útil y realista para el contenido de cada post. !Veamos junto de qué es capaz para tareas concretas! En este caso, la IA me ha ayudado en:
+
+- Refinar ideas y estructura narrativa
+- Revisar y optimizar el estilo para hacerlo más claro y cercano
+- GPreparar contenido visual para explicar la Teoría de difusión de innovaciones
+- Sugerir mejoras SEO como el título, subtítulos y metadescripciones
+
+---
+---
+
+## ¿Qué sigue?
+
+👉 Si te ha resonado este post, puedes suscribirte a la newsletter para no perderte los próximos.
+👉 O escríbeme: cuéntame en qué punto estás tú, y qué quieres aprender (¡o enseñarme!).
