@@ -1,61 +1,70 @@
 ---
 // src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCardHomepage from '../components/cards/BlogCardHomepage.astro'; // Ensure this path is correct
+import HeroSection from '../components/sections/HeroSection.astro';
+import AboutMeSnapshot from '../components/sections/AboutMeSnapshot.astro'; // Ensure this path is correct
 
-const pageTitle = "Página de Inicio"; // Or "Homepage"
+
+// Placeholder data for blog posts using Unsplash for images
+const homepagePosts = [
+  { 
+    href: "/blog/post-1-slug", 
+    imageUrl: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash URL
+    imageAlt: "Imagen sobre inteligencia artificial",
+    title: "¿Por qué la Inteligencia Artificial está cambiando el mundo?", 
+    excerpt: "Aún estamos a tiempo de aprender con ella y utilizarla en nuestro favor...", 
+    date: "10 Mayo, 2025", 
+    readingTime: "18 min" 
+  },
+  { 
+    href: "/blog/post-2-slug", 
+    imageUrl: "https://images.unsplash.com/photo-1664447972779-316251bd8bd7?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQyfHx8ZW58MHx8fHx8", // Example Unsplash URL
+    imageAlt: "Imagen sobre IA generativa",
+    title: "Seis conceptos esenciales para entender la IA Generativa", 
+    excerpt: "Descubre de forma sencilla qué son los prompts, tokens, ventanas de contexto...", 
+    date: "17 Mayo, 2025", 
+    readingTime: "14 min" 
+  },
+  { 
+    href: "/blog/post-3-slug", 
+    imageUrl: "https://images.unsplash.com/photo-1674027444454-97b822a997b6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDU2fHx8ZW58MHx8fHx8", // Example Unsplash URL
+    imageAlt: "Imagen sobre escritura y notas",
+    title: "¿Qué es la IA Generativa?", 
+    excerpt: "Inteligencia Artificial Generativa, IA discriminativa... hay distintos tipos de IAs...", 
+    date: "24 Mayo, 2025", 
+    readingTime: "12 min" 
+  },
+];
 ---
-<BaseLayout title={pageTitle}>
-  <div class="container mx-auto p-8"> {/* Basic container and padding */}
+<BaseLayout title="Inicio">
+  {/* 
+    Your Hero Section component/markup will go here 
+    e.g., <HeroSection /> 
+  */}
 
-    {/* Test H1 with arbitrary values based on your Figma H1 style */}
-    <h1 class="text-8xl leading-tight font-he font-bold tracking-[-0.02em] text-text-primary mb-6">
-      ¡Hola Mundo! (H1 Test)
-    </h1>
+  {/* 
+    Your "Quién soy?" (About Me Snapshot) component/markup will go here 
+    e.g., <AboutMeSnapshot />
+  */}
 
-
-
-    {/* Test Body Text (should inherit from body or use Tailwind's base) */}
-    <p class="text-lg leading-relaxed text-[var(--color-text-secondary)] mb-6"> {/* text-lg is 18px, leading-relaxed is ~1.625 line height */}
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Usando <span class="font-bold text-accent-blue">color de acento azul</span> y también 
-      <span class="font-semibold text-accent-orange">color de acento naranja</span> para probar.
-      El fondo de la página debería ser tu color `bg-primary`.
-    </p>
-
-    {/* Test Background Colors */}
-    <div class="p-4 mb-2 bg-bg-secondary">
-      Esto tiene el fondo secundario (bg-secondary).
-            Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-      Este es un párrafo de prueba con el color de texto secundario. 
-
+  <HeroSection />
+  <AboutMeSnapshot /> {/* Add the new section here */}
+  <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8"> {/* Recent Posts Section */}
+    <div class="container mx-auto">
+      <h2 class="text-4xl md:text-5xl font-semibold text-text-primary text-center mb-3"> {/* Your H2 style */}
+        Últimos posts del Blog
+      </h2>
+      <p class="text-center text-text-secondary text-lg mb-10 md:mb-16"> {/* Subtitle style */}
+        Explora, aprende y comparte ideas conmigo :)
+      </p>
+      {/* You can add your orange scribble component/markup here later */}
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        {homepagePosts.map(post => (
+          <BlogCardHomepage {...post} />
+        ))}
+      </div>
     </div>
-    <div class="p-4 mb-2 bg-accent-blue text-white"> {/* Assuming white text on blue accent */}
-      Esto tiene el fondo de acento azul.
-    </div>
-    <div class="p-4 mb-2 bg-accent-orange text-text-primary"> {/* Assuming primary text on orange accent */}
-      Esto tiene el fondo de acento naranja.
-    </div>
-    <div class="p-4 border border-border-card rounded-lg">
-      Esto es un contenedor con borde de tarjeta y esquinas redondeadas.
-    </div>
-
-  </div>
+  </section>
 </BaseLayout>

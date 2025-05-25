@@ -1,0 +1,54 @@
+---
+// src/components/career/AlternatingTimelineItem.astro
+import { Image } from 'astro:assets';
+// import Button from '../common/Button.astro'; // Uncomment if you plan to use your Button component
+
+export interface Props {
+  logoSrc: any; // Will be an imported image object
+  logoAlt: string;
+  role: string;
+  institutionName: string;
+  institutionColorClass?: string;
+  dates: string;
+  descriptionLines: string[];
+  ctaLink?: string;
+  ctaText?: string;
+  
+  illustrationSrc?: any; // Will be an imported image object
+  illustrationAlt?: string;
+  
+  // To determine layout: 
+  // true if text content should be on the right & illustration on left
+  // false if text content on left & illustration on right
+  textOnRight: boolean; 
+}
+
+const {
+  logoSrc,
+  logoAlt,
+  role,
+  institutionName,
+  institutionColorClass = 'text-text-primary',
+  dates,
+  descriptionLines,
+  ctaLink,
+  ctaText,
+  illustrationSrc,
+  illustrationAlt,
+  textOnRight
+} = Astro.props;
+
+const hasCta = ctaLink && ctaText;
+---
+
+{/* 
+  Placeholder for the item's structure. 
+  We will build this out in the next step.
+*/}
+<li class="mb-16 border border-dashed border-red-500 p-4"> {/* Temporary border to see it */}
+  <p>AlternatingTimelineItem for: {role} at {institutionName}</p>
+  <p>Text on Right: {textOnRight.toString()}</p>
+  {illustrationSrc && <p>Has an illustration: {illustrationAlt}</p>}
+  {logoSrc && <div class="my-2">Logo: <Image src={logoSrc} alt={logoAlt} width={50} /></div>}
+  {illustrationSrc && <div class="my-2">Illustration: <Image src={illustrationSrc} alt={illustrationAlt || "illustration"} width={50} /></div>}
+</li>

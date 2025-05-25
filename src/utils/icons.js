@@ -1,4 +1,5 @@
 // src/utils/icons.js
+// src/utils/icons.js
 import fs from 'node:fs/promises'; // Using Node.js fs module
 import path from 'node:path';
 
@@ -7,7 +8,7 @@ import path from 'node:path';
 // For production builds, Astro.glob() is more robust for assets in `src`.
 
 // Let's try a more Astro-idiomatic way using Astro.glob for broader compatibility
-const iconImports = import.meta.glob('/src/assets/icons/*.svg', { as: 'raw' });
+const iconImports = import.meta.glob('/src/assets/icons/*.svg', { query: '?raw', import: 'default' });
 
 export async function getIcon(name) {
   const iconPath = `/src/assets/icons/${name}.svg`;

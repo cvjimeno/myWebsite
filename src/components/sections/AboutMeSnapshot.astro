@@ -1,0 +1,53 @@
+---
+// src/components/sections/AboutMeSnapshot.astro
+import { Image } from 'astro:assets'; // If using Astro's Image component
+import aboutMeIllustration from '../../assets/images/about-me-illustration.webp'; // Adjust path
+// You might create a specific Link component later, or just use an <a> tag
+---
+<section id="about-me-snapshot" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8"> 
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16 items-center"> 
+        <!--  Column 1: Text Content (takes 3 out of 5 columns on md+)  -->
+        <div class="md:col-span-3 text-center md:text-left">
+        <h2 class="text-4xl md:text-5xl font-semibold text-text-primary mb-6 md:mb-8"> 
+          ¿Quién soy?
+        </h2>
+        <div class="prose prose-lg text-text-secondary max-w-none leading-relaxed space-y-6"> 
+          <p>
+            Soy Carlos Velasco y tengo una costumbre que aún no he conseguido quitarme: aprender compulsivamente. 
+            Desde niño he querido entender cómo funciona todo lo que me rodea. Esa curiosidad me llevó a estudiar Física Teórica, 
+            pero no tardé en buscar caminos donde aplicar ese conocimiento a problemas reales y complejos.
+          </p>
+          <p>
+            A lo largo de los años he aprendido de todo: bioquímica, programación, biología, imagen médica, síntesis de nanopartículas... 
+            Lo que me mueve no es una sola disciplina, sino el cruce entre ellas. Me gusta mirar sistemas difíciles de entender y pensar: ¿cómo puedo resolver esto?
+            Entre todas esas herramientas, la programación se convirtió en una constante.
+          </p>
+          <p>
+            Y este blog, donde escribo sobre lo que más me interesa ahora mismo: la Inteligencia Artificial.
+          </p>
+        </div>
+        <a 
+          href="/trayectoria" 
+          class="inline-block text-accent-blue font-medium mt-8 hover:underline underline-offset-2 text-lg"
+        >
+          Lee más sobre mi trayectoria →
+        </a>
+      </div>
+
+      <!-- Column 2: Illustrative Image (takes 2 out of 5 columns on md+) -->
+      <div class="md:col-span-2 flex justify-center md:justify-end">
+        <Image 
+          src={aboutMeIllustration}
+          alt="Ilustración sobre ciencia y tecnología"
+          widths={[300, 500]}
+          sizes="(max-width: 768px) 80vw, 40vw"
+          format="webp"
+          quality={80}
+          class="w-full max-w-md rounded-lg shadow-md" 
+        />
+      </div>
+
+    </div>
+  </div>
+</section>

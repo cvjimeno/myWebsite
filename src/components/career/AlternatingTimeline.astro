@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  careerPathData: Array<{
+    id: string;
+    logoSrc: any;
+    logoAlt: string;
+    role: string;
+    institutionName: string;
+    institutionColorClass?: string;
+    dates: string;
+    descriptionLines: string[];
+    ctaLink?: string;
+    ctaText?: string;
+    illustrationSrc?: any;
+    illustrationAlt?: string;
+  }>;
+}
+
+const { careerPathData } = Astro.props;
+---
+
+<div class="relative">
+  <!-- Optional: vertical line connecting all timeline items -->
+  <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 -translate-x-1/2 hidden md:block"></div>
+  
+  <ul class="space-y-16 relative z-10">
+    {careerPathData.map((item, index) => (
+      <li class="relative">
+        <!-- Timeline item content here -->
+        <div class="md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 items-center mb-16">
+          <!-- Left side -->
+          <div class="w-full">
+            {index % 2 === 0 ? (
+              <div class="py-4">
+                <h3 class="text-xl md:text-2xl font-semibold text-text-primary mb-1">
+                  {item.role} 
+                  {item.institutionName && (
+                    <span class="font-semibold">
+                      {' en '}
+                      <span class:list={[item.institutionColorClass || 'text-text-primary', 'font-bold']}>
+                        {item.institutionName}
+                      </span>
+                    </span>
+                  )}
+                </h3>
+                <p class="text-sm text-text-secondary mb-3">{item.dates}</p>
+                {item.descriptionLines && item.descriptionLines.length > 0 && (
+                  <div class="prose prose-sm sm:prose-base text-text-secondary max-w-none space-y-3">
+                    {item.descriptionLines.map(line => <p>{line}</p>)}
+                  </div>
+                )}
+              </div>
+            ) : (
+              item.illustrationSrc && (
+                <div class="py-4 flex items-center justify-end">
+                  <Image 
+                    src={item.illustrationSrc} 
+                    alt={item.illustrationAlt || "Timeline illustration"} 
+                    width={300} 
+                    height={300}
+                    class="max-w-[6000px] md:max-w-[600ps] rounded-lg shadow-md object-contain"
+                  />
+                </div>
+              )
+            )}
+          </div>
+          
+          <!-- Center with logo -->
+          <div class="flex justify-center">
+            {item.logoSrc && (
+              <Image 
+                src={item.logoSrc} 
+                alt={item.logoAlt} 
+                width={80} 
+                height={80}
+                class=" " 
+              />
+            )}
+          </div>
+          
+          <!-- Right side -->
+          <div class="w-full">
+            {index % 2 === 0 ? (
+              item.illustrationSrc && (
+                <div class="py-4 flex items-center justify-start">
+                  <Image 
+                    src={item.illustrationSrc} 
+                    alt={item.illustrationAlt || "Timeline illustration"} 
+                    width={200} 
+                    height={200}
+                    class="max-w-[450px] md:max-w-[600px]"
+                  />
+                </div>
+              )
+            ) : (
+              <div class="py-4">
+                <h3 class="text-xl md:text-2xl font-semibold text-text-primary mb-1">
+                  {item.role}
+                  {item.institutionName && (
+                    <span class="font-semibold">
+                      {' en '}
+                      <span class:list={[item.institutionColorClass || 'text-text-primary', 'font-bold']}>
+                        {item.institutionName}
+                      </span>
+                    </span>
+                  )}
+                </h3>
+                <p class="text-sm text-text-secondary mb-3">{item.dates}</p>
+                {item.descriptionLines && item.descriptionLines.length > 0 && (
+                  <div class="prose prose-sm sm:prose-base text-text-secondary max-w-none space-y-3">
+                    {item.descriptionLines.map(line => <p>{line}</p>)}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
