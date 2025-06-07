@@ -22,19 +22,6 @@ const readingTime = frontmatter.readingTime || 'N/A'; // Assuming readingTime is
 
 <BaseLayout title={frontmatter.title}>
 
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>{frontmatter.title} | El Blog de CV</title>
-  <meta name="description" content={frontmatter.description} />
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-</head>
-<body class="bg-primary-bg text-primary-text font-inter">
   <main> 
     <!-- Centered Title and Metadata Section -->
     <section class="max-w-screen-xl mx-auto px-4 text-center pt-8 pb-10 md:pt-24 md:pb-12">
@@ -42,14 +29,6 @@ const readingTime = frontmatter.readingTime || 'N/A'; // Assuming readingTime is
 
       {/* "Blog Post" breadcrumb-like text */}
       
-      <!-- Article Title -->
-      {/* 
-        For the title, you can use your custom font utility from global.css 
-        if you defined one like .font-h2-section or use Tailwind's responsive text sizes.
-        Your Figma H2: Inter Semibold, 64px / 78px lh, -1.5% ls
-        Equivalent Tailwind JIT: text-[64px] leading-[78px] tracking-[-0.015em] font-semibold
-        Let's use Tailwind classes that are close, or your custom utility if available.
-      */}
       <h1 class="mb-6 text-4xl font-bold tracking-tight text-primary-text md:text-5xl lg:text-section-h2 lg:leading-tight">
         {frontmatter.title}
       </h1>
@@ -97,12 +76,7 @@ const readingTime = frontmatter.readingTime || 'N/A'; // Assuming readingTime is
   </main>
 
 
-  <!-- <script>
-    // Optional: Smooth scrolling for TOC links
-    // ... (your script remains the same) ...
-  </script> -->
-</body>
-</html>
+  
 </BaseLayout>
 
 <style>

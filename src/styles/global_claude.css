@@ -1,0 +1,88 @@
+/* src/styles/global.css - Configuración corregida Tailwind 4 */
+@import "tailwindcss";
+
+@theme {
+  /* Sistema de colores más audaz y profesional */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-900: #0c4a6e;
+
+  --color-accent-orange: #f97316;
+  --color-accent-purple: #8b5cf6;
+  
+  /* Backgrounds más sofisticados */
+  --color-bg-primary: #fafafa;
+  --color-bg-secondary: #f4f4f5;
+  --color-bg-dark: #18181b;
+  --color-bg-card: #ffffff;
+  
+  /* Textos con mejor contraste */
+  --color-text-primary: #09090b;
+  --color-text-secondary: #71717a;
+  --color-text-muted: #a1a1aa;
+  
+  /* Borders más sutiles */
+  --color-border-light: #e4e4e7;
+  --color-border-medium: #d4d4d8;
+  
+  /* Shadows profesionales */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Typography scale más agresiva */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+  --font-size-8xl: 6rem;
+}
+
+@layer base {
+  * {
+    @apply border-border-light;
+  }
+  
+  body {
+    @apply bg-bg-primary text-text-primary;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Mejores estilos para prose */
+  .prose {
+    @apply text-text-primary max-w-none;
+  }
+  
+  .prose h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary;
+  }
+  
+  .prose h2 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold text-text-primary;
+  }
+  
+  .prose h3 {
+    @apply text-xl md:text-2xl font-medium text-text-primary;
+  }
+  
+  .prose p {
+    @apply text-base md:text-lg text-text-secondary leading-relaxed;
+  }
+  
+  .prose a {
+    @apply text-primary-600 hover:text-primary-700 font-medium underline underline-offset-4;
+  }
+}
