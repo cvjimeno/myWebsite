@@ -4,7 +4,7 @@ description: 'Un análisis profundo sobre el impacto transformador de la IA en l
 pubDate: 2025-05-15 
 heroImage: '/src/assets/images/blog/hero/01.jpg'
 imageAlt: 'Red abstracta de conexiones neuronales representando la inteligencia artificial'
-tags: ["IA", "Tecnología", "Futuro", "Innovación"] 
+tags: ["IA","Cositas"] 
 readingTime: 18
 ---
 

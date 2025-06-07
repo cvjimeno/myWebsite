@@ -1,41 +1,43 @@
 ---
 // src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BlogCardHomepage from '../components/cards/BlogCardHomepage.astro'; // Ensure this path is correct
+import BlogCardHomepage from '../components/cards/BlogCardHomepage.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
-import AboutMeSnapshot from '../components/sections/AboutMeSnapshot.astro'; // Ensure this path is correct
+import AboutMeSnapshot from '../components/sections/AboutMeSnapshot.astro';
+import { getCollection } from 'astro:content';
 
+// --- This is the new, dynamic data fetching ---
 
-// Placeholder data for blog posts using Unsplash for images
-const homepagePosts = [
-  { 
-    href: "/blog/post-1-slug", 
-    imageUrl: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash URL
-    imageAlt: "Imagen sobre inteligencia artificial",
-    title: "¿Por qué la Inteligencia Artificial está cambiando el mundo?", 
-    excerpt: "Aún estamos a tiempo de aprender con ella y utilizarla en nuestro favor...", 
-    date: "10 Mayo, 2025", 
-    readingTime: "18 min" 
-  },
-  { 
-    href: "/blog/post-2-slug", 
-    imageUrl: "https://images.unsplash.com/photo-1664447972779-316251bd8bd7?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQyfHx8ZW58MHx8fHx8", // Example Unsplash URL
-    imageAlt: "Imagen sobre IA generativa",
-    title: "Seis conceptos esenciales para entender la IA Generativa", 
-    excerpt: "Descubre de forma sencilla qué son los prompts, tokens, ventanas de contexto...", 
-    date: "17 Mayo, 2025", 
-    readingTime: "14 min" 
-  },
-  { 
-    href: "/blog/post-3-slug", 
-    imageUrl: "https://images.unsplash.com/photo-1674027444454-97b822a997b6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDU2fHx8ZW58MHx8fHx8", // Example Unsplash URL
-    imageAlt: "Imagen sobre escritura y notas",
-    title: "¿Qué es la IA Generativa?", 
-    excerpt: "Inteligencia Artificial Generativa, IA discriminativa... hay distintos tipos de IAs...", 
-    date: "24 Mayo, 2025", 
-    readingTime: "12 min" 
-  },
-];
+// 1. Find all possible hero images (same logic as the blog page)
+const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
+
+// 2. Fetch all non-draft blog posts from your content collection
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// 3. Sort the posts by date to find the newest ones
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
+);
+
+// 4. Get just the 3 latest posts
+const latestPosts = sortedPosts.slice(0, 3);
+
+// 5. Process these 3 posts to attach their resolved images
+const postsWithImages = await Promise.all(
+  latestPosts.map(async (post) => {
+    const imagePath = post.data.heroImage;
+    if (!allHeroImages[imagePath]) {
+      throw new Error(`[index.astro] Hero image for post "${post.slug}" not found. Path: "${imagePath}"`);
+    }
+    const resolvedImage = (await allHeroImages[imagePath]()).default;
+    return {
+      ...post,
+      data: { ...post.data, heroImageResolved: resolvedImage }
+    };
+  })
+);
 ---
 
 <BaseLayout title="Inicio">
@@ -44,9 +46,9 @@ const homepagePosts = [
   
   <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
     <div class="container mx-auto">
-      <div class="text-center mb-10 md:mb-16"> {/* Main wrapper for the entire title block */}
-        <div class="relative inline-block mx-auto"> {/* `inline-block` to shrink-wrap H2, `mx-auto` to center this block, `relative` for scribble */}
-          <h2 class="text-4xl md:text-5xl font-semibold text-text-primary mb-2"> {/* mb-2 for space before scribble if needed */}
+      <div class="text-center mb-10 md:mb-16">
+        <div class="relative inline-block mx-auto">
+          <h2 class="text-4xl md:text-5xl font-semibold text-text-primary mb-2">
             Últimos posts del Blog
           </h2>
           <div class="absolute -bottom-[-3%] left-[55%] transform -translate-x-1/2 w-full max-w-[calc(100%+2rem)] px-2"> 
@@ -55,14 +57,28 @@ const homepagePosts = [
             </svg>
           </div>
         </div>
-        <p class="text-text-secondary text-lg mt-4 md:mt-5"> {/* Added mt-4/mt-5 for space after H2+scribble */}
+        <p class="text-text-secondary text-lg mt-4 md:mt-5">
           Explora, aprende y comparte ideas conmigo :)
         </p>
       </div>
       
+      <!-- We now map over the REAL posts, not the hardcoded ones -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {homepagePosts.map(post => (
-          <BlogCardHomepage {...post} />
+        {postsWithImages.map(post => (
+          <BlogCardHomepage
+            href={`/blog/${post.slug}/`}
+            title={post.data.title}
+            image={post.data.heroImageResolved}
+            imageAlt={post.data.imageAlt}
+            excerpt={post.data.description}
+            date={new Date(post.data.pubDate).toLocaleDateString('es-ES', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+            readingTime={`${post.data.readingTime} min`}
+            tags={post.data.tags}
+          />
         ))}
       </div>
     </div>
