@@ -24,6 +24,19 @@ import Icon from "../common/Icon.astro";
 </section>
 
 <script>
+  // A small helper function for debouncing
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   class StarlightField {
     constructor(container) {
       this.container = container;
@@ -34,24 +47,39 @@ import Icon from "../common/Icon.astro";
       this.mouseX = 0;
       this.mouseY = 0;
       this.activationRadius = 150;
-      // THE FIX: Strict budget on neurons for performance.
-      this.numNeurons = 200;
 
-      this.init();
-      this.setupEventListeners();
+      // This is our main loop that runs constantly
       this.animate();
+      this.setupEventListeners();
+      
+      // We wrap the expensive init() call in a debounced function
+      this.debouncedInit = debounce(() => this.init(), 250);
+      window.addEventListener('resize', this.debouncedInit);
+
+      // Initial setup
+      this.init();
     }
 
     init() {
-      this.container.innerHTML = '';
-      for (let i = 0; i < this.numNeurons; i++) {
-        this.createNeuron();
+      this.container.innerHTML = ''; // Clear old elements
+      this.neurons = [];
+      this.connections = [];
+      
+      const rect = this.container.getBoundingClientRect();
+      if (rect.width === 0) return;
+
+      // THE RESPONSIVE FIX: Calculate density based on viewport area
+      // You can make the denominator smaller for more dots (e.g., 15000)
+      const numNeurons = Math.floor((rect.width * rect.height) / 6000);
+
+      for (let i = 0; i < numNeurons; i++) {
+        this.createNeuron(rect);
       }
       this.createConnections();
     }
-
-    createNeuron() {
-      const rect = this.container.getBoundingClientRect();
+    
+    // ... createNeuron and createConnection methods remain the same as the last version ...
+     createNeuron(rect) {
       const neuronEl = document.createElement('div');
       neuronEl.className = 'neuron';
       const x = Math.random() * (rect.width - 20) + 10;
@@ -62,7 +90,7 @@ import Icon from "../common/Icon.astro";
       this.container.appendChild(neuronEl);
     }
     
-    createConnections() {
+        createConnections() {
       for (let i = 0; i < this.neurons.length; i++) {
         for (let j = i + 1; j < this.neurons.length; j++) {
           const neuron1 = this.neurons[i];
@@ -70,7 +98,7 @@ import Icon from "../common/Icon.astro";
           const distance = Math.sqrt(Math.pow(neuron1.x - neuron2.x, 2) + Math.pow(neuron1.y - neuron2.y, 2));
 
           // Connect if they are close enough, but with a bit of randomness
-          if (distance < 120 && Math.random() < 0.2) {
+          if (distance < 180 && Math.random() < 0.5) {
             this.createConnection(neuron1, neuron2);
           }
         }
@@ -91,7 +119,7 @@ import Icon from "../common/Icon.astro";
       this.connections.push({ element: connEl, n1, n2 });
       this.container.appendChild(connEl);
     }
-
+    // ... updateActivations method remains the same ...
     updateActivations() {
       this.neurons.forEach(neuron => {
         const dist = Math.sqrt(Math.pow(this.mouseX - neuron.x, 2) + Math.pow(this.mouseY - neuron.y, 2));
@@ -110,25 +138,52 @@ import Icon from "../common/Icon.astro";
       });
     }
 
+
     setupEventListeners() {
-      this.container.parentElement.addEventListener('mousemove', e => {
-        const rect = this.container.getBoundingClientRect();
+      const parent = this.container.parentElement;
+      parent.addEventListener('mousemove', e => {
+        const rect = parent.getBoundingClientRect();
         this.mouseX = e.clientX - rect.left;
         this.mouseY = e.clientY - rect.top;
       }, { passive: true });
     }
 
     animate() {
-      this.updateActivations();
-      requestAnimationFrame(() => this.animate());
+      if(this.container.parentElement.style.display !== 'none'){
+        this.updateActivations();
+        requestAnimationFrame(() => this.animate());
+      }
+    }
+    
+    // Cleanup method to remove listeners when the component is destroyed
+    destroy() {
+      window.removeEventListener('resize', this.debouncedInit);
     }
   }
 
+  let fieldInstance = null;
   function initializeField() {
+    // Clean up old instance if it exists
+    if (fieldInstance) {
+      fieldInstance.destroy();
+    }
     const canvas = document.getElementById('starlightCanvas');
-    if (canvas) new StarlightField(canvas);
+    if (canvas) {
+      fieldInstance = new StarlightField(canvas);
+    }
   }
 
   document.addEventListener('astro:page-load', initializeField);
   initializeField();
+
+  // Add cleanup listener for when you navigate away
+  document.addEventListener('astro:before-swap', () => {
+    if (fieldInstance) {
+      fieldInstance.destroy();
+    }
+  });
 </script>
+
+
+
+
