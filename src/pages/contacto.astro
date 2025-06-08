@@ -7,88 +7,123 @@ const socialLinks = [
   { href: "https://x.com/yourprofile", icon: "x", label: "X / Twitter" },
   { href: "https://linkedin.com/in/yourprofile", icon: "linkedin", label: "LinkedIn" },
 ];
-
-// Define a new, much cleaner base style for our form fields.
-const fieldWrapperClasses = "space-y-1"; // A container for the label and the input
-const labelClasses = "text-sm font-medium text-text-secondary";
-const inputClasses = "w-full bg-bg-secondary border-2 border-border-subtle rounded-lg px-4 py-2.5 transition duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue";
 ---
 
-<BaseLayout title="Hablemos">
-  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    
-    <header class="text-center mb-12">
-      <h1 class="text-5xl md:text-6xl font-bold text-text-primary mb-4">
-        ¿Hablemos?
-      </h1>
-      <p class="text-lg text-text-secondary leading-relaxed">
-        Tengo curiosidad por tus ideas. Si crees que podemos crear algo juntos, o si simplemente tienes una pregunta, este es el lugar.
-      </p>
-    </header>
-
-    <!-- FORM SECTION with a much cleaner design -->
-    <div class="bg-white p-8 md:p-10 rounded-xl shadow-lg border border-border-card">
-      <form class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-        
-        <!-- Name Field -->
-        <div class:list={[fieldWrapperClasses, "md:col-span-1"]}>
-          <label for="name" class={labelClasses}>Nombre</label>
-          <input type="text" id="name" name="name" class={inputClasses} />
+<BaseLayout title="Contacto">
+  <div class="min-h-screen bg-bg-secondary">
+    <!-- The outermost container controls the page's max width and padding -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      
+      <header class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
+          <Icon name="mail" size="w-8 h-8" class="text-accent-blue"/>
         </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+          Hablemos
+        </h1>
+        <p class="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+          ¿Tienes una idea interesante? ¿Quieres colaborar en algo? 
+          Me encanta conocer nuevas perspectivas y proyectos.
+        </p>
+      </header>
 
-        <!-- Email Field -->
-        <div class:list={[fieldWrapperClasses, "md:col-span-1"]}>
-          <label for="email" class={labelClasses}>Email</label>
-          <input type="email" id="email" name="email" class={inputClasses} />
-        </div>
+      <!-- THE FIX: The form is now in a single, centered, wider container -->
+      <div class="max-w-3xl mx-auto">
+        <form class="space-y-6 bg-white p-8 md:p-10 rounded-xl shadow-md border border-border-card">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="group">
+              <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
+                Nombre
+              </label>
+              <input 
+                type="text" 
+                name="name" 
+                class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+                placeholder="Tu nombre"
+              />
+            </div>
+            
+            <div class="group">
+              <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
+                Email
+              </label>
+              <input 
+                type="email" 
+                name="email" 
+                class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+                placeholder="tu@email.com"
+              />
+            </div>
+          </div>
 
-        <!-- Subject Field (Full Width) -->
-        <div class:list={[fieldWrapperClasses, "md:col-span-2"]}>
-          <label for="subject" class={labelClasses}>El motivo de tu mensaje</label>
-          <select id="subject" name="subject" class={inputClasses}>
-            <option>Propuesta de Colaboración</option>
-            <option>Feedback sobre un post</option>
-            <option>Pregunta rápida</option>
-            <option>Otro</option>
-          </select>
-        </div>
+          <div class="group">
+            <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
+              ¿De qué quieres hablar?
+            </label>
+            <select 
+              name="subject" 
+              class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="colaboracion">💡 Propuesta de colaboración</option>
+              <option value="feedback">📝 Feedback sobre un artículo</option>
+              <option value="pregunta">❓ Pregunta sobre IA/tecnología</option>
+              <option value="networking">🤝 Networking</option>
+              <option value="otro">💬 Otro tema</option>
+            </select>
+          </div>
 
-        <!-- Message Field (Full Width) -->
-        <div class:list={[fieldWrapperClasses, "md:col-span-2"]}>
-          <label for="message" class={labelClasses}>Tu mensaje</label>
-          <textarea id="message" name="message" rows="5" class={inputClasses}></textarea>
-        </div>
+          <div class="group">
+            <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
+              Tu mensaje
+            </label>
+            <textarea 
+              name="message" 
+              rows="6" 
+              class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300 resize-none"
+              placeholder="Cuéntame tu idea, pregunta o propuesta..."
+            ></textarea>
+          </div>
 
-        <!-- Disabled Submit Button (Right-Aligned) -->
-        <div class="md:col-span-2 flex justify-end items-center gap-x-4 pt-4">
-           <p class="text-sm text-text-secondary italic">El formulario se activará próximamente.</p>
-           <button 
-            type="submit" 
-            disabled 
-            class="px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-200 disabled:bg-gray-300 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none hover:scale-105"
-          >
-            Enviar
-          </button>
-        </div>
-      </form>
-    </div>
+          <div class="pt-2 text-right">
+            <button 
+              type="submit" 
+              disabled 
+              class="w-full sm:w-auto px-8 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed"
+            >
+              <span class="flex items-center justify-center gap-2">
+                <Icon name="send" size="w-4 h-4"/>
+                Enviar mensaje
+              </span>
+            </button>
+            <p class="text-sm text-gray-500 mt-3 text-left sm:text-right">
+              * Formulario próximamente disponible.
+            </p>
+          </div>
+        </form>
+      </div>
 
-    <!-- SOCIALS SECTION -->
-    <div class="text-center mt-16">
-        <h3 class="text-xl font-semibold text-text-primary mb-4">O encuéntrame aquí:</h3>
-         <div class="flex justify-center gap-6">
+      <!-- THE FIX: Socials are now below the form and centered -->
+      <div class="mt-16 text-center">
+        <h3 class="font-semibold text-text-primary mb-4">
+          O encuéntrame aquí:
+        </h3>
+        <div class="flex justify-center gap-4">
           {socialLinks.map(social => (
             <a 
               href={social.href} 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label={social.label}
-              class="text-text-secondary hover:text-accent-blue transition-transform duration-200 hover:scale-110"
+              class="w-12 h-12 bg-white hover:bg-blue-100 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 group border border-border-card"
             >
-              <Icon name={social.icon} size="w-7 h-7" />
+              <Icon name={social.icon} size="w-5 h-5" class="text-text-secondary group-hover:text-accent-blue"/>
             </a>
           ))}
         </div>
+      </div>
+      
     </div>
   </div>
 </BaseLayout>

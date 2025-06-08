@@ -1,0 +1,134 @@
+---
+// src/components/blog/NewsletterCTA.astro
+import Icon from "../common/Icon.astro";
+---
+<section class="starlight-field border-y border-border-card py-16 md:py-20">
+  
+  <div class="starlight-canvas" id="starlightCanvas"></div>
+  
+  <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="bg-bg-primary p-8 md:p-10 rounded-xl shadow-lg border border-border-card">
+      <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full mb-6">
+        <Icon name="mail" size="w-7 h-7" class="text-accent-blue"/>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Únete a mis Apuntes Semanales</h2>
+      <p class="text-lg text-text-secondary mb-8 leading-relaxed">Cada viernes comparto una idea sobre IA, un paper que me ha parecido interesante y una herramienta que estoy probando. Sin spam, solo contenido de alto valor.</p>
+      <form class="max-w-md mx-auto">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="email" name="email" placeholder="tu@email.com" required class="flex-grow w-full bg-bg-secondary border-2 border-border-card rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue transition"/>
+          <button type="submit" class="px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 ring-offset-bg-primary focus:ring-accent-blue transition-all duration-300 hover:scale-105">Suscribirme</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  class StarlightField {
+    constructor(container) {
+      this.container = container;
+      if (!this.container) return;
+
+      this.neurons = [];
+      this.connections = [];
+      this.mouseX = 0;
+      this.mouseY = 0;
+      this.activationRadius = 150;
+      // THE FIX: Strict budget on neurons for performance.
+      this.numNeurons = 200;
+
+      this.init();
+      this.setupEventListeners();
+      this.animate();
+    }
+
+    init() {
+      this.container.innerHTML = '';
+      for (let i = 0; i < this.numNeurons; i++) {
+        this.createNeuron();
+      }
+      this.createConnections();
+    }
+
+    createNeuron() {
+      const rect = this.container.getBoundingClientRect();
+      const neuronEl = document.createElement('div');
+      neuronEl.className = 'neuron';
+      const x = Math.random() * (rect.width - 20) + 10;
+      const y = Math.random() * (rect.height - 20) + 10;
+      neuronEl.style.left = `${x}px`;
+      neuronEl.style.top = `${y}px`;
+      this.neurons.push({ element: neuronEl, x, y });
+      this.container.appendChild(neuronEl);
+    }
+    
+    createConnections() {
+      for (let i = 0; i < this.neurons.length; i++) {
+        for (let j = i + 1; j < this.neurons.length; j++) {
+          const neuron1 = this.neurons[i];
+          const neuron2 = this.neurons[j];
+          const distance = Math.sqrt(Math.pow(neuron1.x - neuron2.x, 2) + Math.pow(neuron1.y - neuron2.y, 2));
+
+          // Connect if they are close enough, but with a bit of randomness
+          if (distance < 120 && Math.random() < 0.2) {
+            this.createConnection(neuron1, neuron2);
+          }
+        }
+      }
+    }
+
+    createConnection(n1, n2) {
+      const connEl = document.createElement('div');
+      connEl.className = 'connection';
+      const dX = n2.x - n1.x;
+      const dY = n2.y - n1.y;
+      const dist = Math.sqrt(dX * dX + dY * dY);
+      const angle = Math.atan2(dY, dX) * 180 / Math.PI;
+      connEl.style.width = `${dist}px`;
+      connEl.style.left = `${n1.x + 2}px`;
+      connEl.style.top = `${n1.y + 2}px`;
+      connEl.style.transform = `rotate(${angle}deg)`;
+      this.connections.push({ element: connEl, n1, n2 });
+      this.container.appendChild(connEl);
+    }
+
+    updateActivations() {
+      this.neurons.forEach(neuron => {
+        const dist = Math.sqrt(Math.pow(this.mouseX - neuron.x, 2) + Math.pow(this.mouseY - neuron.y, 2));
+        if (dist < this.activationRadius) {
+          neuron.element.classList.add('active');
+        } else {
+          neuron.element.classList.remove('active');
+        }
+      });
+      this.connections.forEach(conn => {
+        if (conn.n1.element.classList.contains('active') && conn.n2.element.classList.contains('active')) {
+          conn.element.classList.add('active');
+        } else {
+          conn.element.classList.remove('active');
+        }
+      });
+    }
+
+    setupEventListeners() {
+      this.container.parentElement.addEventListener('mousemove', e => {
+        const rect = this.container.getBoundingClientRect();
+        this.mouseX = e.clientX - rect.left;
+        this.mouseY = e.clientY - rect.top;
+      }, { passive: true });
+    }
+
+    animate() {
+      this.updateActivations();
+      requestAnimationFrame(() => this.animate());
+    }
+  }
+
+  function initializeField() {
+    const canvas = document.getElementById('starlightCanvas');
+    if (canvas) new StarlightField(canvas);
+  }
+
+  document.addEventListener('astro:page-load', initializeField);
+  initializeField();
+</script>

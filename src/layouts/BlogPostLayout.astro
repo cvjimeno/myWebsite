@@ -1,108 +1,135 @@
 ---
-// src/layouts/BlogPostLayout.astro
-import TableOfContents from '../components/TableOfContents.astro'; // We'll create this next
+// File: src/layouts/BlogPostLayout.astro
 import BaseLayout from './BaseLayout.astro';
-// Props come from the Markdown frontmatter
+import { Image } from 'astro:assets';
+import Icon from '../components/common/Icon.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { getTagClasses } from '../utils/tagUtils';
+import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
+
+// THE ONLY CHANGE IS THIS NEW IMPORT
+
+// NOTE: We still have placeholders for other features to build
+// import RelatedPosts from '../components/blog/RelatedPosts.astro';
+
 const { frontmatter, headings } = Astro.props;
 
-// Helper function to format date (optional, you can do this inline too)
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', { // 'es-ES' for Spanish date format
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
+const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const readingTimeText = `${frontmatter.readingTime} min de lectura`;
 
-const formattedDate = frontmatter.pubDate ? formatDate(frontmatter.pubDate) : 'Fecha no disponible';
-const readingTime = frontmatter.readingTime || 'N/A'; // Assuming readingTime is in your frontmatter
+const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
+const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 ---
-
 
 <BaseLayout title={frontmatter.title}>
 
-  <main> 
-    <!-- Centered Title and Metadata Section -->
-    <section class="max-w-screen-xl mx-auto px-4 text-center pt-8 pb-10 md:pt-24 md:pb-12">
-      <h2 class="mb-4 text-2xl md:text-3xl font-semibold text-primary-text">El Blog de CV</h2>
-
-      {/* "Blog Post" breadcrumb-like text */}
-      
-      <h1 class="mb-6 text-4xl font-bold tracking-tight text-primary-text md:text-5xl lg:text-section-h2 lg:leading-tight">
-        {frontmatter.title}
-      </h1>
-      
-      <!-- Metadata -->
-      <div class="flex items-center justify-center space-x-4 text-sm text-secondary-text">
-        <span>{formattedDate}</span>
-        <span>•</span> {/* Or use the word 'mineral' if intended as a category/keyword */}
-        <span>{readingTime}</span>
+  <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">
+      {frontmatter.title}
+    </h1>
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-base text-text-secondary mb-8">
+      <span>{formattedDate}</span>
+      <span class="text-gray-400">•</span>
+      <div class="flex items-center gap-x-1.5">
+        <Icon name="clock" size="w-4 h-4" />
+        <span>{readingTimeText}</span>
       </div>
-    </section>
-    
-    <!-- Full-Width Hero Image Section -->
-    {frontmatter.heroImage && (
-      <div class="mb-8 md:mb-12"> {/* Add some margin below the image */}
-        <img 
-          src={frontmatter.heroImage} 
-          alt={frontmatter.imageAlt || `Imagen destacada para ${frontmatter.title}`}
-          class="w-full h-auto max-h-[400px] object-cover" {/* Adjust max-h as needed */}
-        />
+    </div>
+    {frontmatter.tags && (
+      <div class="flex flex-wrap justify-center gap-2">
+        {frontmatter.tags.map(tag => (
+          <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>
+            {tag}
+          </span>
+        ))}
       </div>
     )}
+  </header>
 
+  <div class="w-full mb-12 md:mb-16">
+    <Image 
+      src={heroImageResolved} 
+      alt={frontmatter.imageAlt}
+      widths={[800, 1200, 1600]}
+      sizes="100vw"
+      class="w-full max-h-[500px] object-cover"
+    />
+  </div>
 
-    <!-- Main Content Area with TOC and Article Body -->
-    <div class="flex flex-col lg:flex-row justify-between px-4 mx-auto max-w-screen-xl pt-8 pb-16 lg:pt-10 lg:pb-24">
-      <!-- Left Sidebar: Table of Contents -->
-      <aside class="lg:w-1/4 lg:pr-8 mb-8 lg:mb-0 order-first lg:order-none">
-        <div class="sticky top-24"> {/* Adjust top value based on your sticky header's height */}
-          <h2 class="mb-4 text-xl font-semibold text-primary-text">En este post...</h2>
-          {headings && headings.length > 0 ? (
-            <TableOfContents headings={headings} />
-          ) : (
-            <p class="text-secondary-text text-sm">No hay secciones en este post.</p>
-          )}
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-12">
+      <aside class="lg:col-span-1 mb-12 lg:mb-0">
+        <div class="sticky top-24">
+          <h2 class="text-lg font-semibold text-text-primary mb-4">En este post</h2>
+          <TableOfContents headings={headings} />
         </div>
       </aside>
 
-      <!-- Right Main Content: Article Body -->
-      <article class="w-full lg:w-3/4 mx-auto prose lg:prose-lg">
-        {/* The <slot /> is where your Markdown content will be injected */}
+      <div id="article-body" class="lg:col-span-3 prose prose-lg max-w-none">
         <slot />
-      </article>
+      </div>
     </div>
   </main>
 
+  <!-- This section now contains our real component, replacing the placeholder -->
+  <div class="mt-20">
+    <NewsletterCTA />
+  </div>
 
-  
+  <!-- Placeholder for the Related Posts section -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+     <h2 class="text-center text-3xl font-bold mb-8">Conexiones (Related Posts)</h2>
+  </section>
 </BaseLayout>
 
-<style>
-  @import '../styles/global.css'; /* Ensure your global styles are imported */
-  .prose {
-    /* Paths inside theme() MUST match keys in your @theme block in global.css */
-    font-family: base('fontFamily.inter');
-    color: theme('color-text-primary'); /* Corrected: 'color-text-primary' */
+<!-- Keep the script for the progress bar and ToC here -->
+<script>
+  // ... your existing, working script ...
+  const handleScroll = () => {
+    // Select the article body by its ID and cast it to tell TypeScript it's an HTMLElement.
+    const articleBody = document.querySelector('#article-body') as HTMLElement;
+    if (!articleBody) return; // Exit if we're not on a page with this element.
 
-    --tw-prose-body: theme('color-text-primary');
-    --tw-prose-headings: theme('color-text-primary');
-    --tw-prose-lead: theme('color-text-secondary');
-    --tw-prose-links: theme('colors.accent-blue');
-    --tw-prose-bold: theme('color-text-primary');
-    --tw-prose-counters: theme('color-text-secondary');
-    --tw-prose-bullets: theme('color-text-secondary');
-    --tw-prose-hr: theme('colors.gray-300'); 
-    --tw-prose-quotes: theme('color-text-primary');
-    --tw-prose-quote-borders: theme('colors.accent-orange');
-    --tw-prose-captions: theme('color-text-secondary');
-    --tw-prose-code: theme('colors.accent-blue');
-    --tw-prose-pre-code: theme('colors.gray-100');
-    --tw-prose-pre-bg: theme('colors.gray-800');
-  }
-/* 
-  .prose h2 { @apply font-semibold text-section-h2; }
-  .prose h3 { @apply font-semibold text-section-h3; }
-  .prose p, .prose li, .prose blockquote { @apply text-body-text; } */
-</style>
+    // 2. Get the necessary measurements.
+    const scrollTop = window.scrollY;
+    const articleTop = articleBody.offsetTop;
+    const articleHeight = articleBody.offsetHeight;
+    const viewportHeight = window.innerHeight;
+
+    // 3. This is the crucial calculation.
+    // The total scrollable distance *within* the article is its height minus the viewport height.
+    const scrollableDistance = articleHeight - viewportHeight;
+
+    // Prevent division by zero if the article is shorter than the screen.
+    if (scrollableDistance <= 0) {
+      document.documentElement.style.setProperty('--scroll-progress', '0%');
+      return;
+    }
+    
+    // 4. Calculate how far into the article the user has scrolled.
+    // We only start counting once the top of the viewport has passed the top of the article.
+    const scrollDistance = scrollTop - articleTop;
+
+    // 5. Calculate the progress percentage using the correct formula.
+    // We clamp the value between 0 and 100.
+    const progress = Math.max(0, Math.min(100, (scrollDistance / scrollableDistance) * 100));
+
+    // 6. Set the CSS variable.
+    document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // --- Event Listeners (This part remains the same) ---
+  // Add the scroll listener when the page loads, and handle Astro's client-side navigation.
+  document.addEventListener('scroll', handleScroll);
+  window.addEventListener('astro:page-load', () => {
+    handleScroll(); // Run once on page load to set initial state
+    document.addEventListener('scroll', handleScroll);
+  });
+  window.addEventListener('astro:before-swap', () => {
+    document.removeEventListener('scroll', handleScroll);
+  });
+</script>
