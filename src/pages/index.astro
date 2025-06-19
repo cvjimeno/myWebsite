@@ -5,6 +5,7 @@ import BlogCardHomepage from '../components/cards/BlogCardHomepage.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import AboutMeSnapshot from '../components/sections/AboutMeSnapshot.astro';
 import { getCollection } from 'astro:content';
+import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
 
 // --- This is the new, dynamic data fetching ---
 
@@ -83,4 +84,9 @@ const postsWithImages = await Promise.all(
       </div>
     </div>
   </section>
+
+    <!-- ADD THIS SECTION BEFORE THE FOOTER -->
+  <div class="mt-20">
+    <NewsletterCTA theme="orange" />
+  </div>
 </BaseLayout>

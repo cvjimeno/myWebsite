@@ -2,7 +2,7 @@
 title: '¿Por qué la Inteligencia Artificial está cambiando el mundo (y tú deberías sumarte al cambio)?'
 description: 'Un análisis profundo sobre el impacto transformador de la IA en la sociedad moderna y cómo puedes adaptarte y prosperar.'
 pubDate: 2025-05-15 
-heroImage: '/src/assets/images/blog/hero/01.jpg'
+heroImage: '/src/assets/images/blog/hero/02.jpg'
 imageAlt: 'Red abstracta de conexiones neuronales representando la inteligencia artificial'
 tags: ["IA","Cositas"] 
 readingTime: 18
@@ -86,9 +86,3 @@ En cada nuevo post, estará esta sección donde iré mostrando cómo aplico la I
 - Sugerir mejoras SEO como el título, subtítulos y metadescripciones
 
 ---
----
-
-## ¿Qué sigue?
-
-👉 Si te ha resonado este post, puedes suscribirte a la newsletter para no perderte los próximos.
-👉 O escríbeme: cuéntame en qué punto estás tú, y qué quieres aprender (¡o enseñarme!).

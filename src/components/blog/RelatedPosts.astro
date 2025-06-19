@@ -1,0 +1,45 @@
+---
+// src/components/blog/RelatedPosts.astro
+import { getCollection } from 'astro:content';
+import RelatedPostCard from './RelatedPostCard.astro';
+
+// ... (logic for finding posts remains the same, but we now fetch up to 6) ...
+export interface Props {
+  currentPostSlug: string;
+  currentPostTags: string[];
+}
+const { currentPostSlug, currentPostTags = [] } = Astro.props;
+
+const allPosts = await getCollection('blog', (entry) => {
+  return entry.slug !== currentPostSlug && !entry.data.draft;
+});
+
+const relatedPosts = allPosts.map(post => {
+  const sharedTags = (post.data.tags || []).filter(tag => currentPostTags.includes(tag));
+  return { post, sharedTagsCount: sharedTags.length };
+})
+.filter(item => item.sharedTagsCount > 0)
+.sort((a, b) => b.sharedTagsCount - a.sharedTagsCount)
+.slice(0, 6); // Get up to 6 posts for a richer carousel
+
+const shouldRender = relatedPosts.length >= 2;
+---
+{shouldRender && (
+  <div class="mt-16 bg-bg-secondary py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-center text-3xl font-bold mb-8 text-text-primary">
+        Para seguir explorando
+      </h2>
+      <!-- THE CAROUSEL FIX: A container with masks for the fadeout effect -->
+      <div class="relative">
+        <div class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4"
+          style="mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);"
+        >
+          {relatedPosts.map(item => (
+              <RelatedPostCard post={item.post} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}

@@ -20,7 +20,15 @@
 */
 @layer utilities {
   /* --- 1. Your global body styles --- */
-  body {
+  .brand-gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-orange;
+  }
+  
+  /* Utility for applying our brand gradient to backgrounds */
+  .brand-gradient-bg {
+    @apply bg-gradient-to-br from-accent-blue to-accent-orange;
+  }
+    body {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -90,11 +98,30 @@
     background: var(--color-border-subtle);
     transform-origin: left center;
     transition: background-color 0.2s ease-in-out;
-    opacity: 0.2;
+    opacity: 0.0;
   }
 
   .connection.active {
     background: var(--color-accent-blue);
     opacity: 0.7;
+  }
+
+}
+
+
+/*
+ =================================================================
+  THEME VARIATION FOR THE HOMEPAGE CTA ("Golden Synapse")
+ =================================================================
+*/
+@layer utilities {
+  /* When the component has the `theme-orange` class... */
+  .starlight-field.theme-orange .neuron.active {
+    background: var(--color-accent-orange);
+    box-shadow: 0 0 10px var(--color-accent-orange);
+  }
+
+  .starlight-field.theme-orange .connection.active {
+    background: var(--color-accent-orange);
   }
 }

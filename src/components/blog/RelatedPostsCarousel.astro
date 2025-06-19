@@ -1,0 +1,103 @@
+---
+// src/components/blog/RelatedPostsCarousel.astro
+import { getCollection } from 'astro:content';
+import HorizontalPostCard from './HorizontalPostCard.astro';
+import Button from '../common/Button.astro';
+
+const { currentPostSlug, currentPostTags = [] } = Astro.props;
+const allPosts = await getCollection('blog', (entry) => entry.slug !== currentPostSlug && !entry.data.draft);
+
+const relatedPosts = allPosts.map(post => {
+  const sharedTags = (post.data.tags || []).filter(tag => currentPostTags.includes(tag));
+  return { post, sharedTagsCount: sharedTags.length };
+})
+.filter(item => item.sharedTagsCount > 0)
+.sort((a, b) => b.sharedTagsCount - a.sharedTagsCount)
+.slice(0, 6);
+
+const shouldRender = relatedPosts.length >= 3;
+---
+{shouldRender && (
+  <div class="mt-20 bg-blue-50/60 border-y border-blue-100 py-16">
+    <!-- This outer container has the padding and max-width for the title -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-text-primary">Para seguir explorando</h2>
+        <a href="/blog" class="inline-block px-5 py-2.5 bg-transparent border-2 border-accent-blue text-accent-blue text-sm font-medium rounded-lg hover:bg-accent-blue/[.10] transition-colors">
+          Ver todo
+        </a>
+      </div>
+    </div>
+    
+    <!-- THE LAYOUT FIX: This container is now full-width, allowing the mask to work properly -->
+    <div class="relative">
+    <div id="carousel-container" class="flex overflow-x-auto gap-6 pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide">
+      {relatedPosts.map((item) => (
+        <div class="w-96 md:w-[420px] flex-shrink-0">
+          <HorizontalPostCard post={item.post} />
+        </div>
+      ))}
+    </div>
+
+      <!-- The fade-out mask for the viewport edges -->
+      <div class="absolute inset-0 pointer-events-none" 
+        style="background: linear-gradient(to right, 
+          rgba(237, 246, 255, 1),  /* A solid version of our bg-blue-50 */
+          transparent 10%, 
+          transparent 90%, 
+          rgba(237, 246, 255, 1)
+        );">
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
+<script>
+function initializeInfiniteCarousel() {
+  const container = document.getElementById('carousel-container');
+  if (!container || container.dataset.initialized === 'true') return;
+  container.dataset.initialized = 'true';
+
+  // Clone items for the infinite loop
+  const items = Array.from(container.children);
+  if (items.length <= 1) return;
+  items.forEach(item => {
+    const clone = item.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    container.appendChild(clone);
+  });
+
+  let isScrolling;
+  container.addEventListener('scroll', () => {
+    clearTimeout(isScrolling);
+    isScrolling = requestAnimationFrame(() => {
+      // Get computed padding so we know the effective scroll area
+      const computedStyle = getComputedStyle(container);
+      const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+      const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+      
+      // Effective scrollable width without the padding
+      const effectiveScrollWidth = container.scrollWidth - paddingLeft - paddingRight;
+      const halfwayPoint = effectiveScrollWidth / 2;
+      
+      const scrollLeft = container.scrollLeft - paddingLeft; // Adjusted scrollLeft
+
+      if (scrollLeft >= halfwayPoint) {
+        // Jump back and add the left padding back
+        container.scrollLeft = scrollLeft - halfwayPoint + paddingLeft;
+      } else if (scrollLeft <= 0) {
+        // Jump forward and add the left padding back
+        container.scrollLeft = scrollLeft + halfwayPoint + paddingLeft;
+      }
+    });
+  }, { passive: true });
+}
+
+document.addEventListener('astro:page-load', initializeInfiniteCarousel);
+initializeInfiniteCarousel();
+</script>

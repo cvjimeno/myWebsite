@@ -1,16 +1,13 @@
 ---
-// File: src/layouts/BlogPostLayout.astro
+// src/layouts/BlogPostLayout.astro
 import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
 import Icon from '../components/common/Icon.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { getTagClasses } from '../utils/tagUtils';
+import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
+import RelatedPostsCarousel from '../components/blog/RelatedPostsCarousel.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
-
-// THE ONLY CHANGE IS THIS NEW IMPORT
-
-// NOTE: We still have placeholders for other features to build
-// import RelatedPosts from '../components/blog/RelatedPosts.astro';
 
 const { frontmatter, headings } = Astro.props;
 
@@ -24,40 +21,26 @@ const readingTimeText = `${frontmatter.readingTime} min de lectura`;
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 ---
-
 <BaseLayout title={frontmatter.title}>
-
+  
   <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">
-      {frontmatter.title}
-    </h1>
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">{frontmatter.title}</h1>
     <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-base text-text-secondary mb-8">
       <span>{formattedDate}</span>
       <span class="text-gray-400">•</span>
-      <div class="flex items-center gap-x-1.5">
-        <Icon name="clock" size="w-4 h-4" />
-        <span>{readingTimeText}</span>
-      </div>
+      <div class="flex items-center gap-x-1.5"><Icon name="clock" size="w-4 h-4" /><span>{readingTimeText}</span></div>
     </div>
     {frontmatter.tags && (
       <div class="flex flex-wrap justify-center gap-2">
         {frontmatter.tags.map(tag => (
-          <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>
-            {tag}
-          </span>
+          <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>{tag}</span>
         ))}
       </div>
     )}
   </header>
 
   <div class="w-full mb-12 md:mb-16">
-    <Image 
-      src={heroImageResolved} 
-      alt={frontmatter.imageAlt}
-      widths={[800, 1200, 1600]}
-      sizes="100vw"
-      class="w-full max-h-[500px] object-cover"
-    />
+    <Image src={heroImageResolved} alt={frontmatter.imageAlt} widths={[800, 1200, 1600]} sizes="100vw" class="w-full max-h-[500px] object-cover"/>
   </div>
 
   <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,68 +51,86 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
           <TableOfContents headings={headings} />
         </div>
       </aside>
-
       <div id="article-body" class="lg:col-span-3 prose prose-lg max-w-none">
         <slot />
+        <ArticleEpilogue />
       </div>
     </div>
   </main>
 
-  <!-- This section now contains our real component, replacing the placeholder -->
-  <div class="mt-20">
-    <NewsletterCTA />
-  </div>
+  <!-- ======================================================= -->
+  <!-- THE FIX: All full-width sections are OUTSIDE the <main> tag -->
+  <!-- ======================================================= -->
 
-  <!-- Placeholder for the Related Posts section -->
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-     <h2 class="text-center text-3xl font-bold mb-8">Conexiones (Related Posts)</h2>
-  </section>
+  <RelatedPostsCarousel 
+    currentPostSlug={frontmatter.slug} 
+    currentPostTags={frontmatter.tags} 
+  />
+
+  <NewsletterCTA />
+
 </BaseLayout>
 
-<!-- Keep the script for the progress bar and ToC here -->
 <script>
-  // ... your existing, working script ...
+// Your working scroll script remains here...
   const handleScroll = () => {
     // Select the article body by its ID and cast it to tell TypeScript it's an HTMLElement.
     const articleBody = document.querySelector('#article-body') as HTMLElement;
     if (!articleBody) return; // Exit if we're not on a page with this element.
 
-    // 2. Get the necessary measurements.
     const scrollTop = window.scrollY;
     const articleTop = articleBody.offsetTop;
     const articleHeight = articleBody.offsetHeight;
     const viewportHeight = window.innerHeight;
 
-    // 3. This is the crucial calculation.
-    // The total scrollable distance *within* the article is its height minus the viewport height.
     const scrollableDistance = articleHeight - viewportHeight;
 
-    // Prevent division by zero if the article is shorter than the screen.
     if (scrollableDistance <= 0) {
       document.documentElement.style.setProperty('--scroll-progress', '0%');
       return;
     }
     
-    // 4. Calculate how far into the article the user has scrolled.
-    // We only start counting once the top of the viewport has passed the top of the article.
     const scrollDistance = scrollTop - articleTop;
 
-    // 5. Calculate the progress percentage using the correct formula.
-    // We clamp the value between 0 and 100.
     const progress = Math.max(0, Math.min(100, (scrollDistance / scrollableDistance) * 100));
 
-    // 6. Set the CSS variable.
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
   };
 
-  // --- Event Listeners (This part remains the same) ---
-  // Add the scroll listener when the page loads, and handle Astro's client-side navigation.
-  document.addEventListener('scroll', handleScroll);
+  const tocLinks = document.querySelectorAll('#toc-list li');
+  const headings = document.querySelectorAll('#article-body h2[id], #article-body h3[id]');
+
+  const handleActiveLink = () => {
+    let currentActiveId = '';
+    for (const heading of headings) {
+        const headingTop = heading.getBoundingClientRect().top;
+        if (headingTop < 150) {
+            currentActiveId = heading.id;
+        } else {
+            break;
+        }
+    }
+
+    tocLinks.forEach(link => {
+      if (link.id === `toc-${currentActiveId}`) {
+        link.classList.add('toc-active');
+      } else {
+        link.classList.remove('toc-active');
+      }
+    });
+  }
+  
+  const onScroll = () => {
+    handleScroll();
+    handleActiveLink();
+  }
+
+  document.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('astro:page-load', () => {
-    handleScroll(); // Run once on page load to set initial state
-    document.addEventListener('scroll', handleScroll);
+    onScroll();
+    document.addEventListener('scroll', onScroll, { passive: true });
   });
   window.addEventListener('astro:before-swap', () => {
-    document.removeEventListener('scroll', handleScroll);
+    document.removeEventListener('scroll', onScroll);
   });
 </script>

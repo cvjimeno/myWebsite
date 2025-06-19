@@ -1,30 +1,57 @@
 ---
 // src/components/blog/NewsletterCTA.astro
 import Icon from "../common/Icon.astro";
+
+// The component now accepts a "theme" prop. It defaults to 'blue'.
+export interface Props {
+  theme?: 'blue' | 'orange';
+}
+const { theme = 'blue' } = Astro.props;
+
+// We dynamically create the class list for the main section
+const sectionClasses = [
+  'starlight-field',
+  'border-y',
+  'border-border-card',
+  'py-16',
+  'md:py-20',
+  { 'theme-orange': theme === 'orange' } // Add this class only if the theme is 'orange'
+];
 ---
-<section class="starlight-field border-y border-border-card py-16 md:py-20">
+<!-- The class list is now dynamic -->
+<section class:list={sectionClasses}>
   
-  <div class="starlight-canvas" id="starlightCanvas"></div>
+  <div class="starlight-canvas" id={`starlightCanvas-${theme}`}></div>
   
   <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="bg-bg-primary p-8 md:p-10 rounded-xl shadow-lg border border-border-card">
-      <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full mb-6">
-        <Icon name="mail" size="w-7 h-7" class="text-accent-blue"/>
+      <div class:list={["inline-flex items-center justify-center w-14 h-14 rounded-full mb-6", {
+        'bg-blue-100': theme === 'blue',
+        'bg-orange-100': theme === 'orange'
+      }]}>
+        <Icon name="mail" size="w-7 h-7" class:list={[{
+          'text-accent-blue': theme === 'blue',
+          'text-accent-orange': theme === 'orange'
+        }]}/>
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Únete a mis Apuntes Semanales</h2>
       <p class="text-lg text-text-secondary mb-8 leading-relaxed">Cada viernes comparto una idea sobre IA, un paper que me ha parecido interesante y una herramienta que estoy probando. Sin spam, solo contenido de alto valor.</p>
       <form class="max-w-md mx-auto">
         <div class="flex flex-col sm:flex-row gap-3">
           <input type="email" name="email" placeholder="tu@email.com" required class="flex-grow w-full bg-bg-secondary border-2 border-border-card rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue transition"/>
-          <button type="submit" class="px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 ring-offset-bg-primary focus:ring-accent-blue transition-all duration-300 hover:scale-105">Suscribirme</button>
+          <button type="submit" class:list={["px-6 py-3 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105", {
+            'bg-accent-blue hover:bg-blue-600 focus:ring-accent-blue': theme === 'blue',
+            'bg-accent-orange hover:bg-orange-600 focus:ring-accent-orange': theme === 'orange'
+          }]}>Suscribirme</button>
         </div>
       </form>
     </div>
   </div>
 </section>
 
-<script>
-  // A small helper function for debouncing
+<!-- The script is almost identical, but now uses a unique canvas ID -->
+<script define:vars={{ theme }}>
+  // ... (keep the debounce function the same) ...
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -38,6 +65,7 @@ import Icon from "../common/Icon.astro";
   }
 
   class StarlightField {
+    // ... (constructor and all methods are the same) ...
     constructor(container) {
       this.container = container;
       if (!this.container) return;
@@ -48,29 +76,24 @@ import Icon from "../common/Icon.astro";
       this.mouseY = 0;
       this.activationRadius = 150;
 
-      // This is our main loop that runs constantly
       this.animate();
       this.setupEventListeners();
       
-      // We wrap the expensive init() call in a debounced function
       this.debouncedInit = debounce(() => this.init(), 250);
       window.addEventListener('resize', this.debouncedInit);
 
-      // Initial setup
       this.init();
     }
 
     init() {
-      this.container.innerHTML = ''; // Clear old elements
+      this.container.innerHTML = '';
       this.neurons = [];
       this.connections = [];
       
       const rect = this.container.getBoundingClientRect();
       if (rect.width === 0) return;
 
-      // THE RESPONSIVE FIX: Calculate density based on viewport area
-      // You can make the denominator smaller for more dots (e.g., 15000)
-      const numNeurons = Math.floor((rect.width * rect.height) / 6000);
+      const numNeurons = Math.floor((rect.width * rect.height) / 8000);
 
       for (let i = 0; i < numNeurons; i++) {
         this.createNeuron(rect);
@@ -78,7 +101,6 @@ import Icon from "../common/Icon.astro";
       this.createConnections();
     }
     
-    // ... createNeuron and createConnection methods remain the same as the last version ...
      createNeuron(rect) {
       const neuronEl = document.createElement('div');
       neuronEl.className = 'neuron';
@@ -90,19 +112,29 @@ import Icon from "../common/Icon.astro";
       this.container.appendChild(neuronEl);
     }
     
-        createConnections() {
-      for (let i = 0; i < this.neurons.length; i++) {
+    createConnections() {
+        // Inside createConnections() method
+        for (let i = 0; i < this.neurons.length; i++) {
         for (let j = i + 1; j < this.neurons.length; j++) {
-          const neuron1 = this.neurons[i];
-          const neuron2 = this.neurons[j];
-          const distance = Math.sqrt(Math.pow(neuron1.x - neuron2.x, 2) + Math.pow(neuron1.y - neuron2.y, 2));
-
-          // Connect if they are close enough, but with a bit of randomness
-          if (distance < 180 && Math.random() < 0.5) {
+            const neuron1 = this.neurons[i];
+            const neuron2 = this.neurons[j];
+            const distance = Math.sqrt(Math.pow(neuron1.x - neuron2.x, 2) + Math.pow(neuron1.y - neuron2.y, 2));
+            
+            const threshold = 200; // 100px is 100% connection probability
+            const lambda = 80; // Controls the decay rate beyond the threshold
+            let probability;
+            if (distance < threshold) {
+            probability = 1;
+            } else {
+            // Probability decays exponentially with distance beyond threshold
+            probability = Math.exp(-(distance - threshold) / lambda);
+            }
+            
+            if (distance < 400 && Math.random() < probability) {
             this.createConnection(neuron1, neuron2);
-          }
+            }
         }
-      }
+        }
     }
 
     createConnection(n1, n2) {
@@ -119,7 +151,7 @@ import Icon from "../common/Icon.astro";
       this.connections.push({ element: connEl, n1, n2 });
       this.container.appendChild(connEl);
     }
-    // ... updateActivations method remains the same ...
+
     updateActivations() {
       this.neurons.forEach(neuron => {
         const dist = Math.sqrt(Math.pow(this.mouseX - neuron.x, 2) + Math.pow(this.mouseY - neuron.y, 2));
@@ -138,7 +170,6 @@ import Icon from "../common/Icon.astro";
       });
     }
 
-
     setupEventListeners() {
       const parent = this.container.parentElement;
       parent.addEventListener('mousemove', e => {
@@ -146,16 +177,21 @@ import Icon from "../common/Icon.astro";
         this.mouseX = e.clientX - rect.left;
         this.mouseY = e.clientY - rect.top;
       }, { passive: true });
+
+      // When the mouse leaves, remove active classes and reset coordinates
+      parent.addEventListener('mouseleave', () => {
+        this.mouseX = -Infinity;
+        this.mouseY = -Infinity;
+        this.neurons.forEach(neuron => neuron.element.classList.remove('active'));
+        this.connections.forEach(conn => conn.element.classList.remove('active'));
+      }, { passive: true });
     }
 
     animate() {
-      if(this.container.parentElement.style.display !== 'none'){
         this.updateActivations();
         requestAnimationFrame(() => this.animate());
-      }
     }
     
-    // Cleanup method to remove listeners when the component is destroyed
     destroy() {
       window.removeEventListener('resize', this.debouncedInit);
     }
@@ -163,11 +199,11 @@ import Icon from "../common/Icon.astro";
 
   let fieldInstance = null;
   function initializeField() {
-    // Clean up old instance if it exists
     if (fieldInstance) {
       fieldInstance.destroy();
     }
-    const canvas = document.getElementById('starlightCanvas');
+    // We use the theme prop to create a unique ID for the canvas
+    const canvas = document.getElementById(`starlightCanvas-${theme}`);
     if (canvas) {
       fieldInstance = new StarlightField(canvas);
     }
@@ -176,14 +212,9 @@ import Icon from "../common/Icon.astro";
   document.addEventListener('astro:page-load', initializeField);
   initializeField();
 
-  // Add cleanup listener for when you navigate away
   document.addEventListener('astro:before-swap', () => {
     if (fieldInstance) {
       fieldInstance.destroy();
     }
   });
 </script>
-
-
-
-

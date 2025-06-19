@@ -2,47 +2,75 @@
 // src/components/Header.astro
 const navLinks = [
   { href: "/", text: "Inicio" },
-  { href: "/sobre-mi", text: "Sobre mí" }, // Scrolls to section with id="about-me-snapshot" on homepage
+  { href: "/sobre-mi", text: "Sobre mí" },
   { href: "/blog", text: "Blog" },
-  { href: "/contacto", text: "Contacto" }, // We'll create this page later
+  { href: "/contacto", text: "Contacto" },
 ];
 ---
-<header class="sticky top-0 z-50 
-              py-6 px-8 
-              backdrop-blur-lg 
-              backdrop-saturate-100
-              bg-[var(--color-bg-primary)]/10
-              bg-opacity-80">
-
-  <nav class="container mx-auto flex justify-between items-center">
-    {/* Logo */}
-    <a 
-      href="/" 
-      class="text-[var(--color-text-primary)] font-bold text-[42px] leading-none tracking-[-0.02em]"
-    >
-      CV
-    </a>
-
-    {/* Navigation Links */}
-    {/* Adjust space-x-8 (32px) or space-x-10 (40px) based on your Figma spacing */}
-    <ul class="flex space-x-4 md:space-x-8"> 
-      {navLinks.map(link => (
-        <li>
-        <a 
-          href={link.href} 
-          class="inline-block text-[var(--color-text-secondary)] 
-                hover:text-[var(--color-accent-blue)] hover:underline hover:scale-110
-                underline-offset-4
-                text-base md:text-lg font-medium 
-                duration-150 transition-transform ease-in-out"
-        >
-          {link.text}
-          
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
+  <div class="backdrop-blur-md bg-bg-primary/80 border-b border-border-ligth/20">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        <!-- The New Logo -->
+        <a href="/" class="text-3xl font-black tracking-tight text-text-primary">
+          CV<span class="text-accent-blue">.</span>
         </a>
-      </li>
-      ))}
-    </ul>
-  </nav>
-</header>
 
+        <!-- Navigation Links -->
+        <ul class="hidden md:flex items-center space-x-2"> 
+          {navLinks.map(link => (
+            <li>
+              <a href={link.href} class="relative px-4 py-2 text-base font-medium text-text-secondary hover:text-text-primary transition-colors duration-200 group">
+                {link.text}
+                <span class="absolute bottom-1 left-0 right-0 h-0.5 brand-gradient-bg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-center"></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        
+        <button class="md:hidden p-2 text-text-secondary" aria-label="Open menu">
+          {/* Mobile menu icon */}
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+<script>
+  // Function to handle the header scroll effect
+  function setupHeaderScroll() {
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('main-header');
+    
+    if (!header) return;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        header.style.transform = 'translateY(-100%)';
+      } else {
+        // Scrolling up
+        header.style.transform = 'translateY(0)';
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+    
+    // Remove any existing scroll listener to prevent duplicates
+    window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
+  }
+  
+  // Run on initial page load
+  document.addEventListener('DOMContentLoaded', setupHeaderScroll);
+  
+  // Run when Astro performs a client-side navigation
+  document.addEventListener('astro:page-load', setupHeaderScroll);
+  
+  // Clean up before page transitions to prevent memory leaks
+  document.addEventListener('astro:before-swap', () => {
+    window.removeEventListener('scroll', () => {});
+  });
+</script>
 
