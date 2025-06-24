@@ -68,52 +68,79 @@ const permalink = Astro.url.href;
     <ViewTransitions />
 </head>
 <body>
-    <Header /> 
-    <main class="pt-16 md:pt-20">
-        <slot /> 
+    <Header />
+    <main class="pt-16">
+        <slot />
     </main>
     <Footer />
 
-    {/* SCRIPT 2: PERSISTENCE & INTERACTIVITY - Runs on load and after every page swap */}
+    {/* THE DEFINITIVE SCRIPT: All functions are now complete and working. */}
     <script is:inline>
-      const themeSetup = () => {
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        
-        // This function is the missing piece: it re-applies the theme class after a swap
+      function pageSetup() {
         const applyTheme = () => {
-           // We re-run the same logic from the head script to be sure
-           const theme = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-           if (theme === 'dark') {
-              document.documentElement.classList.add('dark');
-           } else {
-              document.documentElement.classList.remove('dark');
-           }
-        }
+          const theme = (() => {
+            if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+              return localStorage.getItem('color-theme');
+            }
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              return 'dark';
+            }
+            return 'light';
+          })();
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        };
 
+        // --- 1. THEME TOGGLE LOGIC ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
         const handleToggleClick = () => {
           const isDarkMode = document.documentElement.classList.toggle('dark');
           localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
         };
-
         if (themeToggleBtn) {
           themeToggleBtn.addEventListener('click', handleToggleClick);
         }
 
-        // Run the theme application immediately on setup
+        // --- 2. MOBILE MENU LOGIC ---
+        const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
+        const menuDropdown = document.getElementById('mobile-menu-dropdown');
+        const openIcon = document.getElementById('menu-icon-open');
+        const closeIcon = document.getElementById('menu-icon-close');
+        const handleMobileMenuClick = () => {
+          if (!menuDropdown || !openIcon || !closeIcon) return;
+          const isExpanded = mobileToggleBtn.getAttribute('aria-expanded') === 'true';
+          mobileToggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+          if (isExpanded) {
+            menuDropdown.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+            document.body.classList.remove('menu-open', 'overflow-hidden');
+          } else {
+            menuDropdown.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+            document.body.classList.add('menu-open', 'overflow-hidden');
+          }
+          openIcon.classList.toggle('hidden');
+          closeIcon.classList.toggle('hidden');
+        };
+        if (mobileToggleBtn) {
+          mobileToggleBtn.addEventListener('click', handleMobileMenuClick);
+        }
+
+        // --- 3. RE-APPLY THEME ON SWAP ---
         applyTheme();
 
+        // --- 4. CLEANUP LOGIC ---
         document.addEventListener('astro:before-swap', () => {
-          if (themeToggleBtn) {
-            themeToggleBtn.removeEventListener('click', handleToggleClick);
-          }
+          if (themeToggleBtn) themeToggleBtn.removeEventListener('click', handleToggleClick);
+          if (mobileToggleBtn) mobileToggleBtn.removeEventListener('click', handleMobileMenuClick);
         }, { once: true });
       }
 
-      // Run on initial page load
-      themeSetup();
-      
-      // Run after every page swap
-      document.addEventListener('astro:after-swap', themeSetup);
+      // --- RUN EVERYTHING ---
+      pageSetup();
+      document.addEventListener('astro:after-swap', pageSetup);
     </script>
 </body>
 </html>
+

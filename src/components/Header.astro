@@ -4,65 +4,51 @@ import DarkModeToggle from './DarkModeToggle.astro';
 
 const navLinks = [
   { href: "/", text: "Inicio" },
-  { href: "/trayectoria/", text: "Sobre mí" },
+  { href: "/sobre-mi/", text: "Sobre mí" },
   { href: "/blog/", text: "Blog" },
   { href: "/contacto/", text: "Contacto" },
 ];
 const currentPath = Astro.url.pathname;
 ---
-<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
-  <div class="relative z-20 backdrop-blur-md bg-bg-primary/80 border-b border-border-card/50">
+<header class="sticky top-0 z-50">
+  {/* THE FIX: The border class is now `border-border-card` without the `/50` opacity modifier */}
+  <div class="relative z-20 backdrop-blur-md bg-bg-primary/70 border-b border-border-card">
     <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16 md:h-20">
+      <div class="flex justify-between items-center h-16">
+        
         <a href="/" class="text-3xl font-black tracking-tight text-text-primary">
           CV<span class="text-accent-primary">.</span>
         </a>
 
-        <div class="hidden md:flex items-center space-x-2">
-          <ul class="flex items-center space-x-2">
+        <div class="flex items-center gap-x-2 sm:gap-x-4">
+          
+          <ul class="hidden md:flex items-center space-x-2"> 
             {navLinks.map(link => {
               const isActive = link.href === "/" ? currentPath === "/" : currentPath.startsWith(link.href);
               return (
                 <li>
-                  <a 
-                    href={link.href} 
-                    class:list={[
-                      "relative px-4 py-2 text-base font-medium transition-colors duration-200 group",
-                      isActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary"
-                    ]}
-                    aria-current={isActive ? "page" : false}
-                  >
+                  <a href={link.href} class:list={[ "relative px-4 py-2 text-base font-medium transition-colors duration-200 group", isActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary" ]} aria-current={isActive ? "page" : false}>
                     {link.text}
-                    {/* THIS IS THE FIX: Using a solid background color */}
-                    <span 
-                      class:list={[
-                        "absolute bottom-1 left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center",
-                        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                      ]}
-                    ></span>
+                    <span class:list={[ "absolute bottom-1 left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center", isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100" ]}></span>
                   </a>
                 </li>
               );
             })}
           </ul>
-          <div class="pl-4">
-            <DarkModeToggle />
-          </div>
-        </div>
-        
-        <div class="md:hidden flex items-center space-x-2">
-          <DarkModeToggle />
-          <button id="mobile-menu-toggle" class="p-2 text-text-secondary" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu-dropdown">
+          
+          <button id="mobile-menu-toggle" class="md:hidden p-2 text-text-secondary rounded-lg hover:bg-bg-secondary transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu-dropdown">
             <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             <svg id="menu-icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
+
+          <DarkModeToggle />
+
         </div>
       </div>
     </nav>
   </div>
-  
-  {/* The mobile dropdown menu and script remain unchanged from the last step */}
-  <div id="mobile-menu-dropdown" class="absolute top-full left-0 w-full bg-bg-primary border-b border-border-card shadow-lg md:hidden transition-all duration-300 ease-in-out opacity-0 -translate-y-4 pointer-events-none">
+
+  <div id="mobile-menu-dropdown" class="absolute top-full left-0 w-full bg-[var(--color-bg-card)] border-b border-border-card shadow-lg md:hidden transition-all duration-300 ease-in-out opacity-0 -translate-y-4 pointer-events-none">
     <ul class="flex flex-col p-4 space-y-2">
       {navLinks.map(link => (
         <li>
@@ -74,69 +60,3 @@ const currentPath = Astro.url.pathname;
     </ul>
   </div>
 </header>
-
-<script>
-  // --- This script manages the header hide/show on scroll ---
-  function setupHeaderScroll() {
-    let lastScrollY = window.scrollY;
-    const header = document.getElementById('main-header');
-    if (!header) return;
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (document.body.classList.contains('menu-open')) return; // Don't hide header if menu is open
-
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        header.style.transform = 'translateY(-100%)';
-      } else {
-        header.style.transform = 'translateY(0)';
-      }
-      lastScrollY = currentScrollY;
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    document.addEventListener('astro:before-swap', () => {
-      window.removeEventListener('scroll', handleScroll);
-    }, { once: true });
-  }
-
-  // --- This script manages the new mobile dropdown menu ---
-  function setupMobileMenu() {
-    const toggleButton = document.getElementById('mobile-menu-toggle');
-    const dropdown = document.getElementById('mobile-menu-dropdown');
-    const openIcon = document.getElementById('menu-icon-open');
-    const closeIcon = document.getElementById('menu-icon-close');
-
-    if (!toggleButton || !dropdown || !openIcon || !closeIcon) return;
-
-    toggleButton.addEventListener('click', () => {
-      const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
-      
-      toggleButton.setAttribute('aria-expanded', String(!isExpanded));
-      
-      if (isExpanded) {
-        // --- CLOSE MENU ---
-        dropdown.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
-        document.body.classList.remove('menu-open');
-      } else {
-        // --- OPEN MENU ---
-        dropdown.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
-        document.body.classList.add('menu-open');
-      }
-      
-      // Toggle icons
-      openIcon.classList.toggle('hidden');
-      closeIcon.classList.toggle('hidden');
-    });
-  }
-
-  // Run scripts on initial page load and after Astro's page transitions
-  function runScripts() {
-    setupHeaderScroll();
-    setupMobileMenu();
-  }
-
-  document.addEventListener('astro:page-load', runScripts);
-  runScripts(); // Run on initial load
-</script>
