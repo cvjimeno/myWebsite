@@ -1,8 +1,7 @@
 ---
-// filepath: src/components/cards/BlogCardHomepage.astro
+// src/components/cards/BlogCardHomepage.astro
 import { Image } from 'astro:assets';
 import Icon from '../common/Icon.astro';
-// Import our new utility function
 import { getTagClasses } from '../../utils/tagUtils';
 
 export interface Props {
@@ -37,7 +36,11 @@ if (!imageSource) {
 ---
 
 <article 
-    class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full group"
+    class="bg-[var(--color-bg-card)] rounded-lg border border-border-card 
+           shadow-md dark:shadow-lg dark:shadow-black/20 
+           hover:shadow-xl hover:-translate-y-1 
+           dark:hover:border-accent-primary 
+           transition-all duration-300 overflow-hidden flex flex-col h-full group"
     data-tags={tags ? tags.join(',').toLowerCase() : ''}
 >
   <div class="relative">
@@ -48,22 +51,19 @@ if (!imageSource) {
         width={800}
         height={450}
         format="webp"
+        quality={80}
         class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
       />
     </a>
   </div>
   
   <div class="p-5 flex flex-col flex-grow">
-    <!-- THE FIX FOR TAGS IS HERE: Moved below the image, using our new color system -->
     {tags && tags.length > 0 && (
-      <div class="flex gap-2 mb-3">
+      <div class="flex flex-wrap gap-2 mb-3">
         {tags.slice(0, 3).map(tag => {
-          const tagClasses = getTagClasses(tag); // Get the color classes
+          const tagClasses = getTagClasses(tag);
           return (
-            <span class:list={[
-              "text-xs font-semibold px-3 py-1 rounded-lg", // Base styles
-              tagClasses // Dynamic color styles
-            ]}>
+            <span class:list={[ "text-xs font-semibold px-3 py-1 rounded-lg", tagClasses ]}>
               {tag}
             </span>
           )
@@ -71,17 +71,20 @@ if (!imageSource) {
       </div>
     )}
 
-    <h3 class="text-xl font-semibold text-text-primary mb-2 leading-snug">
-      <a href={href} class="hover:text-accent-blue transition-colors">
+    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
+    <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-2 leading-snug">
+      <a href={href} class="hover:text-accent-primary transition-colors">
         {title}
       </a>
     </h3>
 
-    <p class="text-sm text-text-secondary mb-4 leading-relaxed flex-grow line-clamp-3">
+    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
+    <p class="text-sm text-text-secondary dark:text-text-secondary mb-4 leading-relaxed flex-grow line-clamp-3">
       {excerpt}
     </p>
 
-    <div class="mt-auto pt-3 border-t border-border-card flex justify-between items-center text-xs text-text-secondary">
+    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
+    <div class="mt-auto pt-3 border-t border-border-card flex justify-between items-center text-xs text-text-secondary dark:text-text-secondary">
       <span class="font-medium">{date}</span>
       <div class="flex items-center gap-x-1">
         <Icon name="hourglass" class="w-3 h-3" />

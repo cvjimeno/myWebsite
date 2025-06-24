@@ -3,38 +3,117 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
 
-import { ClientRouter } from 'astro:transitions';
-
-// ... other props and imports
 export interface Props {
     title: string;
+    description?: string;
+    image?: string;
 }
-const { title } = Astro.props;
+const { 
+  title, 
+  description = "Soy Carlos Velasco, un científico apasionado por la ciencia y la tecnología que escribe sobre Inteligencia Artificial. ¡Bienvenidos a mi hogar digital!",
+  image = '/og-default.png'
+} = Astro.props;
 
+const siteName = "El Blog de CV";
+const fullTitle = `${title} | ${siteName}`;
+const permalink = Astro.url.href;
 ---
-<html lang="es"> {/* Changed lang to Spanish */}
+<html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> {/* Make sure you have a favicon */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | El Blog de CV</title> {/* Example title format */}
+    
+    <title>{fullTitle}</title>
+    {/* All SEO and other meta tags are correct here */}
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={permalink} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={permalink} />
+    <meta property="twitter:title" content={fullTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
-    {/* Add Inter font from Google Fonts (example) - or self-host */}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    {/* Add any other head elements: meta descriptions, etc. */}
-    <ClientRouter />
+    {/* SCRIPT 1: "NO-FLICKER" - Runs before page render to set initial theme */}
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+          return localStorage.getItem('color-theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
 
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <ViewTransitions />
 </head>
-<body class="bg-bg-primary text-text-primary font-sans"> {/* Applied base classes */}
+<body>
     <Header /> 
-    <main>
+    <main class="pt-16 md:pt-20">
         <slot /> 
     </main>
     <Footer />
+
+    {/* SCRIPT 2: PERSISTENCE & INTERACTIVITY - Runs on load and after every page swap */}
+    <script is:inline>
+      const themeSetup = () => {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        
+        // This function is the missing piece: it re-applies the theme class after a swap
+        const applyTheme = () => {
+           // We re-run the same logic from the head script to be sure
+           const theme = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+           if (theme === 'dark') {
+              document.documentElement.classList.add('dark');
+           } else {
+              document.documentElement.classList.remove('dark');
+           }
+        }
+
+        const handleToggleClick = () => {
+          const isDarkMode = document.documentElement.classList.toggle('dark');
+          localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+
+        if (themeToggleBtn) {
+          themeToggleBtn.addEventListener('click', handleToggleClick);
+        }
+
+        // Run the theme application immediately on setup
+        applyTheme();
+
+        document.addEventListener('astro:before-swap', () => {
+          if (themeToggleBtn) {
+            themeToggleBtn.removeEventListener('click', handleToggleClick);
+          }
+        }, { once: true });
+      }
+
+      // Run on initial page load
+      themeSetup();
+      
+      // Run after every page swap
+      document.addEventListener('astro:after-swap', themeSetup);
+    </script>
 </body>
 </html>

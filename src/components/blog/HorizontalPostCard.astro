@@ -6,17 +6,18 @@ const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg
 const { post } = Astro.props;
 if (!allHeroImages[post.data.heroImage]) throw new Error(`Image not found: ${post.data.heroImage}`);
 const heroImageResolved = (await allHeroImages[post.data.heroImage]()).default;
-const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', { /* ... */ });
 ---
-<a href={`/blog/${post.slug}/`} class="group grid grid-cols-10 gap-x-4 bg-white p-3 rounded-xl border border-border-card hover:border-accent-blue transition-all duration-200 shadow-sm hover:shadow-lg h-full">
+{/* THE FIX: Using semantic card background and explicit dark mode text colors */}
+<a href={`/blog/${post.slug}/`} class="group grid grid-cols-10 gap-x-4 bg-[var(--color-bg-card)] p-3 rounded-xl border border-border-card hover:border-accent-primary transition-all duration-200 shadow-sm hover:shadow-lg h-full">
   <div class="col-span-3 aspect-square rounded-lg overflow-hidden">
     <Image src={heroImageResolved} alt={post.data.imageAlt} width={200} format="webp" quality={75} class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"/>
   </div>
   <div class="col-span-7 flex flex-col pr-1">
-    <h3 class="font-semibold text-base text-text-primary group-hover:text-accent-blue transition-colors leading-tight mb-1.5">
+    <h3 class="font-semibold text-base text-text-primary dark:text-text-primary group-hover:text-accent-primary transition-colors leading-tight mb-1.5">
       {post.data.title}
     </h3>
-    <p class="text-xs text-text-secondary line-clamp-2 mb-2">
+    <p class="text-xs text-text-secondary dark:text-text-secondary line-clamp-2 mb-2">
       {post.data.description}
     </p>
     <div class="mt-auto pt-2 flex items-end justify-between">
@@ -29,7 +30,7 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', { 
           ))}
         </div>
       )}
-      <p class="text-xs text-text-secondary ml-2 flex-shrink-0">{formattedDate}</p>
+      <p class="text-xs text-text-secondary dark:text-text-secondary ml-2 flex-shrink-0">{formattedDate}</p>
     </div>
   </div>
 </a>

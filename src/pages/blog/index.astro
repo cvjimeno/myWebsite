@@ -8,7 +8,7 @@ import { Image } from 'astro:assets';
 import carlosProfilePic from '../../assets/images/hero-main-picture.webp';
 
 const pageTitle = "El Blog de CV";
-const pageDescription = "Explora todos mis artículos sobre IA, ciencia y tecnología. Con el tiempo he visto que había que aprender de esto, y como aprender con gente es siempre más divertido, aquí iré compartiendo lo que voy conociendo. Si te gusta, ¡únete!";
+const pageDescription ="Explora todos mis artículos sobre IA, ciencia y tecnología. Un espacio para aprender sobre los últimos avances y reflexionar sobre su impacto en nuestro mundo.";
 
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -30,7 +30,7 @@ const sortedPosts = postsWithImages.sort((a, b) => new Date(b.data.pubDate).valu
 const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data.tags || []))].sort((a, b) => a === 'Todos' ? -1 : b === 'Todos' ? 1 : a.localeCompare(b));
 ---
 
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
     
     <header class="text-center max-w-3xl mx-auto mb-12 md:mb-16">

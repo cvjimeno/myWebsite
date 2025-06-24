@@ -1,25 +1,35 @@
 ---
 // src/components/Footer.astro
-import Icon from './common/Icon.astro'; // We'll create this simple Icon component next
+import Icon from './common/Icon.astro';
 
 const currentYear = new Date().getFullYear();
 const socialLinks = [
-  { href: "#", icon: "instagram", label: "Instagram" }, // Example if you add more
-  { href: "https://x.com/yourprofile", icon: "x", label: "X/Twitter" }, // Replace with your X profile
-  { href: "https://linkedin.com/in/yourprofile", icon: "linkedin", label: "LinkedIn" }, // Replace with your LinkedIn profile
+  { href: "https://x.com/cvjimeno", icon: "x", label: "X/Twitter" }, 
+  { href: "https://linkedin.com/in/carlos-velasco-jimeno/", icon: "linkedin", label: "LinkedIn" },
 ];
 ---
-<footer class="border-t border-[var(--color-border-subtle)] mt-16 md:mt-24"> {/* Added margin-top */}
-  <div class="container mx-auto px-4 py-4 md:py-6 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm"> {/* Adjusted padding & text size */}
+<footer class="border-t border-border-subtle mt-16 md:mt-24">
+  <div class="container mx-auto px-4 py-4 md:py-6 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
     
-    {/* Left Side: Copyright and Made with */}
-    <div class="text-center md:text-left text-[var(--color-text-secondary)] mb-4 md:mb-0">
-      <span>Hecho en mis ratos libres con Astro 🚀</span>
-      <span class="mx-1">·</span> {/* Separator */}
+    {/* THE ALIGNMENT FIX: This container is now a flexbox to align items perfectly. */}
+    <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-secondary mb-4 md:mb-0">
+      
+      {/* The "Made with" text and icon are now a flex item, ensuring they align. */}
+      <span class="inline-flex items-center">
+        Hecho en mis ratos libres con
+        <Icon name="astro" size="w-5 h-5" class="mx-1.5" />
+        Astro
+      </span>
+      
+      {/* Separator - only shows on larger screens to avoid awkward wrapping */}
+      <span class="hidden sm:inline">·</span>
+      
+      {/* The copyright text is another flex item */}
       <span>© {currentYear} Carlos Velasco. Sin derechos reservados :)</span>
+
     </div>
 
-    {/* Right Side: Social Icons */}
+    {/* Social Icons (no changes here) */}
     <div class="flex space-x-4">
       {socialLinks.map(social => (
         <a 
@@ -27,12 +37,11 @@ const socialLinks = [
           aria-label={social.label}
           target="_blank" 
           rel="noopener noreferrer"
-          class="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-blue)] transition-colors duration-150 ease-in-out"
+          class="text-text-secondary hover:text-accent-primary transition-colors duration-150 ease-in-out"
         >
-          <Icon name={social.icon} size="w-5 h-5 md:w-6 md:h-6" /> {/* Icon size */}
+          <Icon name={social.icon} size="w-5 h-5 md:w-6 md:h-6" />
         </a>
       ))}
     </div>
-
   </div>
 </footer>

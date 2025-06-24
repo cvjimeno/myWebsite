@@ -2,52 +2,68 @@
 // src/components/blog/NewsletterCTA.astro
 import Icon from "../common/Icon.astro";
 
-// The component now accepts a "theme" prop. It defaults to 'blue'.
 export interface Props {
   theme?: 'blue' | 'orange';
 }
 const { theme = 'blue' } = Astro.props;
 
-// We dynamically create the class list for the main section
-const sectionClasses = [
-  'starlight-field',
-  'border-y',
-  'border-border-card',
-  'py-16',
-  'md:py-20',
-  { 'theme-orange': theme === 'orange' } // Add this class only if the theme is 'orange'
-];
+// Determine colors based on the theme prop
+const isOrangeTheme = theme === 'orange';
+const accentColorClass = isOrangeTheme ? 'text-accent-highlight' : 'text-accent-primary';
+const accentBgClass = isOrangeTheme ? 'bg-orange-100 dark:bg-accent-highlight/20' : 'bg-blue-100 dark:bg-accent-primary/20';
+const buttonBgClass = isOrangeTheme ? 'bg-accent-highlight hover:opacity-90' : 'bg-accent-primary hover:bg-[var(--color-accent-primary-hover)]';
+const focusRingClass = isOrangeTheme ? 'focus:ring-accent-highlight/50' : 'focus:ring-accent-primary/50';
+
 ---
-<!-- The class list is now dynamic -->
-<section class:list={sectionClasses}>
+{/* THE FIX: The outer section now provides a consistent background context */}
+<section class="starlight-field bg-bg-secondary dark:bg-bg-primary py-16 md:py-20 border-y border-border-card dark:border-border-card"
+         class:list={[{'theme-orange': isOrangeTheme}]}>
   
   <div class="starlight-canvas" id={`starlightCanvas-${theme}`}></div>
   
   <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="bg-bg-primary p-8 md:p-10 rounded-xl shadow-lg border border-border-card">
-      <div class:list={["inline-flex items-center justify-center w-14 h-14 rounded-full mb-6", {
-        'bg-blue-100': theme === 'blue',
-        'bg-orange-100': theme === 'orange'
-      }]}>
-        <Icon name="mail" size="w-7 h-7" class:list={[{
-          'text-accent-blue': theme === 'blue',
-          'text-accent-orange': theme === 'orange'
-        }]}/>
+    {/* THE FIX: The inner card now uses our semantic variable for its background */}
+    <div class="bg-[var(--color-bg-card)] p-8 md:p-10 rounded-xl shadow-lg border border-border-card dark:border-border-subtle">
+      
+      <div class:list={["inline-flex items-center justify-center w-14 h-14 rounded-full mb-6", accentBgClass]}>
+        <Icon name="mail" size="w-7 h-7" class:list={[accentColorClass]}/>
       </div>
+
       <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Únete a mis Apuntes Semanales</h2>
       <p class="text-lg text-text-secondary mb-8 leading-relaxed">Cada viernes comparto una idea sobre IA, un paper que me ha parecido interesante y una herramienta que estoy probando. Sin spam, solo contenido de alto valor.</p>
+      
       <form class="max-w-md mx-auto">
         <div class="flex flex-col sm:flex-row gap-3">
-          <input type="email" name="email" placeholder="tu@email.com" required class="flex-grow w-full bg-bg-secondary border-2 border-border-card rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue transition"/>
-          <button type="submit" class:list={["px-6 py-3 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105", {
-            'bg-accent-blue hover:bg-blue-600 focus:ring-accent-blue': theme === 'blue',
-            'bg-accent-orange hover:bg-orange-600 focus:ring-accent-orange': theme === 'orange'
-          }]}>Suscribirme</button>
+          {/* THE FIX: Input fields also use the correct inset background color */}
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="tu@email.com" 
+            required 
+            class:list={[
+              "flex-grow w-full bg-bg-secondary dark:bg-bg-primary text-text-primary border border-border-card dark:border-border-subtle rounded-lg px-4 py-3 focus:border-transparent transition-all",
+              focusRingClass
+            ]}
+          />
+          <button 
+            type="submit" 
+            class:list={[
+              "px-6 py-3 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105",
+              buttonBgClass,
+              focusRingClass
+            ]}
+          >Suscribirme</button>
         </div>
       </form>
     </div>
   </div>
 </section>
+
+<!-- The script for the starlight effect remains the same -->
+<script define:vars={{ theme }}>
+  // ... (no changes needed to the script) ...
+</script>
+
 
 <!-- The script is almost identical, but now uses a unique canvas ID -->
 <script define:vars={{ theme }}>

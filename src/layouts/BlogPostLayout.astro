@@ -19,55 +19,69 @@ const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', 
 const readingTimeText = `${frontmatter.readingTime} min de lectura`;
 
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
+if (!allHeroImages[frontmatter.heroImage]) {
+  throw new Error(`Hero image not found for post "${frontmatter.slug}". Path: ${frontmatter.heroImage}`);
+}
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 ---
-<BaseLayout title={frontmatter.title}>
+{/* THE CRITICAL FIX: Passing unique props from this post to the parent layout. */}
+<BaseLayout 
+  title={frontmatter.title}
+  description={frontmatter.description}
+  image={frontmatter.heroImage}
+>
   
-  <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">{frontmatter.title}</h1>
-    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-base text-text-secondary mb-8">
-      <span>{formattedDate}</span>
-      <span class="text-gray-400">•</span>
-      <div class="flex items-center gap-x-1.5"><Icon name="clock" size="w-4 h-4" /><span>{readingTimeText}</span></div>
-    </div>
-    {frontmatter.tags && (
-      <div class="flex flex-wrap justify-center gap-2">
-        {frontmatter.tags.map(tag => (
-          <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>{tag}</span>
-        ))}
+  <article>
+    <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">{frontmatter.title}</h1>
+      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-base text-text-secondary mb-8">
+        <span>{formattedDate}</span>
+        <span class="text-gray-400">•</span>
+        <div class="flex items-center gap-x-1.5">
+          <Icon name="clock" size="w-4 h-4" />
+          <span>{readingTimeText}</span>
+        </div>
       </div>
-    )}
-  </header>
+      {frontmatter.tags && (
+        <div class="flex flex-wrap justify-center gap-2">
+          {frontmatter.tags.map(tag => (
+            <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
 
-  <div class="w-full mb-12 md:mb-16">
-    <Image src={heroImageResolved} alt={frontmatter.imageAlt} widths={[800, 1200, 1600]} sizes="100vw" class="w-full max-h-[500px] object-cover"/>
+    <div class="w-full mb-12 md:mb-16">
+      <Image src={heroImageResolved} alt={frontmatter.imageAlt} widths={[800, 1200, 1600]} sizes="100vw" class="w-full max-h-[500px] object-cover"/>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-12">
+        <aside class="lg:col-span-1 mb-12 lg:mb-0">
+          <div class="sticky top-24">
+            <h2 class="text-lg font-semibold text-text-primary mb-4">En este post</h2>
+            <TableOfContents headings={headings} />
+          </div>
+        </aside>
+        <div id="article-body" class="lg:col-span-3 prose prose-lg max-w-none text-text-primary dark:text-text-primary">
+          <slot />
+          <ArticleEpilogue />
+        </div>
+      </div>
+    </main>
+  </article>
+
+  {/* These components are already styled correctly for dark mode from our previous steps */}
+  <div class="mt-8">
+    <RelatedPostsCarousel 
+      currentPostSlug={frontmatter.slug} 
+      currentPostTags={frontmatter.tags} 
+    />
   </div>
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-12">
-      <aside class="lg:col-span-1 mb-12 lg:mb-0">
-        <div class="sticky top-24">
-          <h2 class="text-lg font-semibold text-text-primary mb-4">En este post</h2>
-          <TableOfContents headings={headings} />
-        </div>
-      </aside>
-      <div id="article-body" class="lg:col-span-3 prose prose-lg max-w-none">
-        <slot />
-        <ArticleEpilogue />
-      </div>
-    </div>
-  </main>
-
-  <!-- ======================================================= -->
-  <!-- THE FIX: All full-width sections are OUTSIDE the <main> tag -->
-  <!-- ======================================================= -->
-
-  <RelatedPostsCarousel 
-    currentPostSlug={frontmatter.slug} 
-    currentPostTags={frontmatter.tags} 
-  />
-
-  <NewsletterCTA />
+  <div class="mt-8">
+    <NewsletterCTA theme="orange"/>
+  </div>
 
 </BaseLayout>
 

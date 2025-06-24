@@ -18,35 +18,34 @@ const relatedPosts = allPosts.map(post => {
 const shouldRender = relatedPosts.length >= 3;
 ---
 {shouldRender && (
-  <div class="mt-20 bg-blue-50/60 border-y border-blue-100 py-16">
-    <!-- This outer container has the padding and max-width for the title -->
+  // THE FIX: Using semantic variable for the background color
+  <div class="mt-20 bg-[var(--color-bg-secondary)] border-y border-border-card py-16">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center mb-8">
         <h2 class="text-3xl font-bold text-text-primary">Para seguir explorando</h2>
-        <a href="/blog" class="inline-block px-5 py-2.5 bg-transparent border-2 border-accent-blue text-accent-blue text-sm font-medium rounded-lg hover:bg-accent-blue/[.10] transition-colors">
+        <a href="/blog" class="inline-block px-5 py-2.5 bg-transparent border-2 border-accent-primary text-accent-primary text-sm font-medium rounded-lg hover:bg-accent-primary/[.10] transition-colors">
           Ver todo
         </a>
       </div>
     </div>
     
-    <!-- THE LAYOUT FIX: This container is now full-width, allowing the mask to work properly -->
     <div class="relative">
-    <div id="carousel-container" class="flex overflow-x-auto gap-6 pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide">
-      {relatedPosts.map((item) => (
-        <div class="w-96 md:w-[420px] flex-shrink-0">
-          <HorizontalPostCard post={item.post} />
-        </div>
-      ))}
-    </div>
+      <div id="carousel-container" class="flex overflow-x-auto gap-6 pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide">
+        {relatedPosts.map((item) => (
+          <div class="w-96 md:w-[420px] flex-shrink-0">
+            <HorizontalPostCard post={item.post} />
+          </div>
+        ))}
+      </div>
 
-      <!-- The fade-out mask for the viewport edges -->
+      {/* THE FIX: The mask now uses CSS variables to adapt automatically */}
       <div class="absolute inset-0 pointer-events-none" 
-        style="background: linear-gradient(to right, 
-          rgba(237, 246, 255, 1),  /* A solid version of our bg-blue-50 */
+        style={`background: linear-gradient(to right, 
+          var(--color-bg-secondary),  
           transparent 10%, 
           transparent 90%, 
-          rgba(237, 246, 255, 1)
-        );">
+          var(--color-bg-secondary)
+        );`}>
       </div>
     </div>
   </div>

@@ -4,19 +4,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/common/Icon.astro';
 
 const socialLinks = [
-  { href: "https://x.com/yourprofile", icon: "x", label: "X / Twitter" },
-  { href: "https://linkedin.com/in/yourprofile", icon: "linkedin", label: "LinkedIn" },
+  { href: "https://x.com/cvjimeno", icon: "x", label: "X / Twitter" },
+  { href: "https://linkedin.com/in/carlos-velasco-jimeno/", icon: "linkedin", label: "LinkedIn" },
 ];
 ---
-
-<BaseLayout title="Contacto">
-  <div class="min-h-screen bg-bg-secondary">
-    <!-- The outermost container controls the page's max width and padding -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+<BaseLayout 
+  title="Contacto"
+  description="¿Tienes una idea, una pregunta o una propuesta de colaboración? Hablemos. Encuentra aquí las mejores formas de ponerte en contacto conmigo."
+>  {/* The main page background is set on the BODY tag, so this div just handles padding */}
+  <div class="py-20 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <header class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
-          <Icon name="mail" size="w-8 h-8" class="text-accent-blue"/>
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-accent-primary/20 rounded-full mb-6">
+          <Icon name="mail" size="w-8 h-8" class="text-accent-primary"/>
         </div>
         <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
           Hablemos
@@ -27,43 +28,37 @@ const socialLinks = [
         </p>
       </header>
 
-      <!-- THE FIX: The form is now in a single, centered, wider container -->
       <div class="max-w-3xl mx-auto">
-        <form class="space-y-6 bg-white p-8 md:p-10 rounded-xl shadow-md border border-border-card">
+        {/* THE DEFINITIVE FIX: Using explicit variable assignment for backgrounds */}
+        <form class="space-y-6 bg-[var(--color-bg-card)] p-8 md:p-10 rounded-xl shadow-md border border-border-card dark:border-border-card">
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="group">
-              <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
-                Nombre
-              </label>
+              <label class="block text-sm font-medium text-text-secondary mb-2">Nombre</label>
               <input 
                 type="text" 
                 name="name" 
-                class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+                class="w-full px-4 py-3 bg-[var(--color-bg-secondary)] dark:bg-[var(--color-bg-primary)] text-text-primary border border-border-card dark:border-border-subtle rounded-lg focus:ring-2 focus:ring-accent-primary/50 focus:border-transparent transition-all duration-200 placeholder:text-text-secondary/70"
                 placeholder="Tu nombre"
               />
             </div>
             
             <div class="group">
-              <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
-                Email
-              </label>
+              <label class="block text-sm font-medium text-text-secondary mb-2">Email</label>
               <input 
                 type="email" 
                 name="email" 
-                class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+                class="w-full px-4 py-3 bg-[var(--color-bg-secondary)] dark:bg-[var(--color-bg-primary)] text-text-primary border border-border-card dark:border-border-subtle rounded-lg focus:ring-2 focus:ring-accent-primary/50 focus:border-transparent transition-all duration-200 placeholder:text-text-secondary/70"
                 placeholder="tu@email.com"
               />
             </div>
           </div>
 
           <div class="group">
-            <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
-              ¿De qué quieres hablar?
-            </label>
+            <label class="block text-sm font-medium text-text-secondary mb-2">¿De qué quieres hablar?</label>
             <select 
               name="subject" 
-              class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300"
+              class="w-full px-4 py-3 bg-[var(--color-bg-secondary)] dark:bg-[var(--color-bg-primary)] text-text-primary border border-border-card dark:border-border-subtle rounded-lg focus:ring-2 focus:ring-accent-primary/50 focus:border-transparent transition-all"
             >
               <option value="">Selecciona una opción</option>
               <option value="colaboracion">💡 Propuesta de colaboración</option>
@@ -75,40 +70,26 @@ const socialLinks = [
           </div>
 
           <div class="group">
-            <label class="block text-sm font-medium text-text-secondary mb-2 transition-colors group-hover:text-accent-blue">
-              Tu mensaje
-            </label>
+            <label class="block text-sm font-medium text-text-secondary mb-2">Tu mensaje</label>
             <textarea 
               name="message" 
               rows="6" 
-              class="w-full px-4 py-3 border border-border-card rounded-lg focus:ring-2 focus:ring-accent-blue/50 focus:border-transparent transition-all duration-200 bg-bg-secondary hover:border-gray-300 resize-none"
+              class="w-full px-4 py-3 bg-[var(--color-bg-secondary)] dark:bg-[var(--color-bg-primary)] text-text-primary border border-border-card dark:border-border-subtle rounded-lg focus:ring-2 focus:ring-accent-primary/50 focus:border-transparent transition-all resize-none placeholder:text-text-secondary/70"
               placeholder="Cuéntame tu idea, pregunta o propuesta..."
             ></textarea>
           </div>
 
           <div class="pt-2 text-right">
-            <button 
-              type="submit" 
-              disabled 
-              class="w-full sm:w-auto px-8 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed"
-            >
-              <span class="flex items-center justify-center gap-2">
-                <Icon name="send" size="w-4 h-4"/>
-                Enviar mensaje
-              </span>
+            <button disabled class="w-full sm:w-auto px-8 py-3 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-semibold rounded-lg cursor-not-allowed">
+              <span class="flex items-center justify-center gap-2"><Icon name="send" size="w-4 h-4"/>Enviar mensaje</span>
             </button>
-            <p class="text-sm text-gray-500 mt-3 text-left sm:text-right">
-              * Formulario próximamente disponible.
-            </p>
+            <p class="text-sm text-text-secondary mt-3 text-left sm:text-right">* Formulario próximamente disponible.</p>
           </div>
         </form>
       </div>
 
-      <!-- THE FIX: Socials are now below the form and centered -->
       <div class="mt-16 text-center">
-        <h3 class="font-semibold text-text-primary mb-4">
-          O encuéntrame aquí:
-        </h3>
+        <h3 class="font-semibold text-text-primary mb-4">O encuéntrame aquí:</h3>
         <div class="flex justify-center gap-4">
           {socialLinks.map(social => (
             <a 
@@ -116,9 +97,9 @@ const socialLinks = [
               target="_blank" 
               rel="noopener noreferrer"
               aria-label={social.label}
-              class="w-12 h-12 bg-white hover:bg-blue-100 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 group border border-border-card"
+              class="w-12 h-12 bg-[var(--color-bg-card)] hover:bg-blue-100 dark:hover:bg-accent-primary/10 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 group border border-border-card dark:border-border-subtle"
             >
-              <Icon name={social.icon} size="w-5 h-5" class="text-text-secondary group-hover:text-accent-blue"/>
+              <Icon name={social.icon} size="w-5 h-5" class="text-text-secondary group-hover:text-accent-primary"/>
             </a>
           ))}
         </div>

@@ -3,17 +3,13 @@
 const { headings } = Astro.props;
 const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
-
 {filteredHeadings && filteredHeadings.length > 0 && (
   <nav aria-label="Tabla de contenido" class="relative">
-
     <div id="toc-scrollbar" class="h-full absolute left-0 top-0 w-1"></div>
-
-    <!-- The list now has padding on the left to make space for our scrollbar -->
     <ul id="toc-list" class="space-y-2 pl-4">
       {filteredHeadings.map(heading => (
         <li id={`toc-${heading.slug}`} class:list={['font-medium', { 'pl-4': heading.depth === 3 }]}>
-          <a href={`#${heading.slug}`} class="toc-link text-text-secondary hover:text-accent-blue transition-colors duration-150 block text-sm leading-relaxed">
+          <a href={`#${heading.slug}`} class="toc-link text-text-secondary hover:text-accent-primary transition-colors duration-150 block text-sm leading-relaxed">
             {heading.text}
           </a>
         </li>
@@ -22,7 +18,6 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
   </nav>
 )}
 <style>
-  /* The grey "track" for our scrollbar */
   #toc-scrollbar::before {
     content: '';
     position: absolute;
@@ -33,26 +28,21 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
     background-color: var(--color-border-subtle);
     border-radius: 2px;
   }
-
   #toc-scrollbar::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 2px;
-    /* This tells the bar's height to be whatever --scroll-progress is, or 0% by default */
     height: var(--scroll-progress, 0%);
-    background-color: var(--color-accent-orange);
+    /* THE FIX: Using the semantic variable */
+    background-color: var(--color-accent-highlight);
     border-radius: 2px;
-    transition: height 0.05s linear; /* A subtle, smooth transition */
+    transition: height 0.05s linear;
   }
-
-    /*
-    This is the style for our active link.
-    We target the <a> tag inside the list item that has our active class.
-  */
   .toc-active a {
-    color: var(--color-accent-orange);
-    font-weight: 600; /* Make it bolder */
+    /* THE FIX: Using the semantic variable */
+    color: var(--color-accent-highlight);
+    font-weight: 600;
   }
 </style>

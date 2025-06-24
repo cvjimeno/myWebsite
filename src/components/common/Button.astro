@@ -60,10 +60,10 @@ switch (variant) {
   case 'primary': // Default variant
   default:
     variantClasses = `
-      bg-accent-blue 
+      bg-[var(--color-accent-primary)] 
       text-white 
-      hover:bg-blue-600  // Assuming blue-600 is a darker shade of your accent-blue
-      focus:ring-accent-blue
+      hover:bg-[var(--color-accent-primary-hover)]  // Updated to use new variable
+      focus:ring-[var(--color-accent-primary)]
       shadow-md hover:shadow-lg
     `;
     // If your accent-blue is #42A5F5, a darker shade could be #1E88E5 (blue-600 in Material Design)
