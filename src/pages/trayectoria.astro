@@ -9,7 +9,8 @@ import { getTagClasses } from '../utils/tagUtils'; // We'll reuse your tag styli
 import philipsLogo from '../assets/images/logos/philips-logo.svg';
 import kclLogo from '../assets/images/logos/kcl-logo.png';
 import cnicLogo from '../assets/images/logos/cnic-logo.png';
-import ucmLogo from '../assets/images/logos/cnic-logo.png'; // Assuming you have a UCM logo
+import ucmLogo from '../assets/images/logos/ucm-logo.svg'; // Assuming you have a UCM logo
+import { isAborted, isDirty } from 'astro:schema';
 
 const careerPath = [
   {
@@ -23,6 +24,7 @@ const careerPath = [
       'Proporciono soporte científico y técnico a una red de más de 15 hospitales y centros de investigación de referencia en Iberia, centrándome en la Resonancia Magnética (RM) avanzada.',
       'Colaboro en proyectos de investigación, ayudo a optimizar protocolos de adquisición y reconstrucción, y actúo como puente entre las necesidades clínicas y las soluciones tecnológicas de Philips.'
     ],
+    skills: ['MRI Avanzada', 'Soporte Clínico', 'Optimización de Protocolos']
   },
   {
     logoSrc: kclLogo,
@@ -32,9 +34,10 @@ const careerPath = [
     institutionColorClass: 'text-red-600',
     dates: 'Dic 2019 - Dic 2024',
     descriptionLines: [
-      'Desarrollé nuevas técnicas de adquisición y reconstrucción de RM para aplicaciones cardiovasculares y neurológicas, trabajando en el King\'s College Hospital.',
-      'Mi trabajo se centró en secuencias de RM cuantitativas y en la aplicación de modelos de machine learning para acelerar los tiempos de escaneo y mejorar la calidad de imagen.'
+      'Desarrollé nuevas secuencias de RM para aplicaciones cardiovasculares y hepáticas, trabajando en St. Thomas\' Hospital.',
+      'Mi trabajo se centró en secuencias de RM multiparamétricas, principalmente MR Fingerprinting.'
     ],
+    skills: ['MR Fingerprinting', 'C++ (Pulse Programming)', 'MATLAB', 'Reconstrucción de Imagen (Gadgetron)']
   },
   {
     logoSrc: cnicLogo,
@@ -44,9 +47,12 @@ const careerPath = [
     institutionColorClass: 'text-red-800',
     dates: 'Sep 2015 - Nov 2019',
     descriptionLines: [
-      'Mi tesis se centró en el desarrollo de nuevas técnicas de imagen multimodal (PET/RM) para el estudio de la aterosclerosis.',
-      'Investigué el uso de nanopartículas como agentes de contraste para PET y optimicé los protocolos de imagen para su detección y cuantificación.'
+      'Mi tesis se centró en el desarrollo de nuevas técnicas de (PET/RM) en un entorno altamente multidisciplinario.',
+      'Implementé el uso de un nuevo radiotrazador (68Ga-DOTA) para estudios de perfusión pulmonar y miocárdica.',
+      'Desarrollé y construí un detector de radiación para medida simultánea de dos radiotrazadores en sangre',
+      'Entorno altamente multidisciplinario, trabajando en proyectos diversos, desde síntesis de liposomas y nanopartículas, bioquímica y cultivos celulares hasta estudios en animal grande y desarrollo de software para análisis de imágenes médicas.',
     ],
+    skills: ['PET/RM Multimodal', 'Python (Análisis de Imagen)', 'Diseño de Hardware (CAD)', 'Síntesis de Nanopartículas']
   },
    {
     logoSrc: ucmLogo, // Using the same logo for both
@@ -54,25 +60,34 @@ const careerPath = [
     role: 'Máster en Física Biomédica',
     institutionName: 'Universidad Complutense de Madrid',
     institutionColorClass: 'text-fuchsia-700', // Example color
-    dates: '2014 - 2015',
+    dates: '2013 - 2014',
     descriptionLines: [
       'Especialización en las bases físicas de las técnicas de imagen médica, radioterapia y instrumentación biomédica.',
+      'Trabajo de Fin de Máster sobre simulación y análisis de imagen y dosimetría para radioterapia intrahoperatoria'
       // Add more details if you wish
     ],
+    skills: ['Física Biomédica', 'Simulación de Imagen', 'Dosimetría'],
   },
   {
     logoSrc: ucmLogo, // Using the same logo for both
     logoAlt: 'Universidad Complutense de Madrid Logo',
-    role: 'Grado en Física',
+    role: 'Licenciatura en Física',
     institutionName: 'Universidad Complutense de Madrid',
     institutionColorClass: 'text-fuchsia-700', // Example color
-    dates: '2010 - 2014',
+    dates: '2008 - 2013',
     descriptionLines: [
-      'Formación fundamental en todas las áreas de la física, con especialización en física teórica y matemática.',
-      'Este grado me proporcionó la base analítica y de resolución de problemas que he aplicado a lo largo de toda mi carrera.'
+      'Formación fundamental en todas las áreas de la física, con especialización en física teórica.',
+      'Trabajo de Fin de Carrera sobre el bosón de Higgs.'
     ],
+    skills: ['Física Teórica', 'Análisis Matemático', 'Programación Científica'],
   },
 ];
+
+// --- DATA: PUBLICATIONS (with new badge properties) ---
+const phdThesis = {
+  title: "Técnicas de Imagen Avanzada Aplicadas a la Investigación Cardiovascular",
+  link: "https://docta.ucm.es/entities/publication/69475632-a3a4-4fb9-817a-c746717682e8" // <-- IMPORTANT: Replace this
+};
 
 // --- DATA: PUBLICATIONS ---
 // Here is where you will add your publication data.
@@ -80,18 +95,21 @@ const publications = [
   {
     year: '2023',
     journal: 'Magnetic Resonance in Medicine',
-    title: 'High-resolution motion-corrected cardiac quantitative mapping using a 3D dual-phase radial-cartesian acquisition',
-    authors: 'Velasco C, Cruz G, et al.',
-    link: 'https://onlinelibrary.wiley.com/doi/abs/10.1002/mrm.29748',
-    tags: ['MRI', 'Cardiovascular', 'Reconstrucción de Imagen'],
+    title: 'Simultaneous T1, T2, and T1ρ cardiac magnetic resonance fingerprinting for contrast agent–free myocardial tissue characterization',
+    authors: 'Velasco C, Cruz G, Lavin B, et al.',
+    link: 'https://onlinelibrary.wiley.com/doi/10.1002/mrm.29091',
+    tags: ['MR Fingerprinting', 'Cardiovascular', 'T1ρ'],
+    isFeatured: true, // This will show the star icon
+    award: 'ISMRM Gold Mention', // This will show a special purple badge   
   },
   {
-    year: '2021',
-    journal: 'Journal of Nuclear Cardiology',
-    title: 'Characterization of a novel automated respiratory motion correction algorithm for clinical cardiac PET/CT',
-    authors: 'Velasco C, et al.',
-    link: 'https://link.springer.com/article/10.1007/s12350-020-02075-x',
-    tags: ['PET', 'Cardiovascular', 'Algoritmos'],
+    year: '2022',
+    journal: 'Magnetic Resonance in Medicine',
+    title: 'Simultaneous comprehensive liver T1, T2,T2* T1ρ, and fat fraction characterization with MR fingerprinting.',
+    authors: 'Velasco C, Cruz G, Jaubert O, Lavin B, Botnar RM, Prieto C.',
+    link: 'https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.29089',
+    tags: ['MR Fingerprinting', 'Liver', 'T1ρ'],
+    award: 'ISMRM Gold Mention', // This will show a special purple badge
   },
   {
     year: '2019',
@@ -135,39 +153,55 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
     <section id="publications" class="mb-16 md:mb-24">
       <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-12 text-center">Publicaciones Destacadas</h2>
       <div class="max-w-4xl mx-auto space-y-10">
-        {/* Special Highlight for your PhD Thesis */}
+        
         <div class="p-6 bg-bg-secondary dark:bg-bg-secondary rounded-lg border-l-4 border-accent-primary">
           <h3 class="font-semibold text-text-primary mb-2">Mi Tesis Doctoral</h3>
-          <p class="text-text-secondary mb-3">"Novel Molecular Imaging Agents for the Evaluation of Atherosclerosis"</p>
-          <a href="#YOUR_THESIS_LINK" target="_blank" rel="noopener noreferrer" class="text-accent-primary font-medium hover:underline">
+          <p class="text-text-secondary mb-3">{phdThesis.title}</p>
+          <a href={phdThesis.link} target="_blank" rel="noopener noreferrer" class="text-accent-primary font-medium hover:underline">
             Leer la tesis completa →
           </a>
         </div>
 
-        {/* The new, elegant publication list */}
-        {publications.map(pub => (
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 py-4 border-b border-border-card last:border-b-0">
-            <div class="md:col-span-1 text-sm text-text-secondary mb-2 md:mb-0">
-              <p class="font-semibold">{pub.year}</p>
-              <p>{pub.journal}</p>
-            </div>
-            <div class="md:col-span-3">
-              <h4 class="text-lg font-semibold text-text-primary mb-1">
-                <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary transition-colors">
-                  {pub.title}
-                </a>
-              </h4>
-              <p class="text-sm text-text-secondary mb-3">{pub.authors}</p>
-              <div class="flex flex-wrap gap-2">
-                {pub.tags.map(tag => (
-                  <span class:list={[ "text-xs font-semibold px-3 py-1 rounded-lg", getTagClasses(tag) ]}>
-                    {tag}
-                  </span>
-                ))}
+        {publications.map(pub => {
+          let awardClasses = '';
+          if (pub.award) {
+            if (pub.award.toLowerCase().includes('gold')) {
+              awardClasses = 'bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/30';
+            } else if (pub.award.toLowerCase().includes('silver')) {
+              awardClasses = 'bg-slate-400/20 text-slate-700 dark:text-slate-300 border border-slate-400/30';
+            }
+          }
+
+          return (
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 py-4 border-b border-border-card last:border-b-0">
+              <div class="md:col-span-1 text-sm text-text-secondary mb-2 md:mb-0">
+                <p class="font-semibold">{pub.year}</p>
+                <p>{pub.journal}</p>
+              </div>
+              <div class="md:col-span-3">
+                <div class="flex items-center flex-wrap gap-x-3 gap-y-2 mb-1">
+                  <h4 class="text-lg font-semibold text-text-primary">
+                    <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary transition-colors">
+                      {pub.title}
+                    </a>
+                  </h4>
+                  {/* THE NEW BADGES: Conditionally rendered */}
+                  {pub.isFeatured && <span class="text-accent-highlight" title="Destacado">⭐</span>}
+                  {pub.isReview && <span class="text-xs font-semibold px-2.5 py-1 bg-bg-secondary dark:bg-bg-primary rounded-full border border-border-card">Review</span>}
+                  {pub.award && <span class:list={["text-xs font-semibold px-2.5 py-1 rounded-full", awardClasses]}>{pub.award}</span>}
+                </div>
+                <p class="text-sm text-text-secondary mb-3">{pub.authors}</p>
+                <div class="flex flex-wrap gap-2">
+                  {pub.tags.map(tag => (
+                    <span class:list={[ "text-xs font-semibold px-3 py-1 rounded-lg", getTagClasses(tag) ]}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </section>
 
@@ -178,7 +212,7 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
         <a href="https://scholar.google.com/citations?user=0gpttXAAAAAJ&hl=es" target="_blank" rel="noopener noreferrer" class="text-lg text-accent-primary hover:underline underline-offset-4">
           Google Scholar
         </a>
-        <a href="https://linkedin.com/in/carlos-velasco-jimeno/" target="_blank" rel="noopener noreferrer" class="text-lg text-accent-primary hover:underline underline-offset-4">
+        <a href="https://linkedin.com/in/cvjimeno/" target="_blank" rel="noopener noreferrer" class="text-lg text-accent-primary hover:underline underline-offset-4">
           LinkedIn
         </a>
         <a href="/contacto" class="text-lg text-accent-primary hover:underline underline-offset-4">
@@ -189,3 +223,5 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 
   </div>
 </BaseLayout>
+
+
