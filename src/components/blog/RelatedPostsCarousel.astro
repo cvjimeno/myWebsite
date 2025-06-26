@@ -18,13 +18,16 @@ const relatedPosts = allPosts.map(post => {
 const shouldRender = relatedPosts.length >= 3;
 ---
 {shouldRender && (
-  // THE FIX: Using semantic variable for the background color
   <div class="mt-20 bg-[var(--color-bg-secondary)] border-y border-border-card py-16">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-bold text-text-primary">Para seguir explorando</h2>
-        <a href="/blog" class="inline-block px-5 py-2.5 bg-transparent border-2 border-accent-primary text-accent-primary text-sm font-medium rounded-lg hover:bg-accent-primary/[.10] transition-colors">
+        {/* THE FIX: Smaller base font size for the heading */}
+        <h2 class="text-2xl sm:text-3xl font-bold text-text-primary">Para seguir explorando</h2>
+        
+        {/* THE FIX: `flex-shrink-0` prevents the button from being squished and wrapping */}
+        <a href="/blog" class="flex-shrink-0 inline-block px-5 py-2.5 bg-transparent border-2 border-accent-primary text-accent-primary text-sm font-medium rounded-lg hover:bg-accent-primary/[.10] transition-colors">
           Ver todo
+        </a>
         </a>
       </div>
     </div>

@@ -2,15 +2,19 @@
 // src/pages/trayectoria.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TimelineItem from '../components/career/TimelineItem.astro';
-import { getTagClasses } from '../utils/tagUtils'; // We'll reuse your tag styling
+import Badge from '../components/common/Badge.astro'; // <-- IMPORT THE NEW COMPONENT
+
+    
 
 // --- DATA: TIMELINE ---
-// We'll use more descriptive, results-oriented text here.
 import philipsLogo from '../assets/images/logos/philips-logo.svg';
 import kclLogo from '../assets/images/logos/kcl-logo.png';
 import cnicLogo from '../assets/images/logos/cnic-logo.png';
-import ucmLogo from '../assets/images/logos/ucm-logo.svg'; // Assuming you have a UCM logo
-import { isAborted, isDirty } from 'astro:schema';
+import ucmLogo from '../assets/images/logos/ucm-logo.svg';
+
+
+
+
 
 const careerPath = [
   {
@@ -83,14 +87,14 @@ const careerPath = [
   },
 ];
 
-// --- DATA: PUBLICATIONS (with new badge properties) ---
-const phdThesis = {
-  title: "Técnicas de Imagen Avanzada Aplicadas a la Investigación Cardiovascular",
-  link: "https://docta.ucm.es/entities/publication/69475632-a3a4-4fb9-817a-c746717682e8" // <-- IMPORTANT: Replace this
-};
 
 // --- DATA: PUBLICATIONS ---
-// Here is where you will add your publication data.
+const phdThesis = {
+  title: "Técnicas de Imagen Avanzada Aplicadas a la Investigación Cardiovascular",
+  link: "https://docta.ucm.es/entities/publication/69475632-a3a4-4fb9-817a-c746717682e8"
+};
+
+
 const publications = [
   {
     year: '2023',
@@ -99,8 +103,8 @@ const publications = [
     authors: 'Velasco C, Cruz G, Lavin B, et al.',
     link: 'https://onlinelibrary.wiley.com/doi/10.1002/mrm.29091',
     tags: ['MR Fingerprinting', 'Cardiovascular', 'T1ρ'],
-    isFeatured: true, // This will show the star icon
-    award: 'ISMRM Gold Mention', // This will show a special purple badge   
+    isFeatured: true,
+    award: 'ISMRM Gold Mention',
   },
   {
     year: '2022',
@@ -109,7 +113,7 @@ const publications = [
     authors: 'Velasco C, Cruz G, Jaubert O, Lavin B, Botnar RM, Prieto C.',
     link: 'https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.29089',
     tags: ['MR Fingerprinting', 'Liver', 'T1ρ'],
-    award: 'ISMRM Gold Mention', // This will show a special purple badge
+    award: 'ISMRM Silver Mention',
   },
   {
     year: '2019',
@@ -118,8 +122,8 @@ const publications = [
     authors: 'Velasco C, et al.',
     link: 'https://www.nature.com/articles/s41598-019-54845-0',
     tags: ['PET', 'Nanopartículas', 'Aterosclerosis'],
+    isReview: true
   },
-  // Add more publications here...
 ];
 
 const pageTitle = "Mi Trayectoria";
@@ -129,79 +133,52 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 <BaseLayout title={pageTitle} description={introText}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
     
-    <!-- Section 1: Introduction -->
     <header class="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-      <h1 class="text-5xl md:text-6xl font-bold text-text-primary mb-6">
-        {pageTitle}
-      </h1>
-      <p class="text-xl text-text-secondary leading-relaxed">
-        {introText}
-      </p>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-primary mb-6">{pageTitle}</h1>
+      <p class="text-xl text-text-secondary leading-relaxed">{introText}</p>
     </header>
 
-    <!-- Section 2: Timeline -->
     <section id="timeline" class="mb-16 md:mb-24">
       <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-12 text-center">Viaje Profesional</h2>
       <ol class="relative max-w-4xl mx-auto">
-        {careerPath.map((item, index) => (
-          <TimelineItem {...item} isLastItem={index === careerPath.length - 1} />
-        ))}
+        {careerPath.map((item, index) => <TimelineItem {...item} isLastItem={index === careerPath.length - 1} />)}
       </ol>
     </section>
 
-    <!-- Section 3: Publications -->
     <section id="publications" class="mb-16 md:mb-24">
       <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-12 text-center">Publicaciones Destacadas</h2>
       <div class="max-w-4xl mx-auto space-y-10">
-        
         <div class="p-6 bg-bg-secondary dark:bg-bg-secondary rounded-lg border-l-4 border-accent-primary">
           <h3 class="font-semibold text-text-primary mb-2">Mi Tesis Doctoral</h3>
           <p class="text-text-secondary mb-3">{phdThesis.title}</p>
-          <a href={phdThesis.link} target="_blank" rel="noopener noreferrer" class="text-accent-primary font-medium hover:underline">
-            Leer la tesis completa →
-          </a>
+          <a href={phdThesis.link} target="_blank" rel="noopener noreferrer" class="text-accent-primary font-medium hover:underline">Leer la tesis completa →</a>
         </div>
-
-        {publications.map(pub => {
-          let awardClasses = '';
-          if (pub.award) {
-            if (pub.award.toLowerCase().includes('gold')) {
-              awardClasses = 'bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/30';
-            } else if (pub.award.toLowerCase().includes('silver')) {
-              awardClasses = 'bg-slate-400/20 text-slate-700 dark:text-slate-300 border border-slate-400/30';
-            }
-          }
-
-          return (
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 py-4 border-b border-border-card last:border-b-0">
-              <div class="md:col-span-1 text-sm text-text-secondary mb-2 md:mb-0">
-                <p class="font-semibold">{pub.year}</p>
-                <p>{pub.journal}</p>
+        
+        {publications.map(pub => (
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 py-4 border-b border-border-card last:border-b-0">
+            <div class="md:col-span-1 text-sm text-text-secondary mb-2 md:mb-0">
+              <p class="font-semibold">{pub.year}</p>
+              <p>{pub.journal}</p>
+            </div>
+            <div class="md:col-span-3">
+              <div class="flex items-center flex-wrap gap-x-3 gap-y-2 mb-2">
+                <h4 class="text-lg font-semibold text-text-primary">
+                  <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary transition-colors">{pub.title}</a>
+                </h4>
+                {pub.isFeatured && <span class="text-amber-400" title="Destacado">⭐</span>}
               </div>
-              <div class="md:col-span-3">
-                <div class="flex items-center flex-wrap gap-x-3 gap-y-2 mb-1">
-                  <h4 class="text-lg font-semibold text-text-primary">
-                    <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary transition-colors">
-                      {pub.title}
-                    </a>
-                  </h4>
-                  {/* THE NEW BADGES: Conditionally rendered */}
-                  {pub.isFeatured && <span class="text-accent-highlight" title="Destacado">⭐</span>}
-                  {pub.isReview && <span class="text-xs font-semibold px-2.5 py-1 bg-bg-secondary dark:bg-bg-primary rounded-full border border-border-card">Review</span>}
-                  {pub.award && <span class:list={["text-xs font-semibold px-2.5 py-1 rounded-full", awardClasses]}>{pub.award}</span>}
-                </div>
-                <p class="text-sm text-text-secondary mb-3">{pub.authors}</p>
-                <div class="flex flex-wrap gap-2">
-                  {pub.tags.map(tag => (
-                    <span class:list={[ "text-xs font-semibold px-3 py-1 rounded-lg", getTagClasses(tag) ]}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              <div class="flex items-center flex-wrap gap-x-2 gap-y-2 mb-3">
+                {pub.isReview && <Badge variant="neutral" text="Review" />}
+                {pub.award && pub.award.toLowerCase().includes('gold') && <Badge variant="award" awardType="gold" text={pub.award} />}
+                {pub.award && pub.award.toLowerCase().includes('silver') && <Badge variant="award" awardType="silver" text={pub.award} />}
+              </div>
+              <p class="text-sm text-text-secondary mb-3">{pub.authors}</p>
+              <div class="flex flex-wrap gap-2">
+                {pub.tags.map(tag => <Badge variant="neutral" text={tag} />)}
               </div>
             </div>
-          )
-        })}
+          </div>
+        ))}
       </div>
     </section>
 

@@ -10,7 +10,7 @@ export interface Props {
   institutionColorClass?: string;
   dates: string;
   descriptionLines: string[];
-  skills?: string[]; // The new optional prop for skills
+  skills?: string[];
   ctaLink?: string;
   ctaText?: string;
   isLastItem?: boolean;
@@ -24,7 +24,7 @@ const {
   institutionColorClass = 'text-text-primary',
   dates,
   descriptionLines,
-  skills, // Destructure the new prop
+  skills,
   ctaLink,
   ctaText,
   isLastItem = false,
@@ -75,12 +75,13 @@ const hasCta = ctaLink && ctaText;
       ))}
     </div>
 
-    {/* THE NEW SKILLS SECTION */}
+    {/* THE SKILLS SECTION WITH NEUTRAL STYLING */}
     {skills && skills.length > 0 && (
       <div class="mt-6">
         <h4 class="text-sm font-semibold text-text-primary mb-3">Tecnologías y Habilidades Clave:</h4>
         <div class="flex flex-wrap gap-2">
           {skills.map(skill => (
+            // THE FIX: Using a simple, neutral background and border for the pills.
             <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-3 py-1.5 rounded-full border border-border-card">
               {skill}
             </span>

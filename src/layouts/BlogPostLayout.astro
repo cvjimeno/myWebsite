@@ -4,11 +4,10 @@ import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
 import Icon from '../components/common/Icon.astro';
 import TableOfContents from '../components/TableOfContents.astro';
-import { getTagClasses } from '../utils/tagUtils';
 import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
 import RelatedPostsCarousel from '../components/blog/RelatedPostsCarousel.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
-
+import Badge from '../components/common/Badge.astro';
 const { frontmatter, headings } = Astro.props;
 
 const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
@@ -44,9 +43,7 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
       </div>
       {frontmatter.tags && (
         <div class="flex flex-wrap justify-center gap-2">
-          {frontmatter.tags.map(tag => (
-            <span class:list={[ "text-sm font-medium px-3 py-1 rounded-lg", getTagClasses(tag) ]}>{tag}</span>
-          ))}
+          {frontmatter.tags.map(tag => <Badge variant="color" text={tag} />)}
         </div>
       )}
     </header>

@@ -1,7 +1,7 @@
 ---
 // src/components/blog/HorizontalPostCard.astro
 import { Image } from 'astro:assets';
-import { getTagClasses } from '../../utils/tagUtils';
+import Badge from '../common/Badge.astro'; // <-- IMPORT THE NEW BADGE
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
 const { post } = Astro.props;
 if (!allHeroImages[post.data.heroImage]) throw new Error(`Image not found: ${post.data.heroImage}`);
@@ -23,11 +23,7 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', { 
     <div class="mt-auto pt-2 flex items-end justify-between">
       {post.data.tags && (
         <div class="flex gap-1.5">
-          {post.data.tags.slice(0, 2).map(tag => (
-            <span class:list={[ "text-[10px] font-bold px-2 py-0.5 rounded", getTagClasses(tag) ]}>
-              {tag}
-            </span>
-          ))}
+          {post.data.tags.slice(0, 2).map(tag => <Badge variant="color" text={tag} />)}
         </div>
       )}
       <p class="text-xs text-text-secondary dark:text-text-secondary ml-2 flex-shrink-0">{formattedDate}</p>

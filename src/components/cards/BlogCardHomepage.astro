@@ -2,7 +2,7 @@
 // src/components/cards/BlogCardHomepage.astro
 import { Image } from 'astro:assets';
 import Icon from '../common/Icon.astro';
-import { getTagClasses } from '../../utils/tagUtils';
+import Badge from '../common/Badge.astro'; // <-- IMPORT THE NEW COMPONENT
 
 export interface Props {
   href: string;
@@ -16,74 +16,32 @@ export interface Props {
   tags?: string[];
 }
 
-const {
-  href,
-  image,
-  imageUrl,
-  imageAlt,
-  title,
-  excerpt,
-  date,
-  readingTime,
-  tags,
-} = Astro.props;
-
+const { href, image, imageUrl, imageAlt, title, excerpt, date, readingTime, tags } = Astro.props;
 const imageSource = image || imageUrl;
-
-if (!imageSource) {
-  throw new Error('A BlogCardHomepage component requires either an `image` (local) or `imageUrl` (remote) prop.');
-}
 ---
 
-<article 
-    class="bg-[var(--color-bg-card)] rounded-lg border border-border-card 
-           shadow-md dark:shadow-lg dark:shadow-black/20 
-           hover:shadow-xl hover:-translate-y-1 
-           dark:hover:border-accent-primary 
-           transition-all duration-300 overflow-hidden flex flex-col h-full group"
-    data-tags={tags ? tags.join(',').toLowerCase() : ''}
->
+<article class="relative group bg-[var(--color-bg-card)] rounded-lg border border-border-card shadow-md dark:shadow-lg dark:shadow-black/20 hover:shadow-xl hover:-translate-y-1 dark:hover:border-accent-primary transition-all duration-300 overflow-hidden flex flex-col h-full" data-tags={tags ? tags.join(',').toLowerCase() : ''}>
   <div class="relative">
-    <a href={href} aria-label={`Leer más sobre ${title}`} class="block overflow-hidden aspect-video">
-      <Image
-        src={imageSource}
-        alt={imageAlt}
-        width={800}
-        height={450}
-        format="webp"
-        quality={80}
-        class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-      />
-    </a>
+    <div class="block overflow-hidden aspect-video">
+      <Image src={imageSource} alt={imageAlt} width={800} height={450} format="webp" quality={80} class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"/>
+    </div>
   </div>
   
   <div class="p-5 flex flex-col flex-grow">
     {tags && tags.length > 0 && (
       <div class="flex flex-wrap gap-2 mb-3">
-        {tags.slice(0, 3).map(tag => {
-          const tagClasses = getTagClasses(tag);
-          return (
-            <span class:list={[ "text-xs font-semibold px-3 py-1 rounded-lg", tagClasses ]}>
-              {tag}
-            </span>
-          )
-        })}
+        {tags.slice(0, 3).map(tag => <Badge variant="color" text={tag} />)}
       </div>
     )}
 
-    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
-    <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-2 leading-snug">
-      <a href={href} class="hover:text-accent-primary transition-colors">
-        {title}
-      </a>
+    <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-2 leading-snug group-hover:text-accent-primary transition-colors">
+      {title}
     </h3>
 
-    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
     <p class="text-sm text-text-secondary dark:text-text-secondary mb-4 leading-relaxed flex-grow line-clamp-3">
       {excerpt}
     </p>
 
-    {/* DEFINITIVE FIX: Explicit dark mode text color for high contrast */}
     <div class="mt-auto pt-3 border-t border-border-card flex justify-between items-center text-xs text-text-secondary dark:text-text-secondary">
       <span class="font-medium">{date}</span>
       <div class="flex items-center gap-x-1">
@@ -92,4 +50,8 @@ if (!imageSource) {
       </div>
     </div>
   </div>
+
+  <a href={href} class="absolute inset-0" aria-label={`Leer más sobre ${title}`}>
+    <span class="sr-only">Leer más sobre {title}</span>
+  </a>
 </article>

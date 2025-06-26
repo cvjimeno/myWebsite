@@ -8,11 +8,12 @@ import { Image } from 'astro:assets';
 import carlosProfilePic from '../../assets/images/hero-main-picture.webp';
 
 const pageTitle = "El Blog de CV";
-const pageDescription ="Explora todos mis artículos sobre IA, ciencia y tecnología. Un espacio para aprender sobre los últimos avances y reflexionar sobre su impacto en nuestro mundo.";
+const pageDescription = "Explora todos mis artículos sobre IA, ciencia y tecnología. Un espacio para aprender sobre los últimos avances y reflexionar sobre su impacto en nuestro mundo.";
 
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 
+// THE CRITICAL FIX: The complete and correct data mapping logic is now here.
 const postsWithImages = await Promise.all(
   allPosts.map(async (post) => {
     const imagePath = post.data.heroImage;
@@ -20,13 +21,15 @@ const postsWithImages = await Promise.all(
       throw new Error(`[blog/index.astro] Hero image for post "${post.slug}" not found. Path: "${imagePath}"`);
     }
     const resolvedImage = (await allHeroImages[imagePath]()).default;
-    return { ...post, data: { ...post.data, heroImageResolved: resolvedImage } };
+    return { 
+      ...post, 
+      data: { ...post.data, heroImageResolved: resolvedImage } 
+    };
   })
 );
 
 const sortedPosts = postsWithImages.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
 
-// Create a unique, sorted list of all categories, with "Todos" at the front.
 const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data.tags || []))].sort((a, b) => a === 'Todos' ? -1 : b === 'Todos' ? 1 : a.localeCompare(b));
 ---
 
@@ -34,13 +37,10 @@ const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
     
     <header class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-      {/* ... your header content (Image, h1, p) remains the same ... */}
-       <Image 
+      <Image 
           src={carlosProfilePic} 
           alt="Foto de Carlos Velasco"
-          width={120}
-          height={120}
-          format="webp"
+          width={120} height={120} format="webp"
           class="w-24 h-24 md:w-28 md:h-28 rounded-full mx-auto mb-6 shadow-md" 
       />
       <h1 class="text-5xl md:text-6xl font-bold text-text-primary mb-4">
@@ -51,21 +51,22 @@ const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data
       </p>
     </header>
 
-    <!-- THE NEW FILTER BUTTONS -->
-    <div id="filter-buttons" class="flex flex-wrap justify-center gap-3 mb-16">
-      {allCategories.map((category, index) => (
-        <button 
-          class:list={[
-            "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200",
-            // The first button ("Todos") is active by default
-            { 'bg-accent-blue text-white': index === 0 },
-            { 'bg-bg-secondary text-text-secondary hover:bg-gray-200': index !== 0 }
-          ]}
-          data-category={category.toLowerCase()}
-        >
-          {category}
-        </button>
-      ))}
+    <div id="filter-buttons" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16">
+      {allCategories.map((category, index) => {
+        const baseClasses = "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200";
+        const inactiveClasses = "bg-bg-secondary text-text-secondary hover:bg-gray-200 dark:bg-bg-secondary dark:text-text-primary dark:hover:bg-gray-700";
+        const activeClasses = "bg-accent-primary text-white";
+        const isInitiallyActive = index === 0;
+
+        return (
+          <button 
+            class:list={[ baseClasses, isInitiallyActive ? activeClasses : inactiveClasses ]}
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        )
+      })}
     </div>
 
     <main id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -85,42 +86,44 @@ const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data
   </div>
 </BaseLayout>
 
-<!-- THE JAVASCRIPT LOGIC -->
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  function setupBlogFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const blogCards = document.querySelectorAll('#blog-grid > article');
+    
+    const activeClasses = ['bg-accent-primary', 'text-white'];
+    const inactiveClasses = ['bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200', 'dark:bg-bg-secondary', 'dark:text-text-primary', 'dark:hover:bg-gray-700'];
 
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const selectedCategory = button.getAttribute('data-category');
+        const selectedCategory = button.dataset.category;
 
-        // Update button styles
         filterButtons.forEach(btn => {
-          btn.classList.remove('bg-accent-blue', 'text-white');
-          btn.classList.add('bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200');
+          btn.classList.remove(...activeClasses);
+          btn.classList.add(...inactiveClasses);
         });
-        button.classList.add('bg-accent-blue', 'text-white');
-        button.classList.remove('bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200');
+        
+        button.classList.remove(...inactiveClasses);
+        button.classList.add(...activeClasses);
 
-        // Filter cards
         blogCards.forEach(card => {
-          const cardTags = card.getAttribute('data-tags');
-          if (selectedCategory === 'todos' || (cardTags && cardTags.includes(selectedCategory))) {
-            card.style.display = 'flex'; // Use 'flex' as the card is a flex container
+          const cardTags = card.dataset.tags || '';
+          if (selectedCategory === 'todos' || cardTags.includes(selectedCategory)) {
+            card.style.display = 'flex';
           } else {
             card.style.display = 'none';
           }
         });
       });
     });
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupBlogFilters);
+  document.addEventListener('astro:after-swap', setupBlogFilters);
 </script>
 
-<!-- THE CSS FOR SMOOTH TRANSITIONS -->
 <style is:global>
   #blog-grid > article {
-    /* This makes the show/hide transition smooth */
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   }
 </style>
