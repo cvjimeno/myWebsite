@@ -1,0 +1,55 @@
+---
+// src/components/blog/Callout.astro (Refined Version)
+import Icon from '../common/Icon.astro';
+
+export interface Props {
+  type?: 'info' | 'warning' | 'tip' | 'note';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+
+// A map to define styles for each callout type
+const typeMap = {
+  note: {
+    icon: 'pencil',
+    colorClass: 'border-slate-400 bg-slate-100/80 dark:bg-slate-800/40',
+    iconColorClass: 'text-slate-500 dark:text-slate-300',
+  },
+  info: {
+    icon: 'info',
+    colorClass: 'border-blue-500 bg-blue-100/80 dark:bg-blue-900/40',
+    iconColorClass: 'text-blue-500 dark:text-blue-400',
+  },
+  tip: {
+    icon: 'lightbulb',
+    colorClass: 'border-green-500 bg-green-100/80 dark:bg-green-900/40',
+    iconColorClass: 'text-green-600 dark:text-green-400',
+  },
+  warning: {
+    icon: 'alert-triangle',
+    colorClass: 'border-amber-500 bg-amber-100/80 dark:bg-amber-900/40',
+    iconColorClass: 'text-amber-600 dark:text-amber-400',
+  },
+};
+
+const styles = typeMap[type];
+---
+<aside class:list={[
+  "relative my-8 py-5 pl-16 pr-6 border-l-4 rounded-lg",
+  styles.colorClass
+]}>
+  <!-- The Integrated Icon -->
+  <div class:list={[
+    "absolute -left-[15px] top-5 w-7 h-7 rounded-full flex items-center justify-center",
+    "bg-bg-primary dark:bg-bg-primary", // The "knockout" background
+    styles.iconColorClass
+  ]}>
+    <Icon name={styles.icon} size="w-5 h-5" />
+  </div>
+  
+  <!-- The Content -->
+  <div class="prose prose-sm sm:prose-base max-w-none text-text-secondary dark:text-text-secondary">
+    {title && <p class="font-semibold text-base !mt-0 !mb-2 text-text-primary dark:text-text-primary">{title}</p>}
+    <slot />
+  </div>
+</aside>

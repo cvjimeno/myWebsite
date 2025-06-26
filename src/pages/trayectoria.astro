@@ -1,5 +1,5 @@
 ---
-// src/pages/trayectoria.astro (REVISED FOR 5 ITEMS & COLLAGE DATA)
+// src/pages/trayectoria.astro (FINAL ANIMATED VERSION)
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AlternatingTimelineItem from '../components/career/AlternatingTimelineItem.astro';
 import Badge from '../components/common/Badge.astro';
@@ -16,6 +16,7 @@ import placeholderIllustration from '../assets/images/illustrations/img1.png';
 // --- CAREER PATH: Now 5 items, with an 'illustrations' array ---
 const careerPath = [
   {
+    id: 'philips',
     logoSrc: philipsLogo,
     logoAlt: 'Philips Logo',
     role: 'Clinical Scientist',
@@ -27,6 +28,7 @@ const careerPath = [
     illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
   },
   {
+    id: 'kcl',
     logoSrc: kclLogo,
     logoAlt: "King's College London Logo",
     role: 'Investigador Post-Doctoral',
@@ -38,6 +40,7 @@ const careerPath = [
     illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
   },
   {
+    id: 'cnic',
     logoSrc: cnicLogo,
     logoAlt: 'CNIC Logo',
     role: 'Investigador Pre-Doctoral (PhD)',
@@ -49,6 +52,7 @@ const careerPath = [
     illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
   },
   {
+    id: 'ucm-master',
     logoSrc: ucmLogo,
     logoAlt: 'Universidad Complutense de Madrid Logo',
     role: 'Máster en Física Biomédica',
@@ -60,6 +64,7 @@ const careerPath = [
     illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
   },
   {
+    id: 'ucm-grado',
     logoSrc: ucmLogo,
     logoAlt: 'Universidad Complutense de Madrid Logo',
     role: 'Grado en Física',
@@ -88,6 +93,7 @@ const pageTitle = "Mi Trayectoria";
 const introText = "Un resumen de mi camino profesional y académico, desde la investigación fundamental hasta la aplicación de la ciencia de datos e IA en entornos clínicos e industriales.";
 ---
 
+---
 <BaseLayout title={pageTitle} description={introText}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
     <header class="max-w-3xl mx-auto text-center mb-16 md:mb-20">
@@ -97,15 +103,18 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 
     <section id="timeline" class="mb-16 md:mb-24">
       <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-16 text-center">Viaje Profesional</h2>
-      <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
-        {careerPath.map((item, index) => (
-          <AlternatingTimelineItem
-            {...item}
-            textOnRight={index % 2 !== 0}
-            isLastItem={index === careerPath.length - 1}
-          />
-        ))}
-      </ol>
+      <div class="relative">
+        <div id="timeline-fuse" class="absolute top-0 left-10 md:left-1/2 -translate-x-1/2 h-full w-0.5 bg-accent-primary z-0" style="height: 0;"></div>
+        <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
+          {careerPath.map((item, index) => (
+            <AlternatingTimelineItem
+              {...item}
+              textOnRight={index % 2 !== 0}
+              isLastItem={index === careerPath.length - 1}
+            />
+          ))}
+        </ol>
+      </div>
     </section>
 
     <section id="publications" class="mb-16 md:mb-24">
@@ -159,3 +168,59 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 
   </div>
 </BaseLayout>
+<script>
+  function setupTimelineAnimations() {
+    const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+    const fuse = document.getElementById('timeline-fuse');
+
+    if (!timelineItems.length || !fuse) return;
+
+    const handleScroll = () => {
+      // --- Fuse line animation ---
+      const firstItem = timelineItems[0];
+      const lastItem = timelineItems[timelineItems.length - 1];
+      const startY = firstItem.offsetTop;
+      const endY = lastItem.offsetTop + lastItem.offsetHeight;
+      const totalHeight = endY - startY;
+      const scrollProgress = window.scrollY - startY;
+      let progressPercentage = (scrollProgress / totalHeight) * 100;
+      fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
+
+      // --- Combined active state logic ---
+      const fuseBottom = fuse.getBoundingClientRect().top + fuse.offsetHeight + window.scrollY;
+      let closestActiveId = null;
+      let minDelta = Infinity;
+
+      for (const item of timelineItems) {
+        // --- Logic for Logo Scaling ---
+        const logoDot = item.querySelector('.logo-dot');
+        if (logoDot) {
+          const logoCenter = logoDot.getBoundingClientRect().top + (logoDot.clientHeight / 2) + window.scrollY;
+          const delta = fuseBottom - logoCenter;
+          if (delta >= -10 && delta < minDelta) { // Added a small -10px tolerance for feel
+            minDelta = delta;
+            closestActiveId = item.id;
+          }
+        }
+        
+        // --- Logic for Illustration Grayscale ---
+        const itemRect = item.getBoundingClientRect();
+        const illustrationTriggerPoint = itemRect.top + window.scrollY + (itemRect.height * 0.50); // Activate when fuse passes 35% of the item
+        item.classList.toggle('is-illustrations-active', fuseBottom >= illustrationTriggerPoint);
+      }
+
+      // --- Apply active class for logo scaling ---
+      for (const item of timelineItems) {
+        item.classList.toggle('is-active', item.id === closestActiveId);
+      }
+    };
+
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('scroll', handleScroll);
+    }, { once: true });
+    handleScroll();
+  }
+
+  document.addEventListener('astro:page-load', setupTimelineAnimations);
+</script>

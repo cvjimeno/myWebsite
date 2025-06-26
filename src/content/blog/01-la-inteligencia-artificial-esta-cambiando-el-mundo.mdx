@@ -7,6 +7,9 @@ imageAlt: 'Red abstracta de conexiones neuronales representando la inteligencia 
 tags: ["IA", "Tecnología", "Futuro", "Innovación"] 
 readingTime: 18
 ---
+import Conversation from '../../components/blog/Conversation.astro';
+import Message from '../../components/blog/Message.astro';
+import Callout from '../../components/blog/Callout.astro';
 
 Mayo de 2025. La Inteligencia Artificial ya no es un concepto futurista. Es una realidad cotidiana que se está integrando en nuestras vidas a una velocidad asombrosa. Hoy, millones de personas usan ChatGPT y otras herramientas cada día para trabajar, aprender, crear o resolver problemas. Todo el mundo la utiliza en mayor o menor medida, consciente o inconscientemente.  ¿Quién, en los últimos meses, no ha *preguntado a chatGPT* alguna duda que hace algunos años habría googleado?
 ¿O quién no ha visto en las últimas semanas una imagen de lo que sea en formato “Studio Ghibli”?. [Según el propio Sam Altman](https://x.com/sama/status/1906771292390666325), creador de OpenAI, ChatGPT alcanzó el millón de usuarios tan sólo 5 días después de su lanzamiento, allá por Noviembre de 2022. En Marzo de 2025 crecía al ritmo 1 millón en sólo una hora. Ya son cientos de millones de personas los que usan ChatGPT, y eso sin contar Copilot, Claude, Perplexity, Gemini, DeepSeek, Notion AI, Fireflies, ElevenLabs, Midjourney...
@@ -57,13 +60,20 @@ Juan, 16 años, tiene examen de filosofía. Pero el libro no le ayuda, los víde
 Con ChatGPT, puede pedir explicaciones personalizadas, ejemplos claros, podcasts a medida e incluso tarjetas de memoria para repasar.
 ¿El resultado? Aprende mejor, en menos tiempo, y sin frustración.
 
-<--((poner snippet de conversacion ))-->
+<Conversation>
+  <Message from="user" speaker="Juan" avatar="🧑‍🎓">
+    <p>Explícame el dualismo cartesiano como si tuviera 16 años y usa una analogía con los videojuegos.</p>
+  </Message>
+  <Message from="ai" speaker="ChatGPT" avatar="🤖">
+    <p>¡Claro! Imagina que tu mente es el <strong>jugador</strong> (con sus ideas y decisiones) y tu cuerpo es el <strong>mando de la consola</strong>. Son dos cosas distintas, ¿verdad? El jugador (mente) decide saltar, y pulsa el botón en el mando (cuerpo) para que el personaje en pantalla lo haga. Descartes pensaba que mente y cuerpo eran así: dos sustancias separadas que interactuaban de alguna manera.</p>
+  </Message>
+</Conversation>
+
 
 >  **Ejemplo 2: Practicar inglés para un futuro profesional**  
 Marta, 18 años, estudia medicina y quiere perfeccionar su inglés clínico.
 Con la IA, puede simular consultas médicas, recibir correcciones gramaticales en tiempo real, y practicar hablando en voz alta. Todo sin pagar academias ni depender de horarios.
 
-<--((poner snippet de conversacion ))-->
 
 Para sara el máximo partido, no tenemos que pensar en "qué podemos preguntar a la IA" sino "qué puede hacer la IA por mi". No tenemos que ver a un chatbot como ChatGPT, Gemini o Claude como algo que simplemente responde tus preguntas con tablas o iconos. Tenemos que verlos en términos de colaboración, como superherramientas que pueden hacer todo lo que le pidas en una fracción de tiempo que te costaría hacerlo, si es que sabes cómo. La diferencia puede parece sutil, pero hay un mundo entre ambos enfoques.
 
@@ -75,6 +85,15 @@ En definitiva, la IA han venido para quedarse. Cuanto antes entendamos que esto 
 Yo estoy decidido a ser un adoptador temprano y voy a documentar mi camino de aprendizaje. ¿Te apuntas al viaje?
 
 --- 
+
+<Callout type="info" title="Intended Audience">
+  <p>This post is intended to be beginner-friendly. As long as you understand the basic syntax of CSS, you should be able to follow along.</p>
+</Callout>
+
+<Callout type="warning" title="A Word of Caution">
+  <p>While this technique is powerful, be mindful of its performance implications on very large datasets.</p>
+</Callout>
+
 
 ## 🤖 IA en acción (en este post)
 

@@ -1,0 +1,61 @@
+---
+// src/components/blog/Message.astro (REFINED VERSION)
+import Icon from '../common/Icon.astro';
+
+export interface Props {
+  from?: 'user' | 'ai';
+  speaker: string;
+  avatar?: string;
+}
+
+const { from = 'ai', speaker, avatar } = Astro.props;
+const isUser = from === 'user';
+
+const aiAvatar = { icon: 'cpu', class: 'bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-300' };
+---
+<div class:list={["flex gap-x-3 sm:gap-x-4 w-full", { 'flex-row-reverse': isUser }]}>
+  
+  <!-- Avatar (always on the outside) -->
+  <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
+    {isUser ? (
+      <div class="bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 w-full h-full rounded-full flex items-center justify-center">
+        {avatar ? <span class="text-xl">{avatar}</span> : <Icon name="user" size="w-5 h-5"/>}
+      </div>
+    ) : (
+      <div class:list={[aiAvatar.class, "w-full h-full rounded-full flex items-center justify-center"]}>
+        {avatar ? <span class="text-xl">{avatar}</span> : <Icon name={aiAvatar.icon} size="w-5 h-5"/>}
+      </div>
+    )}
+  </div>
+
+  <!-- Message Bubble and Speaker Name -->
+  <div class="flex-grow max-w-xl">
+    {/* REFINEMENT B: Grouping speaker name with bubble */}
+    <p class:list={["text-sm font-semibold text-text-primary mb-1", { 'text-right': isUser }]}>
+      {speaker}
+    </p>
+    
+    <div class:list={[
+      "p-3 sm:p-4 shadow-sm",
+      // REFINEMENT C: Classic bubble shape
+      // AI Bubble Style
+      { 'bg-bg-card border border-border-card rounded-b-xl rounded-tr-xl': !isUser },
+      // User Bubble Style
+      { 'bg-accent-primary text-white rounded-b-xl rounded-tl-xl': isUser }
+    ]}>
+      {/* REFINEMENT A: Align text inside the bubble */}
+      <div class:list={["prose prose-sm max-w-none prose-p:my-2", { 'prose-invert text-right': isUser }]}>
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- This style tag inverts the prose styling for the user's message for perfect text color -->
+<style>
+  .prose-invert {
+    --tw-prose-body: #ffffff;
+    --tw-prose-bold:  #ffffff;;
+    --tw-prose-links:  #ffffff;;
+  }
+</style>
