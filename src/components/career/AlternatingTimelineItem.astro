@@ -1,54 +1,88 @@
 ---
-// src/components/career/AlternatingTimelineItem.astro
+// src/components/career/AlternatingTimelineItem.astro (The Actually-Working Version)
 import { Image } from 'astro:assets';
-// import Button from '../common/Button.astro'; // Uncomment if you plan to use your Button component
 
 export interface Props {
-  logoSrc: any; // Will be an imported image object
+  logoSrc: any;
   logoAlt: string;
   role: string;
   institutionName: string;
   institutionColorClass?: string;
   dates: string;
   descriptionLines: string[];
-  ctaLink?: string;
-  ctaText?: string;
-  
-  illustrationSrc?: any; // Will be an imported image object
-  illustrationAlt?: string;
-  
-  // To determine layout: 
-  // true if text content should be on the right & illustration on left
-  // false if text content on left & illustration on right
-  textOnRight: boolean; 
+  skills?: string[];
+  illustrations?: any[];
+  textOnRight: boolean;
+  isLastItem?: boolean;
 }
 
+const { illustrations, ...item } = Astro.props;
 const {
-  logoSrc,
-  logoAlt,
-  role,
-  institutionName,
-  institutionColorClass = 'text-text-primary',
-  dates,
-  descriptionLines,
-  ctaLink,
-  ctaText,
-  illustrationSrc,
-  illustrationAlt,
-  textOnRight
-} = Astro.props;
+  role, institutionName, institutionColorClass, dates, descriptionLines, skills,
+  logoSrc, logoAlt, textOnRight, isLastItem
+} = item;
 
-const hasCta = ctaLink && ctaText;
+const collagePositions = [
+  'absolute top-0 left-8 rotate-[-12deg] scale-95',
+  'absolute bottom-4 left-0 rotate-[3deg] z-10',
+  'absolute top-4 right-0 rotate-[10deg] scale-90',
+];
 ---
+<li class="relative group">
+  <!-- The Centerline and Dot (Decorative) -->
+  <!-- On mobile: positioned left. On desktop: positioned center. -->
+  <div class="absolute top-0 left-10 md:left-1/2 -translate-x-1/2 h-full w-20 flex justify-center" aria-hidden="true">
+    {!isLastItem && <div class="w-0.5 h-full bg-border-subtle/40"></div>}
+    <div class="absolute top-10 w-20 h-20 bg-bg-card border-4 border-bg-primary dark:border-bg-secondary rounded-full flex items-center justify-center">
+      <Image src={logoSrc} alt={logoAlt} width={48} height={48} class="object-contain" />
+    </div>
+  </div>
 
-{/* 
-  Placeholder for the item's structure. 
-  We will build this out in the next step.
-*/}
-<li class="mb-16 border border-dashed border-red-500 p-4"> {/* Temporary border to see it */}
-  <p>AlternatingTimelineItem for: {role} at {institutionName}</p>
-  <p>Text on Right: {textOnRight.toString()}</p>
-  {illustrationSrc && <p>Has an illustration: {illustrationAlt}</p>}
-  {logoSrc && <div class="my-2">Logo: <Image src={logoSrc} alt={logoAlt} width={50} /></div>}
-  {illustrationSrc && <div class="my-2">Illustration: <Image src={illustrationSrc} alt={illustrationAlt || "illustration"} width={50} /></div>}
+  <!-- The Main Content Container -->
+  <!-- On mobile: has left padding. On desktop: becomes a 2-col grid. -->
+  <div class="relative md:grid md:grid-cols-2 md:gap-x-16 items-center w-full pl-32 md:pl-0 py-10">
+    
+    <!-- Text Block -->
+    <div class:list={[
+      "md:py-4",
+      { 'md:order-last md:text-left': textOnRight },
+      { 'md:text-right': !textOnRight }
+    ]}>
+      <h3 class:list={[ "text-xl md:text-2xl font-bold mb-1", institutionColorClass ]}>{institutionName}</h3>
+      <p class="text-lg font-medium text-text-primary mb-4">{role}</p>
+      <div class="inline-block bg-bg-secondary text-text-secondary text-sm font-semibold px-3 py-1 mb-6 rounded-md border border-border-card">{dates}</div>
+      <div class="prose prose-sm sm:prose-base text-text-secondary max-w-none space-y-3 mb-6">
+        {descriptionLines.map(line => <p set:html={line} />)}
+      </div>
+      <div class:list={[
+        "flex flex-wrap gap-2",
+        { "md:justify-end": !textOnRight }
+      ]}>
+        {skills?.map(skill => (
+          <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-3 py-1.5 rounded-full border border-border-card">{skill}</span>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Illustration Collage (Desktop only) -->
+    <div class:list={[
+      "hidden md:flex items-center",
+      { "justify-start": textOnRight },
+      { "justify-end": !textOnRight }
+    ]}>
+       {illustrations && illustrations.length > 0 && (
+          <div class="relative w-80 h-56 transition-transform duration-300 group-hover:scale-105">
+            {illustrations.slice(0, 3).map((illust, index) => (
+              <div class:list={[
+                "p-1.5 bg-bg-card rounded-md shadow-lg border border-border-card",
+                "transition-all duration-300 ease-in-out group-hover:rotate-0 group-hover:scale-100",
+                collagePositions[index]
+              ]}>
+                <Image src={illust} alt="" width={120} height={120} class="rounded-sm w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        )}
+    </div>
+  </div>
 </li>

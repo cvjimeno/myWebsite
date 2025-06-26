@@ -5,7 +5,7 @@ PROJECT_ROOT = '.'
 OUTPUT_FILE = 'project_snapshot.txt'
 INCLUDE_EXTENSIONS = (
     '.astro', '.html', '.css', '.js', '.ts', '.mjs', '.cjs',
-    '.json', '.md', '.mdx', '.svg'
+    '.json', '.md', '.mdx',
 )
 EXCLUDE_DIRS = {
     'node_modules', 'dist', 'build', '.git', '.astro',
