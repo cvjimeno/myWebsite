@@ -85,33 +85,41 @@ const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data
     </main>
   </div>
 </BaseLayout>
-
 <script>
   function setupBlogFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const blogCards = document.querySelectorAll('#blog-grid > article');
     
+    // These class lists are correct
     const activeClasses = ['bg-accent-primary', 'text-white'];
     const inactiveClasses = ['bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200', 'dark:bg-bg-secondary', 'dark:text-text-primary', 'dark:hover:bg-gray-700'];
 
+    if (!filterButtons.length || !blogCards.length) return;
+
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const selectedCategory = button.dataset.category;
+        const selectedCategory = button.dataset.category.toLowerCase();
 
+        // Update button styles (this part is correct)
         filterButtons.forEach(btn => {
           btn.classList.remove(...activeClasses);
           btn.classList.add(...inactiveClasses);
         });
-        
-        button.classList.remove(...inactiveClasses);
         button.classList.add(...activeClasses);
+        button.classList.remove(...inactiveClasses);
 
+        // --- THE FIX IS HERE ---
+        // We now toggle the 'hidden' class instead of using inline styles.
         blogCards.forEach(card => {
           const cardTags = card.dataset.tags || '';
-          if (selectedCategory === 'todos' || cardTags.includes(selectedCategory)) {
-            card.style.display = 'flex';
+          const cardElement = card as HTMLElement;
+
+          const shouldShow = selectedCategory === 'todos' || cardTags.includes(selectedCategory);
+          
+          if (shouldShow) {
+            cardElement.classList.remove('hidden');
           } else {
-            card.style.display = 'none';
+            cardElement.classList.add('hidden');
           }
         });
       });
@@ -121,9 +129,3 @@ const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data
   document.addEventListener('DOMContentLoaded', setupBlogFilters);
   document.addEventListener('astro:after-swap', setupBlogFilters);
 </script>
-
-<style is:global>
-  #blog-grid > article {
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  }
-</style>
