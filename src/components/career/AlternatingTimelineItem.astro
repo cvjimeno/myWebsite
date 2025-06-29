@@ -1,5 +1,4 @@
 ---
-// src/components/career/AlternatingTimelineItem.astro (The Final, Complete Version)
 import { Image } from 'astro:assets';
 
 export interface Props {
@@ -8,119 +7,129 @@ export interface Props {
   logoAlt: string;
   role: string;
   institutionName: string;
-  institutionColorClass?: string;
+  institutionColor?: string;
   dates: string;
   descriptionLines: string[];
   skills?: string[];
   illustrations?: any[];
   textOnRight: boolean;
   isLastItem?: boolean;
+  logoPadding?: string;
+  logoBorderRadius?: string;
 }
 
-const { id, illustrations, ...item } = Astro.props;
-const {
-  role, institutionName, institutionColorClass, dates, descriptionLines, skills,
-  logoSrc, logoAlt, textOnRight, isLastItem
-} = item;
+const props = Astro.props;
 ---
-<li id={id} class="timeline-item relative group">
-  <!-- Main container for layout -->
-  <div class="relative md:grid md:grid-cols-2 md:gap-x-16 items-center w-full pl-32 md:pl-0 py-10">
-    
-    <!-- Text Block -->
-    <div class:list={[ "md:py-4", { 'md:order-last md:text-left': textOnRight }, { 'md:text-right': !textOnRight } ]}>
-      <h3 class:list={[ "text-xl md:text-2xl font-bold mb-1", institutionColorClass ]}>{institutionName}</h3>
-      <p class="text-lg font-medium text-text-primary mb-4">{role}</p>
-      <div class="date-badge inline-block bg-bg-secondary text-text-secondary text-sm font-semibold px-3 py-1 mb-6 rounded-md border border-border-card">{dates}</div>
-      <div class="prose prose-sm sm:prose-base text-text-secondary max-w-none space-y-3 mb-6">
-        {descriptionLines.map(line => <p set:html={line} />)}
+<li id={props.id} class="timeline-item relative group">
+  <!-- THE MAIN GRID CONTAINER -->
+  <div class="relative md:grid md:grid-cols-2 md:gap-x-32 items-center w-full pl-32 md:pl-0 py-10">
+    <!-- GRID CHILD 1: Text Block -->
+    <div class:list={[
+      "md:py-4",
+      { 'md:order-last md:col-start-2 md:text-left': props.textOnRight },
+      { 'md:col-start-1 md:text-right': !props.textOnRight }
+    ]}>
+      <h3 class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold mb-1 leading-tight" style={`color: ${props.institutionColor}`}>{props.institutionName}</h3>
+      <p class="text-xs sm:text-sm md:text-base lg:text-lg font-medium text-text-primary mb-2 md:mb-4 leading-snug">{props.role}</p>
+      <div class="inline-block bg-bg-secondary text-text-secondary text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 mb-4 md:mb-6 rounded-md border border-border-card">{props.dates}</div>
+      <div class="prose prose-xs sm:prose-sm md:prose-base text-text-secondary max-w-none space-y-2 md:space-y-3 mb-4 md:mb-6">
+        {props.descriptionLines.map(line => <p class="text-xs sm:text-sm md:text-base leading-relaxed" set:html={line} />)}
       </div>
-      <div class:list={[ "flex flex-wrap gap-2", { "md:justify-end": !textOnRight } ]}>
-        {skills?.map(skill => (
-          <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-3 py-1.5 rounded-full border border-border-card">{skill}</span>
+      <div class:list={[ "flex flex-wrap gap-1 sm:gap-2", { "md:justify-end": !props.textOnRight } ]}>
+        {props.skills?.map(skill => (
+          <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-border-card">{skill}</span>
         ))}
       </div>
     </div>
-    
-    <!-- Illustration/Photo Collage (Desktop only) -->
-    <div class:list={[ "hidden md:flex items-center", { "justify-start": textOnRight }, { "justify-end": !textOnRight } ]}>
-       {illustrations && illustrations.length > 0 && (
-          <div class="illustration-collage relative w-80 h-56">
-            {illustrations.slice(0, 3).map((illust, index) => (
-              <div class:list={[
-                "p-1.5 bg-bg-card rounded-md shadow-lg border border-border-card",
-                `collage-img-${index}`
-              ]}>
-                <Image src={illust} alt="" width={120} height={120} class="rounded-sm w-full h-full object-cover" />
-              </div>
-            ))}
-          </div>
-        )}
-    </div>
+
+    <!-- GRID CHILD 2: Illustration/Photo Collage -->
+    {props.illustrations && props.illustrations.length > 0 && (
+      <div class:list={[
+        "hidden md:flex items-center",
+        { "md:justify-start md:col-start-1": props.textOnRight },
+        { "md:justify-end md:col-start-2": !props.textOnRight }
+      ]}>
+        <div class="illustration-collage relative w-64 h-40 md:w-72 lg:w-80 md:h-48 lg:h-56">
+          {props.illustrations.slice(0, 3).map((illust, index) => (
+            <div class:list={[ "p-1 sm:p-1.5 bg-bg-card rounded-md shadow-lg border border-border-card absolute transition-all duration-400", `collage-img-${index}` ]}>
+              <Image src={illust} alt="" width={120} height={120} class="rounded-sm w-full h-full object-cover" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
-  
-  <!-- Centerline elements -->
-  <div class="absolute top-0 left-10 md:left-1/2 -translate-x-1/2 h-full w-0.5 bg-border-subtle/40 -z-10" aria-hidden="true"></div>
+
+  <!-- The Logo Node and Centerline -->
   <div class="absolute top-10 left-10 md:left-1/2 -translate-x-1/2">
-    <div class="logo-dot w-20 h-20 bg-bg-card border-4 border-bg-primary dark:border-bg-secondary rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out">
-      <Image src={logoSrc} alt={logoAlt} width={48} height={48} class="object-contain" />
+    <div class="logo-node w-20 h-20 sm:w-24 sm:h-24 relative transition-transform duration-300 ease-out z-10">
+      <div
+        class="logo-image-wrapper w-full h-full flex items-center justify-center p-2 sm:p-3 bg-bg-primary dark:bg-bg-secondary transition-all duration-300 relative z-10"
+        style={
+          (props.logoPadding ? `padding:${props.logoPadding};` : '') +
+          (props.logoBorderRadius ? `border-radius:${props.logoBorderRadius};` : 'border-radius:9999px;')
+        }
+      >
+        <Image 
+          src={props.logoSrc}
+          alt={props.logoAlt} 
+          width={128} 
+          height={128} 
+          class="object-contain max-w-full max-h-full"
+        />
+        <!-- Blue progress ring -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-20" viewBox="0 0 100 100">
+          <path
+            d="M 50,2 A 48,48 0 0,0 50,98"
+            fill="none"
+            stroke="#2563eb"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-dasharray="150.796447"
+            stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))"
+            class="transition-all duration-400 ease-out"
+          />
+          <path
+            d="M 50,2 A 48,48 0 0,1 50,98"
+            fill="none"
+            stroke="#2563eb"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-dasharray="150.796447"
+            stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))"
+            class="transition-all duration-400 ease-out"
+          />
+        </svg>
+      </div>
     </div>
   </div>
 </li>
-
 <style>
-  .timeline-item.is-active .logo-dot {
-    transform: scale(1.25);
+  .logo-node {
+    --circle-progress: 0;
   }
-
+  
   .illustration-collage {
-    transition: filter 0.5s ease-in-out;
     filter: grayscale(100%);
   }
+  
   .timeline-item.is-illustrations-active .illustration-collage {
     filter: grayscale(0%);
+    transform: scale(1.2);
   }
-
-  /* Base positions for collage items */
-  .collage-img-0, .collage-img-1, .collage-img-2 {
-    position: absolute;
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  
+  /* Collage positioning - can't be done with Tailwind dynamic classes */
+  .collage-img-0 { top: 0; left: 60px; transform: rotate(-12deg) scale(0.95); z-index: 1; }
+  .collage-img-1 { bottom: 16px; left: 0; transform: rotate(3deg) scale(0.95); z-index: 2; }
+  .collage-img-2 { top: 32px; right: 0; transform: rotate(10deg) scale(0.9); z-index: 0; }
+  
+  .timeline-item.is-illustrations-active .collage-img-0 { 
+    left: -10px; top: -10px; transform: rotate(0deg) scale(1); 
   }
-
-  /* Initial (overlapping, rotated) positions */
-  .collage-img-0 {
-    top: 0;
-    left: 60px;
-    transform: rotate(-12deg) scale(0.95);
-    z-index: 1;
+  .timeline-item.is-illustrations-active .collage-img-1 { 
+    left: 80px; top: 70px; transform: rotate(0deg) scale(1); 
   }
-  .collage-img-1 {
-    bottom: 16px;
-    left: 0;
-    transform: rotate(3deg) scale(0.95);
-    z-index: 2;
-  }
-  .collage-img-2 {
-    top: 32px;
-    right: 0;
-    transform: rotate(10deg) scale(0.9);
-    z-index: 0;
-  }
-
-  /* When illustrations active: disperse, remove rotation, scale up */
-  .timeline-item.is-illustrations-active .collage-img-0 {
-    left: -10px;
-    top: -10px;
-    transform: rotate(0deg) scale(1.1);
-  }
-  .timeline-item.is-illustrations-active .collage-img-1 {
-    left: 80px;
-    top: 70px;
-    transform: rotate(0deg) scale(1.1);
-  }
-  .timeline-item.is-illustrations-active .collage-img-2 {
-    right: -10px;
-    top: 20px;
-    transform: rotate(0deg) scale(1.1);
+  .timeline-item.is-illustrations-active .collage-img-2 { 
+    right: -10px; top: 20px; transform: rotate(0deg) scale(1); 
   }
 </style>

@@ -3,12 +3,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AlternatingTimelineItem from '../components/career/AlternatingTimelineItem.astro';
 import Badge from '../components/common/Badge.astro';
+import { Image } from 'astro:assets'; // <-- Add this import
 
 // --- DATA: LOGOS ---
-import philipsLogo from '../assets/images/logos/philips-logo.svg';
+import philipsLogo from '../assets/images/logos/philips-logo.webp';
 import kclLogo from '../assets/images/logos/kcl-logo.png';
 import cnicLogo from '../assets/images/logos/cnic-logo.png';
-import ucmLogo from '../assets/images/logos/ucm-logo.svg';
+import ucmLogo from '../assets/images/logos/ucm-logo.webp'; // or .png
 
 // --- DATA: ILLUSTRATIONS (We will use a single placeholder for now) ---
 import placeholderIllustration from '../assets/images/illustrations/img1.png';
@@ -21,11 +22,11 @@ const careerPath = [
     logoAlt: 'Philips Logo',
     role: 'Clinical Scientist',
     institutionName: 'Philips',
-    institutionColorClass: 'text-accent-primary',
-    dates: 'Ene 2025 - Actualidad',
+    institutionColor: '#0B5ED7',
+    dates: 'Ene 2024 - Actualidad',
     descriptionLines: ['Proporciono soporte científico y técnico a una red de más de 15 hospitales y centros de investigación de referencia en Iberia, centrándome en la Resonancia Magnética (RM) avanzada.', 'Colaboro en proyectos de investigación, ayudo a optimizar protocolos de adquisición y reconstrucción, y actúo como puente entre las necesidades clínicas y las soluciones tecnológicas de Philips.'],
     skills: ['MRI Avanzada', 'Soporte Clínico', 'Optimización de Protocolos'],
-    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
+    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration],
   },
   {
     id: 'kcl',
@@ -33,11 +34,13 @@ const careerPath = [
     logoAlt: "King's College London Logo",
     role: 'Investigador Post-Doctoral',
     institutionName: "King's College London",
-    institutionColorClass: 'text-red-600',
-    dates: 'Dic 2019 - Dic 2024',
+    institutionColor: '#E22221',
+    dates: 'Dic 2019 - Dic 2023',
     descriptionLines: ['Desarrollé nuevas secuencias de RM para aplicaciones cardiovasculares y hepáticas, trabajando en St. Thomas\' Hospital.', 'Mi trabajo se centró en secuencias de RM multiparamétricas, principalmente MR Fingerprinting.'],
     skills: ['MR Fingerprinting', 'C++ (Pulse Programming)', 'MATLAB', 'Reconstrucción de Imagen (Gadgetron)'],
-    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
+    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration],
+    logoPadding: '16px',
+    logoBorderRadius: '8px',
   },
   {
     id: 'cnic',
@@ -45,35 +48,26 @@ const careerPath = [
     logoAlt: 'CNIC Logo',
     role: 'Investigador Pre-Doctoral (PhD)',
     institutionName: 'Centro Nacional de Investigaciones Cardiovasculares (CNIC)',
-    institutionColorClass: 'text-red-800',
+    institutionColor: '#D40046',
     dates: 'Sep 2015 - Nov 2019',
     descriptionLines: ['Mi tesis se centró en el desarrollo de nuevas técnicas de imagen multimodal (PET/RM) en un entorno altamente multidisciplinario.', 'Implementé el uso de un nuevo radiotrazador (<sup>68</sup>Ga-DOTA) para estudios de perfusión, desarrollé hardware para análisis de sangre y trabajé en proyectos desde bioquímica hasta análisis de imagen.'],
     skills: ['PET/RM Multimodal', 'Python (Análisis de Imagen)', 'Diseño de Hardware (CAD)', 'Síntesis de Nanopartículas'],
-    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
+    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration],
   },
   {
     id: 'ucm-master',
     logoSrc: ucmLogo,
     logoAlt: 'Universidad Complutense de Madrid Logo',
-    role: 'Máster en Física Biomédica',
+    role: 'Máster en Física Biomédica / Grado en Física',
     institutionName: 'Universidad Complutense de Madrid',
-    institutionColorClass: 'text-fuchsia-700',
-    dates: '2013 - 2014',
-    descriptionLines: ['Especialización en las bases físicas de las técnicas de imagen médica, radioterapia y instrumentación biomédica.', 'Trabajo de Fin de Máster sobre simulación y análisis de imagen y dosimetría para radioterapia intraoperatoria.'],
-    skills: ['Física Biomédica', 'Simulación de Imagen', 'Dosimetría', 'Radioterapia'],
-    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
-  },
-  {
-    id: 'ucm-grado',
-    logoSrc: ucmLogo,
-    logoAlt: 'Universidad Complutense de Madrid Logo',
-    role: 'Grado en Física',
-    institutionName: 'Universidad Complutense de Madrid',
-    institutionColorClass: 'text-fuchsia-700',
-    dates: '2008 - 2013',
-    descriptionLines: ['Formación fundamental en todas las áreas de la física, con especialización en física teórica.', 'Trabajo de Fin de Carrera sobre el bosón de Higgs.'],
-    skills: ['Física Teórica', 'Análisis Matemático', 'Programación Científica', 'Mecánica Cuántica'],
-    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration], // 3 placeholders
+    institutionColor: '#708090',
+    dates: '2008 - 2014',
+    descriptionLines: [
+      '<strong>Máster en Física Biomédica (2013-2014):</strong> Especialización en las bases físicas de las técnicas de imagen médica, radioterapia y instrumentación biomédica. Trabajo de Fin de Máster sobre simulación y análisis de imagen y dosimetría para radioterapia intraoperatoria.',
+      '<strong>Grado en Física (2008-2013):</strong> Formación fundamental en todas las áreas de la física, con especialización en física teórica. Trabajo de Fin de Carrera sobre el bosón de Higgs.'
+    ],
+    skills: ['Física Teórica', 'Análisis Matemático', 'Programación Científica', 'Mecánica Cuántica', 'Física Biomédica', 'Simulación de Imagen', 'Dosimetría', 'Radioterapia'],
+    illustrations: [placeholderIllustration, placeholderIllustration, placeholderIllustration],
   },
 ];
 
@@ -96,57 +90,59 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 <BaseLayout title={pageTitle} description={introText}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
     <header class="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-primary mb-6">{pageTitle}</h1>
-      <p class="text-xl text-text-secondary leading-relaxed">{introText}</p>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-4 md:mb-6 leading-tight">{pageTitle}</h1>
+      <p class="text-lg sm:text-xl text-text-secondary leading-relaxed">{introText}</p>
     </header>
 
     <section id="timeline" class="mb-16 md:mb-24">
-      <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-16 text-center">Viaje Profesional</h2>
-      <div class="relative">
-        <div id="timeline-fuse" class="absolute top-0 left-10 md:left-1/2 -translate-x-1/2 h-full w-0.5 bg-accent-primary z-0" style="height: 0;"></div>
-        <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
-          {careerPath.map((item, index) => (
-            <AlternatingTimelineItem
-              {...item}
-              textOnRight={index % 2 !== 0}
-              isLastItem={index === careerPath.length - 1}
-            />
-          ))}
-        </ol>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-text-primary mb-12 md:mb-16 text-center leading-tight">Viaje Profesional</h2>
+      <div class="relative max-w-5xl mx-auto">
+
+      <div class="absolute top-10 bottom-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-border-subtle/40 -z-20" aria-hidden="true"></div>
+      <div id="timeline-fuse" class="absolute top-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-accent-primary z-0" style="height: 0;"></div> <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
+        {careerPath.map((item, index) => (
+          <AlternatingTimelineItem
+            {...item}
+            illustrations={item.illustrations}
+            textOnRight={index % 2 !== 0}
+            isLastItem={index === careerPath.length - 1}
+          />
+        ))}
+      </ol>
       </div>
     </section>
 
     <section id="publications" class="mb-16 md:mb-24">
-      <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-12 text-center">Publicaciones Destacadas</h2>
-      <div class="max-w-4xl mx-auto space-y-10">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-text-primary mb-8 md:mb-12 text-center leading-tight">Publicaciones Destacadas</h2>
+      <div class="max-w-4xl mx-auto space-y-8 md:space-y-10">
         <!-- Thesis Highlight -->
-        <div class="p-6 bg-bg-secondary dark:bg-bg-secondary rounded-lg border-l-4 border-accent-primary">
-          <h3 class="font-semibold text-text-primary mb-2">Mi Tesis Doctoral</h3>
-          <p class="text-text-secondary mb-3">{phdThesis.title}</p>
-          <a href={phdThesis.link} target="_blank" rel="noopener noreferrer" class="text-accent-primary font-medium hover:underline">Leer la tesis completa →</a>
+        <div class="p-4 sm:p-6 bg-bg-secondary dark:bg-bg-secondary rounded-lg border-l-4 border-accent-primary">
+          <h3 class="text-base sm:text-lg font-semibold text-text-primary mb-2">Mi Tesis Doctoral</h3>
+          <p class="text-sm sm:text-base text-text-secondary mb-3 leading-relaxed">{phdThesis.title}</p>
+          <a href={phdThesis.link} target="_blank" rel="noopener noreferrer" class="text-sm sm:text-base text-accent-primary font-medium hover:underline">Leer la tesis completa →</a>
         </div>
         
         <!-- List of Publications -->
         {publications.map(pub => (
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 py-4 border-b border-border-card last:border-b-0">
-            <div class="md:col-span-1 text-sm text-text-secondary mb-2 md:mb-0">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 lg:gap-x-8 py-3 md:py-4 border-b border-border-card last:border-b-0">
+            <div class="md:col-span-1 text-xs sm:text-sm text-text-secondary mb-2 md:mb-0">
               <p class="font-semibold">{pub.year}</p>
-              <p>{pub.journal}</p>
+              <p class="leading-snug">{pub.journal}</p>
             </div>
             <div class="md:col-span-3">
-              <div class="flex items-center flex-wrap gap-x-3 gap-y-2 mb-2">
-                <h4 class="text-lg font-semibold text-text-primary">
+              <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-2 mb-2">
+                <h4 class="text-base sm:text-lg font-semibold text-text-primary leading-snug">
                   <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary transition-colors">{pub.title}</a>
                 </h4>
-                {pub.isFeatured && <span class="text-amber-400" title="Destacado">⭐</span>}
+                {pub.isFeatured && <span class="text-amber-400 text-lg sm:text-xl" title="Destacado">⭐</span>}
               </div>
               <div class="flex items-center flex-wrap gap-x-2 gap-y-2 mb-3">
                 {pub.isReview && <Badge variant="neutral" text="Review" />}
                 {pub.award && pub.award.toLowerCase().includes('gold') && <Badge variant="award" awardType="gold" text={pub.award} />}
                 {pub.award && pub.award.toLowerCase().includes('silver') && <Badge variant="award" awardType="silver" text={pub.award} />}
               </div>
-              <p class="text-sm text-text-secondary mb-3">{pub.authors}</p>
-              <div class="flex flex-wrap gap-2">
+              <p class="text-xs sm:text-sm text-text-secondary mb-3 leading-relaxed">{pub.authors}</p>
+              <div class="flex flex-wrap gap-1 sm:gap-2">
                 {pub.tags.map(tag => <Badge variant="neutral" text={tag} />)}
               </div>
             </div>
@@ -157,11 +153,11 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 
     <!-- Connect Section -->
     <section id="connect" class="text-center">
-      <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-6">Conecta Conmigo</h2>
-      <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-3">
-        <a href="https://scholar.google.com/citations?user=0gpttXAAAAAJ&hl=es" target="_blank" rel="noopener noreferrer" class="text-lg text-accent-primary hover:underline underline-offset-4">Google Scholar</a>
-        <a href="https://linkedin.com/in/cvjimeno/" target="_blank" rel="noopener noreferrer" class="text-lg text-accent-primary hover:underline underline-offset-4">LinkedIn</a>
-        <a href="/contacto" class="text-lg text-accent-primary hover:underline underline-offset-4">Contacto Directo</a>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-text-primary mb-4 md:mb-6 leading-tight">Conecta Conmigo</h2>
+      <div class="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-3">
+        <a href="https://scholar.google.com/citations?user=0gpttXAAAAAJ&hl=es" target="_blank" rel="noopener noreferrer" class="text-base sm:text-lg text-accent-primary hover:underline underline-offset-4">Google Scholar</a>
+        <a href="https://linkedin.com/in/cvjimeno/" target="_blank" rel="noopener noreferrer" class="text-base sm:text-lg text-accent-primary hover:underline underline-offset-4">LinkedIn</a>
+        <a href="/contacto" class="text-base sm:text-lg text-accent-primary hover:underline underline-offset-4">Contacto Directo</a>
       </div>
     </section>
 
@@ -175,15 +171,14 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
     if (!timelineItems.length || !fuse) return;
 
     const handleScroll = () => {
-      // --- Fuse line animation ---
+      // --- First calculate normal fuse line animation ---
       const firstItem = timelineItems[0];
       const lastItem = timelineItems[timelineItems.length - 1];
       const startY = firstItem.offsetTop;
       const endY = lastItem.offsetTop + lastItem.offsetHeight;
       const totalHeight = endY - startY;
-      const scrollProgress = window.scrollY - startY;
+      let scrollProgress = window.scrollY - startY;
       let progressPercentage = (scrollProgress / totalHeight) * 100;
-      fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
 
       // --- Combined active state logic ---
       const fuseBottom = fuse.getBoundingClientRect().top + fuse.offsetHeight + window.scrollY;
@@ -192,25 +187,63 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
 
       for (const item of timelineItems) {
         // --- Logic for Logo Scaling ---
-        const logoDot = item.querySelector('.logo-dot');
-        if (logoDot) {
-          const logoCenter = logoDot.getBoundingClientRect().top + (logoDot.clientHeight / 2) + window.scrollY;
+        const logoNode = item.querySelector('.logo-node') as HTMLElement;
+        if (logoNode) {
+          const logoCenter = logoNode.getBoundingClientRect().top + (logoNode.clientHeight / 2) + window.scrollY;
           const delta = fuseBottom - logoCenter;
-          if (delta >= -10 && delta < minDelta) { // Added a small -10px tolerance for feel
+          if (delta >= -10 && delta < minDelta) {
             minDelta = delta;
             closestActiveId = item.id;
           }
+
+          // --- Animate blue circle progress ONLY when active ---
+          if (item.id === closestActiveId && delta >= -10) {
+            // Set circle to complete immediately
+            logoNode.style.setProperty('--circle-progress', '1');
+          } else {
+            // Reset progress when not active
+            logoNode.style.setProperty('--circle-progress', '0');
+          }
         }
-        
+
         // --- Logic for Illustration Grayscale ---
         const itemRect = item.getBoundingClientRect();
-        const illustrationTriggerPoint = itemRect.top + window.scrollY + (itemRect.height * 0.50); // Activate when fuse passes 35% of the item
+        const illustrationTriggerPoint = itemRect.top + window.scrollY + (itemRect.height * 0.50);
         item.classList.toggle('is-illustrations-active', fuseBottom >= illustrationTriggerPoint);
       }
 
       // --- Apply active class for logo scaling ---
       for (const item of timelineItems) {
         item.classList.toggle('is-active', item.id === closestActiveId);
+      }
+
+      // --- Fuse line animation (progresses only when no active circle) ---
+      if (!closestActiveId) {
+        fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
+      } else {
+        // Get the active logo node
+        const activeLogoNode = document.getElementById(closestActiveId)?.querySelector('.logo-node') as HTMLElement;
+        if (activeLogoNode) {
+          // Get the current circle progress
+          const circleProgress = parseFloat(getComputedStyle(activeLogoNode).getPropertyValue('--circle-progress') || '0');
+
+          // If circle is complete, set fuse to 100%
+          if (circleProgress >= 0.98) {
+            fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
+          } else {
+            // Otherwise, stop the fuse at the previous item's bottom
+            const prevItemIndex = timelineItems.indexOf(document.getElementById(closestActiveId) as Element) - 1;
+            if (prevItemIndex >= 0) {
+              const prevItem = timelineItems[prevItemIndex];
+              const prevItemBottom = prevItem.offsetTop + prevItem.offsetHeight - startY;
+              progressPercentage = (prevItemBottom / totalHeight) * 100;
+              fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
+            } else {
+              // If it's the first item, start from the top
+              fuse.style.height = '0%';
+            }
+          }
+        }
       }
     };
 
