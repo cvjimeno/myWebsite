@@ -6,7 +6,7 @@ import HeroSection from '../components/sections/HeroSection.astro';
 import AboutMeSnapshot from '../components/sections/AboutMeSnapshot.astro';
 import { getCollection } from 'astro:content';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
-
+import AboutMe from '../components/sections/AboutMe.astro';
 // --- This is the new, dynamic data fetching ---
 
 // 1. Find all possible hero images (same logic as the blog page)
@@ -45,7 +45,7 @@ const postsWithImages = await Promise.all(
   description="El hogar digital de Carlos Velasco. Un científico y programador explorando la intersección de la tecnología y la Inteligencia Artificial. Conoce mi trabajo y lee mis últimos artículos."
 >
   <HeroSection />
-  <AboutMeSnapshot />
+  <AboutMe />
     
   <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
     <div class="container mx-auto">

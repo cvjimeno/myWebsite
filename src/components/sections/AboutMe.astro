@@ -1,0 +1,232 @@
+---
+// src/components/sections/AboutMe.astro
+// Remove the WordCloud import since we're doing it all in one component
+---
+<section class="bg-bg-secondary dark:bg-bg-primary py-20 md:py-28">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+      
+      <!-- Column 1: Text Content -->
+      <div class="text-center md:text-left">
+        <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-6 text-balance">
+          De la Física Teórica a la Inteligencia Artificial
+        </h2>
+        <div class="prose prose-lg text-text-secondary max-w-none space-y-4"> 
+          <p>
+            Mi carrera es un viaje a través de sistemas complejos. Empecé en la física teórica, movido por el deseo de entender los fundamentos del universo. Pero la curiosidad me llevó a aplicar ese pensamiento analítico a problemas más tangibles: bioquímica, imagen médica, y finalmente, la programación.
+          </p>
+          <p>
+            Este blog es la siguiente etapa de ese viaje: un espacio para desentrañar, aplicar y debatir sobre la herramienta más transformadora de nuestro tiempo, la IA.
+          </p>
+        </div>
+        <a href="/trayectoria" class="inline-flex items-center gap-x-2 text-accent-primary font-medium mt-8 group text-lg">
+          Ver mi trayectoria completa
+          <span class="transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <!-- Column 2: Word Cloud Container -->
+      <div class="flex justify-center md:justify-end">
+        <div 
+          id="wordcloud-container" 
+          class="w-full max-w-md h-128 overflow-hidden transition-all duration-200 ease-out"
+          style="min-height: 400px;"
+        >
+          <!-- WordCloud will be rendered here by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // Import WordCloud library - make sure it's installed: npm install wordcloud
+  import WordCloud from 'wordcloud';
+  
+  let initialized = false; // Prevent double initialization
+
+  function setupWordCloud() {
+    const container = document.getElementById('wordcloud-container');
+    if (!container) {
+      console.error('WordCloud container not found');
+      return;
+    }
+    
+    // Clear any existing content
+    container.innerHTML = '';
+
+    // Expanded and categorized word list with better weights
+    const sampleWords = [
+      // Core expertise (highest weights)
+      ['MRI', 85], ['Deep Learning', 75], ['Image Reconstruction', 70],
+      
+      // Technical skills (high weights)  
+      ['Cardiovascular', 65], ['Fingerprinting', 60], ['Python', 58],
+      ['PET', 55], ['AI', 52], ['MATLAB', 50],
+      
+      // Specialized techniques (medium-high weights)
+      ['Pulse Programming', 45], ['T1ρ Mapping', 42], ['Signal Processing', 40],
+      ['Data Analysis', 38], ['C++', 35], ['Gadgetron', 32],
+      
+      // Research areas (medium weights)
+      ['Nanoparticles', 30], ['Bioimagen', 28], ['Física Teórica', 26],
+      ['Machine Learning', 25], ['Neuroimaging', 24], ['Biomarkers', 22],
+      
+      // Supporting skills (lower weights)
+      ['Research', 20], ['Innovation', 18], ['Ciencia', 16], ['Technology', 15],
+      ['Analysis', 14], ['Modeling', 13], ['Algorithms', 12], ['Computing', 11]
+    ];
+
+    const getThemeColors = () => {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      return {
+        // Color categories for different skill types
+        primary: isDarkMode ? '#E5E7EB' : '#1F2937',     // Core skills
+        accent: '#3B82F6',      // Technical skills
+        secondary: '#10B981',   // Research areas  
+        tertiary: '#F59E0B',    // Supporting skills
+        quaternary: isDarkMode ? '#9CA3AF' : '#6B7280',  // Minor skills
+      };
+    };
+
+    let isMouseOver = false;
+    let animationId = null;
+
+    const render = () => {
+      const colors = getThemeColors();
+      
+      console.log('Rendering WordCloud...', { containerWidth: container.clientWidth, containerHeight: container.clientHeight });
+      
+      WordCloud(container, {
+        list: sampleWords,
+        gridSize: Math.max(8, Math.min(20, container.clientWidth / 40)),
+        weightFactor: (size) => {
+          const baseSize = Math.max(container.clientWidth, container.clientHeight) / 15;
+          const scaleFactor = size / 85; // Max weight is 85
+          return Math.max(12, baseSize * scaleFactor);
+        },
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        fontWeight: (word, weight) => {
+          if (weight > 60) return '700';
+          if (weight > 35) return '600';
+          return '500';
+        },
+        color: (word, weight, fontSize) => {
+          if (weight > 70) return colors.primary;
+          if (weight > 50) return colors.accent;
+          if (weight > 30) return colors.secondary;
+          if (weight > 20) return colors.tertiary;
+          return colors.quaternary;
+        },
+        backgroundColor: 'transparent',
+        shuffle: true,
+        rotateRatio: 0.1,
+        maxRotation: Math.PI / 12,
+        minRotation: -Math.PI / 12,
+        shape: 'circle',
+
+        
+        // Add drawOutOfBound to prevent words from being cut off
+        drawOutOfBound: false,
+        
+        // Wait callback to ensure it renders
+        wait: 100
+      });
+
+      // Add floating animation after WordCloud renders
+      setTimeout(() => {
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+          let floatOffset = 0;
+          
+          const animate = () => {
+            floatOffset += 0.03; // Faster animation (was 0.01)
+            canvas.style.transform = `translateY(${Math.sin(floatOffset) * 2}px)`;
+            animationId = requestAnimationFrame(animate);
+          };
+          
+          animate();
+          console.log('Floating animation started');
+        }
+      }, 200);
+    };
+
+    // Initialize with proper timing
+    const initWordCloud = () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      
+      // Ensure container has dimensions before rendering
+      if (container.clientWidth === 0 || container.clientHeight === 0) {
+        console.log('Container not ready, retrying...');
+        setTimeout(initWordCloud, 100);
+        return;
+      }
+      
+      render();
+    };
+
+    // Mouse event handlers
+    container.addEventListener('mouseenter', () => { 
+      isMouseOver = true;
+      container.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    });
+    
+    container.addEventListener('mouseleave', () => { 
+      isMouseOver = false;
+      
+      const canvas = container.querySelector('canvas');
+      if (canvas) {
+        canvas.style.opacity = '1';
+        canvas.style.cursor = 'default';
+      }
+    });
+
+    // Theme change handler
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => setTimeout(initWordCloud, 100));
+    }
+
+    // Responsive resize handler
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(initWordCloud, 250);
+    });
+
+    // Astro navigation cleanup
+    document.addEventListener('astro:before-swap', () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      if (container) container.innerHTML = '';
+    }, { once: true });
+
+    // Start initialization
+    initWordCloud();
+  }
+
+  // Multi-stage initialization for Astro
+  function initializeWordCloud() {
+    if (initialized) return;
+    initialized = true;
+    console.log('Initializing WordCloud...');
+    setupWordCloud();
+  }
+
+  // Only initialize once, using Astro's navigation and DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeWordCloud, { once: true });
+  } else {
+    initializeWordCloud();
+  }
+  document.addEventListener('astro:page-load', () => {
+    initialized = false;
+    initializeWordCloud();
+  }, { once: true });
+</script>

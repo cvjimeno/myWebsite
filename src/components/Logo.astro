@@ -1,0 +1,34 @@
+---
+// src/components/Logo.astro
+import logoSvgContent from '../assets/logo.svg?raw';
+
+export interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+// We only need to remove width/height to let CSS control the size.
+const polishedSvg = logoSvgContent
+  .replace(/ width="[^"]*"/, '')
+  .replace(/ height="[^"]*"/, '');
+---
+<div class:list={["logo-container", className]} set:html={polishedSvg} />
+
+<style is:global>
+  /* This CSS targets the classes inside the SVG and applies the correct colors */
+  .logo-container .logo-main-text {
+    fill: var(--color-text-primary); /* fallback for debugging */
+  }
+  .logo-container .logo-dot-accent {
+    fill: var(--color-accent-primary); /* fallback for debugging */
+  }
+  .logo-container {
+    /* Removed border for production */
+    min-width: 60px;
+    min-height: 60px;
+    display: inline-block;
+    vertical-align: middle;
+    aspect-ratio: 1 / 1; /* Force square shape */
+    overflow: hidden;    /* Hide overflow if SVG is not square */
+  }
+</style>

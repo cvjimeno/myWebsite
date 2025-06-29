@@ -1,7 +1,7 @@
 ---
 // src/components/Header.astro
 import DarkModeToggle from './DarkModeToggle.astro';
-
+import Logo from './Logo.astro';
 const navLinks = [
   { href: "/", text: "Inicio" },
   { href: "/trayectoria/", text: "Sobre mí" },
@@ -16,8 +16,8 @@ const currentPath = Astro.url.pathname;
     <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         
-        <a href="/" class="text-3xl font-black tracking-tight text-text-primary">
-          CV<span class="text-accent-primary">.</span>
+        <a href="/" aria-label="Homepage">
+          <Logo class="h-16 w-auto" />
         </a>
 
         <div class="flex items-center gap-x-2 sm:gap-x-4">
