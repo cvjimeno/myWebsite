@@ -31,7 +31,15 @@ const hardcodedIcons = {
   'coffee': {
     svgContent: `<path d="M18 8h1a4 4 0 0 1 0 8h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="6" y1="1" x2="6" y2="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="1" x2="10" y2="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="1" x2="14" y2="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
     viewBox: "0 0 24 24"
-  }
+  },
+  'chevron-left': {
+    svgContent: `<path d="m15 18-6-6 6-6"/>`,
+    viewBox: "0 0 24 24"
+  },
+  'chevron-right': {
+    svgContent: `<path d="m9 18 6-6-6-6"/>`,
+    viewBox: "0 0 24 24"
+  },
 };
 /**
  * A unified function to get icon data from either a file or the hardcoded map.

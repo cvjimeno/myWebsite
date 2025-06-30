@@ -1,8 +1,7 @@
 ---
-// src/components/blog/RelatedPostsCarousel.astro
 import { getCollection } from 'astro:content';
 import HorizontalPostCard from './HorizontalPostCard.astro';
-import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro'; // We'll use the Icon component for arrows
 
 const { currentPostSlug, currentPostTags = [] } = Astro.props;
 const allPosts = await getCollection('blog', (entry) => entry.slug !== currentPostSlug && !entry.data.draft);
@@ -13,43 +12,45 @@ const relatedPosts = allPosts.map(post => {
 })
 .filter(item => item.sharedTagsCount > 0)
 .sort((a, b) => b.sharedTagsCount - a.sharedTagsCount)
-.slice(0, 6);
+.slice(0, 8); // Fetch a few more for a richer carousel
 
 const shouldRender = relatedPosts.length >= 3;
 ---
 {shouldRender && (
-  <div class="mt-20 bg-[var(--color-bg-secondary)] border-y border-border-card py-16">
+  <div class="bg-bg-secondary dark:bg-bg-secondary border-y border-border-card py-16 md:py-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
       <div class="flex justify-between items-center mb-8">
-        {/* THE FIX: Smaller base font size for the heading */}
         <h2 class="text-2xl sm:text-3xl font-bold text-text-primary">Para seguir explorando</h2>
-        
-        {/* THE FIX: `flex-shrink-0` prevents the button from being squished and wrapping */}
         <a href="/blog" class="flex-shrink-0 inline-block px-5 py-2.5 bg-transparent border-2 border-accent-primary text-accent-primary text-sm font-medium rounded-lg hover:bg-accent-primary/[.10] transition-colors">
           Ver todo
-        </a>
         </a>
       </div>
     </div>
     
+    <!-- FIX #1 & #3: The container for the carousel and arrows -->
     <div class="relative">
-      <div id="carousel-container" class="flex overflow-x-auto gap-6 pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide">
+      <!-- Left Arrow Button -->
+      <button id="carousel-prev" aria-label="Previous post" class="carousel-arrow left-0">
+        <Icon name="chevron-left" size="w-6 h-6" />
+      </button>
+
+      <!-- The Carousel Itself -->
+      <div id="carousel-container" class="flex overflow-x-auto gap-6 pb-4 scroll-smooth scrollbar-hide px-4 sm:px-6 lg:px-8">
         {relatedPosts.map((item) => (
-          <div class="w-96 md:w-[420px] flex-shrink-0">
+          <div class="w-80 md:w-96 flex-shrink-0">
             <HorizontalPostCard post={item.post} />
           </div>
         ))}
       </div>
+      
+      <!-- Right Arrow Button -->
+      <button id="carousel-next" aria-label="Next post" class="carousel-arrow right-0">
+        <Icon name="chevron-right" size="w-6 h-6" />
+      </button>
 
-      {/* THE FIX: The mask now uses CSS variables to adapt automatically */}
-      <div class="absolute inset-0 pointer-events-none" 
-        style={`background: linear-gradient(to right, 
-          var(--color-bg-secondary),  
-          transparent 10%, 
-          transparent 90%, 
-          var(--color-bg-secondary)
-        );`}>
-      </div>
+      <!-- The fade-out mask (no change needed here) -->
+      <div class="absolute inset-0 pointer-events-none" style={`background: linear-gradient(to right, var(--color-bg-secondary), transparent 10%, transparent 90%, var(--color-bg-secondary));`}></div>
     </div>
   </div>
 )}
@@ -57,49 +58,101 @@ const shouldRender = relatedPosts.length >= 3;
 <style>
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 3rem; /* w-12 */
+    height: 3rem; /* h-12 */
+    border-radius: 9999px; /* rounded-full */
+    background-color: rgba(var(--color-bg-card-rgb, 255 255 255) / 0.5); /* bg-bg-card/50 */
+    backdrop-filter: blur(4px); /* backdrop-blur-sm */
+    border: 1px solid var(--color-border-card);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    opacity: 0;
+  }
+  
+  .carousel-arrow:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-card);
+  }
+
+  .carousel-arrow:disabled {
+    opacity: 0;
+    cursor: not-allowed;
+  }
+  
 </style>
 
 <script>
-function initializeInfiniteCarousel() {
+function setupInfiniteCarousel() {
   const container = document.getElementById('carousel-container');
-  if (!container || container.dataset.initialized === 'true') return;
-  container.dataset.initialized = 'true';
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
 
-  // Clone items for the infinite loop
-  const items = Array.from(container.children);
-  if (items.length <= 1) return;
-  items.forEach(item => {
+  if (!container || !prevBtn || !nextBtn) return;
+  
+  // --- INFINITE LOGIC SETUP ---
+  const originalItems = Array.from(container.children);
+  if (originalItems.length <= 3) return; // Don't bother if there aren't enough items
+
+  // 1. Clone items for the seamless loop
+  originalItems.forEach(item => {
     const clone = item.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
     container.appendChild(clone);
   });
 
-  let isScrolling;
-  container.addEventListener('scroll', () => {
-    clearTimeout(isScrolling);
-    isScrolling = requestAnimationFrame(() => {
-      // Get computed padding so we know the effective scroll area
-      const computedStyle = getComputedStyle(container);
-      const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
-      const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-      
-      // Effective scrollable width without the padding
-      const effectiveScrollWidth = container.scrollWidth - paddingLeft - paddingRight;
-      const halfwayPoint = effectiveScrollWidth / 2;
-      
-      const scrollLeft = container.scrollLeft - paddingLeft; // Adjusted scrollLeft
+  const scrollAmount = (container.querySelector('div')?.clientWidth || 320) + 24; // card width + gap
 
-      if (scrollLeft >= halfwayPoint) {
-        // Jump back and add the left padding back
-        container.scrollLeft = scrollLeft - halfwayPoint + paddingLeft;
-      } else if (scrollLeft <= 0) {
-        // Jump forward and add the left padding back
-        container.scrollLeft = scrollLeft + halfwayPoint + paddingLeft;
-      }
-    });
+  prevBtn.addEventListener('click', () => {
+    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  });
+
+  // 2. The scroll listener that creates the infinite illusion
+  let isScrolling;
+  function handleInfiniteScroll() {
+    isScrolling = false;
+    
+    // We get the total width of the *original* items
+    const scrollWidthOriginal = container.scrollWidth / 2;
+
+    // Check for forward loop
+    if (container.scrollLeft >= scrollWidthOriginal) {
+      // We are at the "fake" end, so silently jump back to the real beginning
+      container.scrollBy({ left: -scrollWidthOriginal, behavior: 'instant' });
+    }
+    
+    // Check for backward loop
+    if (container.scrollLeft <= 0) {
+      // We are at the "real" beginning, so silently jump to the "fake" beginning
+      container.scrollBy({ left: scrollWidthOriginal, behavior: 'instant' });
+    }
+  }
+
+  container.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      // Use requestAnimationFrame for smoother performance
+      window.requestAnimationFrame(handleInfiniteScroll);
+    }
+    isScrolling = true;
   }, { passive: true });
+  
+  // Set initial position to the start of the "fake" set for seamless backward scroll
+  container.scrollBy({ left: container.scrollWidth / 2, behavior: 'instant' });
 }
 
-document.addEventListener('astro:page-load', initializeInfiniteCarousel);
-initializeInfiniteCarousel();
+document.addEventListener('astro:page-load', setupInfiniteCarousel);
 </script>

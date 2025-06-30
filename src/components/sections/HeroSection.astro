@@ -1,44 +1,95 @@
 ---
-// src/components/sections/HeroSection.astro
 import { Image } from 'astro:assets';
 import heroImageCarlos from '../../assets/images/hero-main-picture.webp';
 import Button from '../common/Button.astro';
 ---
-
-<section class="hero py-16 md:py-24 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
+<!--
+  THE DEFINITIVE FIX:
+  1. No 'min-h-screen', no 'flex'.
+  2. Spacing is controlled precisely with padding:
+     - `pt-24` on mobile to clear the header.
+     - `pb-16` on mobile for bottom space.
+     - `md:pt-32` and `md:pb-28` on desktop for a taller, more impactful hero.
+-->
+<section 
+  class="hero relative px-4 sm:px-6 lg:px-8 pt-24 pb-16 md:pt-32 md:pb-28" 
+  aria-labelledby="hero-heading"
+>
   <div class="container mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-16 items-center">
       
-      <figure class="order-1 md:order-none">
+      <!-- Image Column -->
+      <figure class="order-1 md:order-none opacity-0 animate-fadeIn [animation-delay:200ms]">
         <Image 
           src={heroImageCarlos} 
           alt="Carlos Velasco - Foto de perfil con efecto pincelada"
           widths={[400, 600, 800]}
-          sizes="(max-width: 768px) 100vw, 50vw" 
+          sizes="(max-width: 768px) 80vw, 60vw" 
           format="webp"
           loading="eager"
-          fetchpriority={'high'}
-          class="w-full max-w-2xl mx-auto md:mx-0 rounded-lg" 
+          fetchpriority="high"
+          class="w-full max-w-sm mx-auto md:max-w-xl lg:max-w-2xl drop-shadow-xl" 
         />
       </figure>
 
+      <!-- Text Column -->
       <header class="text-center md:text-left order-2 md:order-none">
-        <h1 id="hero-heading" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-text-primary leading-tight tracking-tighter mb-6">
-          ¡Hola! <span class="inline-block animate-wave">👋</span>
+        <h1 id="hero-heading" class="hero-title text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-text-primary leading-tight tracking-tighter mb-6 opacity-0 animate-fadeInUp [animation-delay:400ms]">
+          <span class="block">Hola, soy</span>
+          <span class="hero-name relative block">Carlos Velasco</span>
         </h1>
-        <p class="text-lg md:text-xl text-text-secondary mb-8 leading-relaxed max-w-xl mx-auto md:mx-0">
-          Soy Carlos Velasco, un científico apasionado de la ciencia y la tecnología... y que escribe a ratos sobre Inteligencia Artificial. ¡Bienvenidos a mi hogar digital!
+        <p class="text-lg md:text-xl text-text-secondary mb-10 leading-relaxed max-w-xl mx-auto md:mx-0 opacity-0 animate-fadeInUp [animation-delay:600ms]">
+          Un científico explorando la intersección de la tecnología y la IA. Bienvenidos a mi cuaderno de bitácora digital.
         </p>
-        <nav class="flex flex-col sm:flex-row justify-center md:justify-start gap-4" aria-label="Primary hero navigation">
-          <Button href="/#about-me-snapshot" variant="primary">
-            Conóceme
+        <nav class="flex flex-wrap justify-center md:justify-start gap-4 opacity-0 animate-fadeInUp [animation-delay:800ms]" aria-label="Primary hero navigation">
+          <Button href="/trayectoria" variant="primary">
+            Mi Trayectoria
           </Button>
           <Button href="/blog" variant="secondary">
-            Mi Blog
+            Leer el Blog
           </Button>
         </nav>
       </header>
     </div>
   </div>
-</section>
 
+  <!-- The scroll indicator is removed as the visual overlap will now provide the cue -->
+
+</section>
+<style>
+  .hero-title {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  }
+  
+  .hero-name {
+    color: var(--color-accent-primary);
+  }
+
+  /* Entrance animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+  .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+
+  /* Scroll down chevron animation */
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 2s infinite;
+  }
+</style>
