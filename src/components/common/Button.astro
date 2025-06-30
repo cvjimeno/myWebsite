@@ -61,15 +61,11 @@ switch (variant) {
   default:
     variantClasses = `
       bg-[var(--color-accent-primary)] 
-      text-white 
+      text-[var(--color-bg-primary-dark)] dark:text-[var(--color-bg-primary)]
       hover:bg-[var(--color-accent-primary-hover)]  // Updated to use new variable
       focus:ring-[var(--color-accent-primary)]
       shadow-md hover:shadow-lg
     `;
-    // If your accent-blue is #42A5F5, a darker shade could be #1E88E5 (blue-600 in Material Design)
-    // You might want to define this darker shade in your tailwind.config or CSS vars:
-    // e.g., --color-accent-blue-dark: #1E88E5;
-    // then: hover:bg-[var(--color-accent-blue-dark)]
     break;
 }
 ---

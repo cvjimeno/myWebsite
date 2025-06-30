@@ -1,0 +1,38 @@
+---
+export interface Props {
+  year: string;
+  journal: string;
+  title: string;
+  authors: string;
+  link: string;
+  category?: string;
+}
+
+const { year, journal, title, authors, link, category } = Astro.props;
+
+// --- Logic for 'et al.' (remains the same) ---
+const maxAuthorsToShow = 5;
+const authorList = authors.split(',').map(author => author.trim());
+const truncatedAuthors = authorList.slice(0, maxAuthorsToShow).join(', ');
+const displayAuthors = authorList.length > maxAuthorsToShow
+  ? `${truncatedAuthors} et al.`
+  : authors;
+---
+<a href={link} target="_blank" rel="noopener noreferrer" class="group block bg-bg-card rounded-lg shadow-sm hover:shadow-md border border-border-card hover:border-accent-primary transition-all duration-200 h-full">
+  <div class="p-4 sm:p-5 flex flex-col h-full">
+    <!-- 1. Title - USE set:html -->
+    <h3 class="text-base font-semibold text-text-primary group-hover:text-accent-primary transition-colors leading-tight mb-2 flex-grow" set:html={title}>
+    </h3>
+    
+    <!-- 2. Authors - USE set:html -->
+    <p class="text-xs text-text-secondary mb-3 line-clamp-2" set:html={displayAuthors}></p>
+
+    <!-- Separator -->
+    <div class="border-t border-border-subtle pt-2 mt-auto flex justify-between items-center text-xs text-text-secondary">
+      <!-- 3. Journal -->
+      <span class="leading-snug">{journal}</span>
+      <!-- 4. Year -->
+      <span class="font-medium">{year}</span>
+    </div>
+  </div>
+</a>

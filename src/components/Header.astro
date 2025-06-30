@@ -1,41 +1,110 @@
 ---
-// src/components/Header.astro
+// src/components/Header.astro - Final Corrected Navigation & Underline
 import DarkModeToggle from './DarkModeToggle.astro';
 import Logo from './Logo.astro';
+
+// Define all main navigation links
 const navLinks = [
   { href: "/", text: "Inicio" },
-  { href: "/trayectoria/", text: "Sobre mí" },
   { href: "/blog/", text: "Blog" },
   { href: "/contacto/", text: "Contacto" },
 ];
+
+// Define the "Sobre mí" dropdown items
+const sobreMiDropdownItems = [
+  { href: "/quien-soy/", text: "Quién Soy" },
+  { href: "/trayectoria/", text: "Mi Trayectoria" },
+];
+
 const currentPath = Astro.url.pathname;
+
+// Helper to determine if a link is active.
+const isNavLinkActive = (href: string) => {
+  if (href === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(href) && (currentPath.length === href.length || currentPath[href.length] === '/');
+};
+
+const isSobreMiActive = currentPath.startsWith('/quien-soy/') || currentPath.startsWith('/trayectoria/');
 ---
 <header class="sticky top-0 z-50">
-  {/* THE FIX: The border class is now `border-border-card` without the `/50` opacity modifier */}
   <div class="relative z-20 backdrop-blur-md bg-bg-primary/70 border-b border-border-card">
     <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         
+        <!-- Site Logo -->
         <a href="/" aria-label="Homepage">
-          <Logo class="h-16 w-auto" />
+          <Logo class="h-8 w-auto" />
         </a>
 
+        <!-- Desktop Navigation & Controls -->
         <div class="flex items-center gap-x-2 sm:gap-x-4">
           
           <ul class="hidden md:flex items-center space-x-2"> 
-            {navLinks.map(link => {
-              const isActive = link.href === "/" ? currentPath === "/" : currentPath.startsWith(link.href);
+            {/* "Inicio" link */}
+            <li>
+              <a href={navLinks[0].href} class:list={[ "relative px-4 py-2 text-base font-medium transition-colors duration-200 group", currentPath === navLinks[0].href ? "text-text-primary" : "text-text-secondary hover:text-text-primary" ]} aria-current={currentPath === navLinks[0].href ? "page" : false} style="display: flex; align-items: center;">
+                {navLinks[0].text}
+                <span class:list={[ "absolute left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center", currentPath === navLinks[0].href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100" ]} style="bottom: 3px;"></span>
+              </a>
+            </li>
+
+            <!-- "Sobre mí" Dropdown -->
+            <li class="relative group" id="sobre-mi-dropdown-parent">
+              <button
+                id="sobre-mi-dropdown-toggle"
+                aria-haspopup="true"
+                aria-expanded="false"
+                class:list={[
+                  "relative px-4 py-2 text-base font-medium transition-colors duration-200 group inline-flex items-center gap-x-1",
+                  isSobreMiActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary"
+                ]}
+                style="display: flex; align-items: center;"
+              >
+                <span>Sobre mí</span>
+                <svg id="dropdown-chevron" class="w-4 h-4 transition-transform duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: -2px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                <span class:list={[ "absolute left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center", isSobreMiActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100" ]} style="bottom: 3px;"></span>
+              </button>
+
+              <div
+                id="sobre-mi-dropdown-menu"
+                class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-bg-card rounded-lg shadow-lg border border-border-card py-2 opacity-0 scale-95 pointer-events-none transition-all duration-200 origin-top"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="sobre-mi-dropdown-toggle"
+                tabindex="-1"
+              >
+                {sobreMiDropdownItems.map(item => (
+                  <a
+                    href={item.href}
+                    class="block px-4 py-2 text-sm text-text-primary hover:bg-bg-secondary hover:text-accent-primary transition-colors"
+                    role="menuitem"
+                    tabindex="-1"
+                  >
+                    {item.text}
+                  </a>
+                ))}
+              </div>
+            </li>
+
+            {/* Loop for "Blog" and "Contacto" */}
+            {navLinks.slice(1).map(link => {
+              const isActive = isNavLinkActive(link.href);
               return (
                 <li>
-                  <a href={link.href} class:list={[ "relative px-4 py-2 text-base font-medium transition-colors duration-200 group", isActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary" ]} aria-current={isActive ? "page" : false}>
+                  <a href={link.href} class:list={[ "relative px-4 py-2 text-base font-medium transition-colors duration-200 group", isActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary" ]} aria-current={isActive ? "page" : false} style="display: flex; align-items: center;">
                     {link.text}
-                    <span class:list={[ "absolute bottom-1 left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center", isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100" ]}></span>
+                    <span class:list={[ "absolute left-0 right-0 h-0.5 bg-accent-primary transition-transform duration-300 ease-in-out origin-center", isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100" ]} style="bottom: 3px;"></span>
                   </a>
                 </li>
               );
             })}
           </ul>
           
+          <!-- Mobile menu button (no changes) -->
           <button id="mobile-menu-toggle" class="md:hidden p-2 text-text-secondary rounded-lg hover:bg-bg-secondary transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu-dropdown">
             <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             <svg id="menu-icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -48,6 +117,7 @@ const currentPath = Astro.url.pathname;
     </nav>
   </div>
 
+  <!-- Mobile menu dropdown (no changes) -->
   <div id="mobile-menu-dropdown" class="absolute top-full left-0 w-full bg-[var(--color-bg-card)] border-b border-border-card shadow-lg md:hidden transition-all duration-300 ease-in-out opacity-0 -translate-y-4 pointer-events-none">
     <ul class="flex flex-col p-4 space-y-2">
       {navLinks.map(link => (
@@ -57,6 +127,19 @@ const currentPath = Astro.url.pathname;
           </a>
         </li>
       ))}
+      {/* Add dropdown items to mobile menu as well */}
+      <li class="border-t border-border-card mt-2 pt-2">
+        <span class="block px-4 py-3 text-lg font-semibold text-text-secondary/70">Sobre mí</span>
+        <ul>
+          {sobreMiDropdownItems.map(item => (
+            <li>
+              <a href={item.href} class="block w-full px-4 py-2 pl-8 text-base font-medium text-text-primary rounded-md hover:bg-bg-secondary hover:text-accent-primary transition-colors">
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </li>
     </ul>
   </div>
 </header>

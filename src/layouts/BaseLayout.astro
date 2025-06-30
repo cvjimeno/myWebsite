@@ -94,7 +94,6 @@ const permalink = Astro.url.href;
             document.documentElement.classList.remove('dark');
           }
         };
-
         // --- 1. THEME TOGGLE LOGIC ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const handleToggleClick = () => {
@@ -104,6 +103,7 @@ const permalink = Astro.url.href;
         if (themeToggleBtn) {
           themeToggleBtn.addEventListener('click', handleToggleClick);
         }
+      
 
         // --- 2. MOBILE MENU LOGIC ---
         const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
@@ -126,6 +126,88 @@ const permalink = Astro.url.href;
         };
         if (mobileToggleBtn) {
           mobileToggleBtn.addEventListener('click', handleMobileMenuClick);
+        }
+
+               // --- NEW: DROPDOWN MENU LOGIC ---
+        const dropdownToggle = document.getElementById('sobre-mi-dropdown-toggle');
+        const dropdownMenu = document.getElementById('sobre-mi-dropdown-menu');
+        const dropdownChevron = document.getElementById('dropdown-chevron');
+        const dropdownParent = document.getElementById('sobre-mi-dropdown-parent');
+
+        if (dropdownToggle && dropdownMenu && dropdownChevron && dropdownParent) {
+          let isDropdownOpen = false;
+
+          const openDropdown = () => {
+            dropdownMenu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            dropdownToggle.setAttribute('aria-expanded', 'true');
+            dropdownChevron.style.transform = 'rotate(180deg)'; // Rotate chevron
+            isDropdownOpen = true;
+          };
+
+          const closeDropdown = () => {
+            dropdownMenu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+            dropdownChevron.style.transform = 'rotate(0deg)'; // Reset chevron
+            isDropdownOpen = false;
+          };
+
+          const toggleDropdown = () => {
+            if (isDropdownOpen) {
+              closeDropdown();
+            } else {
+              openDropdown();
+            }
+          };
+
+          // Toggle on click
+          dropdownToggle.addEventListener('click', toggleDropdown);
+
+          // Close when clicking outside
+          document.addEventListener('click', (event) => {
+            if (isDropdownOpen && !dropdownParent.contains(event.target)) {
+              closeDropdown();
+            }
+          });
+
+          // Close on Escape key
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && isDropdownOpen) {
+              closeDropdown();
+            }
+          });
+
+          // Handle keyboard navigation for accessibility
+          dropdownToggle.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowDown' && isDropdownOpen) {
+              event.preventDefault();
+              dropdownMenu.querySelector('a')?.focus(); // Focus first item
+            }
+          });
+
+          dropdownMenu.addEventListener('keydown', (event) => {
+            const focusableItems = Array.from(dropdownMenu.querySelectorAll('a'));
+            const focusedItemIndex = focusableItems.indexOf(document.activeElement);
+
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              if (focusedItemIndex < focusableItems.length - 1) {
+                focusableItems[focusedItemIndex + 1]?.focus();
+              } else {
+                focusableItems[0]?.focus(); // Loop to first
+              }
+            } else if (event.key === 'ArrowUp') {
+              event.preventDefault();
+              if (focusedItemIndex > 0) {
+                focusableItems[focusedItemIndex - 1]?.focus();
+              } else {
+                focusableItems[focusableItems.length - 1]?.focus(); // Loop to last
+              }
+            } else if (event.key === 'Escape') {
+              event.preventDefault();
+              closeDropdown();
+              dropdownToggle.focus(); // Return focus to toggle button
+            }
+          });
         }
 
         // --- 3. RE-APPLY THEME ON SWAP ---
