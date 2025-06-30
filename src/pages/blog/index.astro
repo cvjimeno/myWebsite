@@ -10,6 +10,15 @@ import carlosProfilePic from '../../assets/images/hero-main-picture.webp';
 const pageTitle = "El Blog de CV";
 const pageDescription = "Explora todos mis artículos sobre IA, ciencia y tecnología. Un espacio para aprender sobre los últimos avances y reflexionar sobre su impacto en nuestro mundo.";
 
+// Define allowed tags for filtering (keeps it controlled)
+const ALLOWED_FILTER_TAGS = [
+  'IA', 
+  'ChatGPT', 
+  'Productividad', 
+  'Aprendizaje', 
+  'Tecnología'
+];
+
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 
@@ -30,7 +39,19 @@ const postsWithImages = await Promise.all(
 
 const sortedPosts = postsWithImages.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
 
-const allCategories = ['Todos', ...new Set(sortedPosts.flatMap(post => post.data.tags || []))].sort((a, b) => a === 'Todos' ? -1 : b === 'Todos' ? 1 : a.localeCompare(b));
+// Only include predefined tags in filters
+const usedTags = new Set();
+sortedPosts.forEach(post => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => {
+      if (ALLOWED_FILTER_TAGS.includes(tag)) {
+        usedTags.add(tag);
+      }
+    });
+  }
+});
+
+const allCategories = ['Todos', ...Array.from(usedTags).sort()];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>

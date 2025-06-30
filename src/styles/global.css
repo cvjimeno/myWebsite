@@ -3,11 +3,18 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-  /* Accent Colors */
-  --color-accent-primary: #3B82F6;        /* Primary interactive color (blue) */
-  --color-accent-primary-hover: #2563EB;   /* Hover state for primary accent */
-  --color-accent-highlight: #F97316; 
+  /* --- NEW "TEAL & ROSE" PALETTE (Light Mode) --- */
+
+  /* Teal (Primary Accent) */
+  --color-accent-primary: #1E6B66;        /* Dark, rich Teal for text, buttons (Passes AA on white) */
+  --color-accent-primary-hover: #154D49;   /* Darker Teal for hover states */
+  --color-accent-primary-bg: #EAF6F5;      /* Very light, subtle Teal for backgrounds */
+
+  /* Rose (Highlight Accent) */
+  --color-accent-highlight: #C64F6C;      /* Darker Rose for highlights (Passes AA) */
+  --color-accent-highlight-bg: #F9EBEF;    /* Very light Rose for backgrounds */
   
+  /* --- Base colors remain the same --- */
   --color-bg-primary: #FFFFFF;
   --color-bg-secondary: #F3F4F6;
   --color-bg-card: #FFFFFF;
@@ -17,6 +24,29 @@
   
   --color-border-card: #E5E7EB;
   --color-border-subtle: #D1D5DB;
+}
+
+/* --- DARK MODE THEME for "TEAL & ROSE" --- */
+.dark {
+  /* Teal */
+  --color-accent-primary: #85CFC9;        /* Your original Teal, which works great on dark backgrounds */
+  --color-accent-primary-hover: #A1D2CE;
+  --color-accent-primary-bg: #1F3D3A;      /* Dark, muted Teal for backgrounds */
+
+  /* Rose */
+  --color-accent-highlight: #E890A6;      /* Lighter Rose for dark backgrounds */
+  --color-accent-highlight-bg: #4D2833;    /* Dark, muted Rose for backgrounds */
+
+  /* --- Dark mode base colors remain the same --- */
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1F2937;
+  --color-bg-card: #374151;
+  
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #9CA3AF;
+  
+  --color-border-card: #4B5563;
+  --color-border-subtle: #4B5563;
 }
 
 @layer base {
@@ -30,11 +60,12 @@
 }
 
 @layer utilities {
-  /* THE FIX: Restored this utility that your Header component uses */
+  /* This utility will now create a teal-to-rose gradient */
   .brand-gradient-bg {
     @apply bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-highlight)];
   }
 
+  /* Your prose styles will automatically inherit the new accent colors */
   .prose {
     --tw-prose-body: var(--color-text-primary);
     --tw-prose-headings: var(--color-text-primary);
@@ -54,7 +85,8 @@
 
 /*
  =================================================================
-  RESTORED: THE "STARLIGHT FIELD" - A HIGH-PERFORMANCE INTERACTIVE BG
+  THE "STARLIGHT FIELD"
+  This will now use the new accent colors automatically
  =================================================================
 */
 @layer utilities {
@@ -105,7 +137,7 @@
 
 /*
  =================================================================
-  RESTORED: THEME VARIATION FOR THE HOMEPAGE CTA ("Golden Synapse")
+  THEME VARIATION FOR THE HOMEPAGE CTA
  =================================================================
 */
 @layer utilities {
@@ -119,23 +151,7 @@
   }
 }
 
-/* --- DARK MODE THEME --- */
-.dark {
-  /* Accent Colors */
-  --color-accent-primary: #3B82F6;
-  --color-accent-primary-hover: #93C5FD;
-  --color-accent-highlight: #FB923C;
 
-  --color-bg-primary: #111827;
-  --color-bg-secondary: #1F2937;
-  --color-bg-card: #374151;
-  
-  --color-text-primary: #F9FAFB;
-  --color-text-secondary: #9CA3AF;
-  
-  --color-border-card: #4B5563;
-  --color-border-subtle: #4B5563;
-}
 
 /*
  =================================================================
