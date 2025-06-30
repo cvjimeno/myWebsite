@@ -16,6 +16,8 @@ import Button from '../common/Button.astro';
           widths={[400, 600, 800]}
           sizes="(max-width: 768px) 100vw, 50vw" 
           format="webp"
+          loading="eager"
+          fetchpriority={'high'}
           class="w-full max-w-2xl mx-auto md:mx-0 rounded-lg" 
         />
       </figure>
