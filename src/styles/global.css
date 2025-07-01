@@ -24,6 +24,8 @@
   
   --color-border-card: #E5E7EB;
   --color-border-subtle: #D1D5DB;
+  --color-button-text: #FFFFFF; /* White text on dark primary button */
+
 }
 
 /* --- DARK MODE THEME for "TEAL & ROSE" --- */
@@ -47,6 +49,8 @@
   
   --color-border-card: #4B5563;
   --color-border-subtle: #4B5563;
+  --color-button-text: #1F2937; /* Dark text on light primary button */
+
 }
 
 @layer base {

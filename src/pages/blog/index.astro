@@ -4,8 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/cards/BlogCardHomepage.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-
 import carlosProfilePic from '../../assets/images/hero-main-picture.webp';
+
 
 const pageTitle = "El Blog de CV";
 const pageDescription = "Explora todos mis artículos sobre IA, ciencia y tecnología. Un espacio para aprender sobre los últimos avances y reflexionar sobre su impacto en nuestro mundo.";
@@ -72,23 +72,25 @@ const allCategories = ['Todos', ...Array.from(usedTags).sort()];
       </p>
     </header>
 
-    <div id="filter-buttons" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16">
-      {allCategories.map((category, index) => {
-        const baseClasses = "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200";
-        const inactiveClasses = "bg-bg-secondary text-text-secondary hover:bg-gray-200 dark:bg-bg-secondary dark:text-text-primary dark:hover:bg-gray-700";
-        const activeClasses = "bg-accent-primary text-white";
-        const isInitiallyActive = index === 0;
+  <div id="filter-buttons" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16">
+    {allCategories.map((category, index) => {
+      const baseClasses = "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200";
+      // FIX: Add text-[var(--color-button-text)] to activeClasses
+      const inactiveClasses = "bg-bg-secondary text-text-secondary hover:bg-gray-200 dark:bg-bg-secondary dark:text-text-primary dark:hover:bg-gray-700";
+      const activeClasses = "bg-accent-primary text-[var(--color-button-text)]"; // <-- FIX IS HERE
 
-        return (
-          <button 
-            class:list={[ baseClasses, isInitiallyActive ? activeClasses : inactiveClasses ]}
-            data-category={category.toLowerCase()}
-          >
-            {category}
-          </button>
-        )
-      })}
-    </div>
+      const isInitiallyActive = index === 0;
+
+      return (
+        <button 
+          class:list={[ baseClasses, isInitiallyActive ? activeClasses : inactiveClasses ]}
+          data-category={category.toLowerCase()}
+        >
+          {category}
+        </button>
+      )
+    })}
+  </div>
 
     <main id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
       {sortedPosts.map((post) => (
@@ -111,26 +113,22 @@ const allCategories = ['Todos', ...Array.from(usedTags).sort()];
     const filterButtons = document.querySelectorAll('.filter-btn');
     const blogCards = document.querySelectorAll('#blog-grid > article');
     
-    // These class lists are correct
-    const activeClasses = ['bg-accent-primary', 'text-white'];
+    // FIX: Update class lists in script as well
+    const activeClasses = ['bg-accent-primary', 'text-[var(--color-button-text)]']; // <-- FIX IS HERE
     const inactiveClasses = ['bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200', 'dark:bg-bg-secondary', 'dark:text-text-primary', 'dark:hover:bg-gray-700'];
-
-    if (!filterButtons.length || !blogCards.length) return;
 
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
         const selectedCategory = button.dataset.category.toLowerCase();
 
-        // Update button styles (this part is correct)
         filterButtons.forEach(btn => {
           btn.classList.remove(...activeClasses);
           btn.classList.add(...inactiveClasses);
         });
-        button.classList.add(...activeClasses);
+        
         button.classList.remove(...inactiveClasses);
+        button.classList.add(...activeClasses);
 
-        // --- THE FIX IS HERE ---
-        // We now toggle the 'hidden' class instead of using inline styles.
         blogCards.forEach(card => {
           const cardTags = card.dataset.tags || '';
           const cardElement = card as HTMLElement;

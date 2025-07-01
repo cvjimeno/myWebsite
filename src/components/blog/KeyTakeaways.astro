@@ -1,0 +1,61 @@
+---
+// src/components/blog/KeyTakeaways.astro
+import Icon from '../common/Icon.astro';
+
+export interface Props {
+  title?: string;
+}
+const { title = "Puntos Clave" } = Astro.props;
+---
+<aside class="key-takeaways-container my-10 rounded-lg border border-border-card bg-bg-secondary dark:bg-bg-primary p-6 shadow-sm">
+  <div class="flex items-center gap-x-3 mb-4">
+    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent-primary-bg dark:bg-accent-primary/20 flex items-center justify-center">
+      <Icon name="target" size="w-5 h-5" class="text-accent-primary" />
+    </div>
+    <h3 class="text-lg font-semibold text-text-primary m-0">{title}</h3>
+  </div>
+  
+  <div class="prose prose-base max-w-none text-text-secondary dark:text-text-secondary">
+    <slot />
+  </div>
+</aside>
+
+<style is:global>
+  /* Target the list specifically within this component for custom styling */
+  .key-takeaways-container .prose ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+  }
+
+  .key-takeaways-container .prose li {
+    position: relative;
+    padding-left: 2rem; /* Make space for our custom icon */
+    margin-bottom: 0.75rem;
+  }
+
+  /* This is the custom list marker - a checkmark icon */
+  .key-takeaways-container .prose li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em; /* Fine-tune vertical alignment */
+    width: 1.25rem;
+    height: 1.25rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    
+    /* Light Mode Icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231E6B66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+
+  .dark .key-takeaways-container .prose li::before {
+    /* Dark Mode Icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2385CFC9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+
+  /* Ensure paragraphs inside list items have proper spacing */
+  .key-takeaways-container .prose li p {
+    margin: 0;
+  }
+</style>

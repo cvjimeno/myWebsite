@@ -40,6 +40,10 @@ const hardcodedIcons = {
     svgContent: `<path d="m9 18 6-6-6-6"/>`,
     viewBox: "0 0 24 24"
   },
+   'target': {
+    svgContent: `<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle>`,
+    viewBox: "0 0 24 24"
+  },
 };
 /**
  * A unified function to get icon data from either a file or the hardcoded map.

@@ -3,21 +3,21 @@
 import Icon from "../common/Icon.astro";
 
 export interface Props {
-  theme?: 'blue' | 'orange';
+  theme?: 'accent' | 'highlight' ; // Added 'orange' as a theme option
 }
-const { theme = 'blue' } = Astro.props;
+const { theme = 'accent' } = Astro.props;
 
 // Determine colors based on the theme prop
-const isOrangeTheme = theme === 'orange';
-const accentColorClass = isOrangeTheme ? 'text-accent-highlight' : 'text-accent-primary';
-const accentBgClass = isOrangeTheme ? 'bg-orange-100 dark:bg-accent-highlight/20' : 'bg-blue-100 dark:bg-accent-primary/20';
-const buttonBgClass = isOrangeTheme ? 'bg-accent-highlight hover:opacity-90' : 'bg-accent-primary hover:bg-[var(--color-accent-primary-hover)]';
-const focusRingClass = isOrangeTheme ? 'focus:ring-accent-highlight/50' : 'focus:ring-accent-primary/50';
+const isHighlightTheme = theme === 'highlight'; // 'highlight' is the new orange theme
+const accentColorClass = isHighlightTheme ? 'text-accent-highlight' : 'text-accent-primary';
+const accentBgClass = isHighlightTheme ? 'bg-orange-100 dark:bg-accent-highlight/20' : 'bg-blue-100 dark:bg-accent-primary/20';
+const buttonBgClass = isHighlightTheme ? 'bg-accent-highlight hover:opacity-90' : 'bg-accent-primary hover:bg-[var(--color-accent-primary-hover)]';
+const focusRingClass = isHighlightTheme ? 'focus:ring-accent-highlight/50' : 'focus:ring-accent-primary/50';
 
 ---
 {/* THE FIX: The outer section now provides a consistent background context */}
 <section class="starlight-field bg-bg-secondary dark:bg-bg-primary py-16 md:py-20 border-y border-border-card dark:border-border-card"
-         class:list={[{'theme-orange': isOrangeTheme}]}>
+         class:list={[{'theme-orange': isHighlightTheme}]}>
   
   <div class="starlight-canvas" id={`starlightCanvas-${theme}`}></div>
   
@@ -59,10 +59,6 @@ const focusRingClass = isOrangeTheme ? 'focus:ring-accent-highlight/50' : 'focus
   </div>
 </section>
 
-<!-- The script for the starlight effect remains the same -->
-<script define:vars={{ theme }}>
-  // ... (no changes needed to the script) ...
-</script>
 
 
 <!-- The script is almost identical, but now uses a unique canvas ID -->

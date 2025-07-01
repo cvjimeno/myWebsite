@@ -1,0 +1,92 @@
+---
+// src/pages/quien-soy.astro (Bento Box with Scoped Styles)
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import Icon from '../components/common/Icon.astro';
+import Button from '../components/common/Button.astro';
+
+// Import your personal photo
+import personalPhoto from '../assets/images/hero-main-picture.webp';
+---
+
+<BaseLayout title="Quién Soy" description="Una mirada personal a mi historia, motivaciones y pasiones en la ciencia y la tecnología.">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    
+    <header class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">
+        Un poco más sobre mí
+      </h1>
+      <p class="text-xl text-text-secondary">
+        Más allá del código y la ciencia, estas son algunas de las cosas que me mueven.
+      </p>
+    </header>
+
+    <!-- The Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Bento Item 1: Main Intro (Large) -->
+      <div class="bento-card lg:col-span-2 flex flex-col md:flex-row items-center gap-8 p-8">
+        <Image src={personalPhoto} alt="Carlos Velasco" width={150} height={150} class="rounded-full w-32 h-32 md:w-40 md:h-40 flex-shrink-0 shadow-md" />
+        <div class="text-center md:text-left">
+          <h2 class="text-2xl font-semibold text-text-primary mb-2">Carlos Velasco</h2>
+          <p class="text-text-secondary">Mi misión es simple: explorar la intersección entre la tecnología y la humanidad, y compartir el viaje. Creo en el aprendizaje constante y en construir en público.</p>
+          <div class="mt-4">
+            <Button href="/trayectoria" variant="secondary" size="sm">Ver mi CV interactivo</Button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bento Item 2: My Philosophy -->
+      <div class="bento-card p-6">
+        <Icon name="compass" size="w-7 h-7" class="text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-2">Mi Filosofía</h3>
+        <ul class="list-disc list-inside text-text-secondary space-y-1 text-sm">
+          <li>Curiosidad > Conveniencia</li>
+          <li>Enseñar es la mejor forma de aprender</li>
+          <li>El progreso está en la intersección</li>
+        </ul>
+      </div>
+
+      <!-- Bento Item 3: My Tools -->
+      <div class="bento-card p-6">
+        <Icon name="tool" size="w-7 h-7" class="text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-2">Mis Herramientas</h3>
+        <p class="text-text-secondary text-sm">Astro, Tailwind CSS, Figma, VS Code, Notion, y mucho café.</p>
+      </div>
+
+      <!-- Bento Item 4: Currently Reading -->
+      <div class="bento-card p-6">
+        <Icon name="book-open" size="w-7 h-7" class="text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-2">Actualmente Leyendo</h3>
+        <p class="text-text-secondary text-sm">"Storyworthy" de Matthew Dicks.</p>
+      </div>
+
+      <!-- Bento Item 5: Let's Connect (CTA) -->
+      <div class="bento-card is-accented p-6 text-center">
+         <h3 class="font-semibold text-text-primary mb-3">¿Tienes una idea?</h3>
+         <p class="text-text-secondary text-sm mb-4">Me encantaría escucharla. Siempre estoy abierto a nuevas colaboraciones y conversaciones.</p>
+         <Button href="/contacto" variant="primary" size="sm">Hablemos</Button>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .bento-card {
+    /* Base styles for all bento cards */
+    background-color: var(--color-bg-card);
+    border-radius: 0.75rem; /* rounded-xl */
+    border: 1px solid var(--color-border-card);
+    box-shadow: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+    height: 100%;
+  }
+
+  .bento-card.is-accented {
+    /* Special background for the CTA card */
+    background-color: var(--color-accent-primary-bg);
+  }
+  .dark .bento-card.is-accented {
+    background-color: rgb(59 130 246 / 0.2); /* fallback for dark mode */
+  }
+</style>

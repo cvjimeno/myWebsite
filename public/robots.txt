@@ -1,0 +1,6 @@
+# Allow all crawlers full access to the site.
+User-agent: *
+Allow: /
+
+# Point crawlers to the sitemap for a full list of pages.
+Sitemap: https://mywebsitecvcv.netlify.app/sitemap-index.xml

@@ -41,28 +41,26 @@ switch (size) {
     break;
 }
 
-// Variant specific classes
 let variantClasses = "";
 switch (variant) {
   case 'secondary':
     variantClasses = `
       bg-transparent 
-      border-2 border-accent-blue 
-      text-accent-blue 
-      hover:bg-accent-blue/[.10]  // Slight blue background on hover
-      focus:ring-accent-blue
+      border-2 border-accent-primary 
+      text-accent-primary 
+      hover:bg-accent-primary-bg  // Subtle background on hover
+      focus:ring-accent-primary
     `;
-    // Example: hover:bg-blue-500 hover:text-white if you want it to fill on hover
     break;
-  case 'custom': // For applying completely custom classes via the `class` prop
-    variantClasses = ""; // No variant-specific classes, rely on customClass
+  case 'custom':
+    variantClasses = "";
     break;
-  case 'primary': // Default variant
+  case 'primary':
   default:
     variantClasses = `
       bg-[var(--color-accent-primary)] 
-      text-[var(--color-bg-primary-dark)] dark:text-[var(--color-bg-primary)]
-      hover:bg-[var(--color-accent-primary-hover)]  // Updated to use new variable
+      text-[var(--color-button-text)]     // <-- FIX IS HERE: Use the new variable
+      hover:bg-[var(--color-accent-primary-hover)]  
       focus:ring-[var(--color-accent-primary)]
       shadow-md hover:shadow-lg
     `;
@@ -76,5 +74,5 @@ switch (variant) {
   target={target}
   rel={target === '_blank' ? (rel || "noopener noreferrer") : rel}
 >
-  <slot /> {/* This is where the button text will go */}
+  <slot />
 </a>
