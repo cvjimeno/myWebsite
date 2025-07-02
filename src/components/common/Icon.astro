@@ -1,22 +1,9 @@
 ---
-// filepath: /Users/carlos/Documents/Website/myWebsite/src/components/common/Icon.astro
-import { getIcon } from '../../utils/icons';
+// src/components/common/Icon.astro (THE CORRECT WRAPPER COMPONENT)
+import { Icon as AstroIcon } from 'astro-icon/components';
 
-export interface Props {
-  name: string;
-  class?: string;
-  size?: string; // Add a size prop
-}
-
-const { name, class: className, size = 'w-5 h-5' } = Astro.props; // Default size
-
-const { svgContent, viewBox } = await getIcon(name);
+// This component acts as a "wrapper".
+// It takes all the props you pass to <Icon ... /> (`name`, `class`, etc.)
+// and passes them directly to the real Icon component from the astro-icon library.
 ---
-
-<svg 
-  class:list={["inline-block fill-current", className, size]} 
-  viewBox={viewBox}  
-  xmlns="http://www.w3.org/2000/svg" 
->
-  <Fragment set:html={svgContent} />
-</svg>
+<AstroIcon {...Astro.props} />

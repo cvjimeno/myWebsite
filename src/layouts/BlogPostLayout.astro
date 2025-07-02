@@ -18,32 +18,26 @@ const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', 
 });
 const readingTimeText = `${frontmatter.readingTime} min de lectura`;
 
-// 1. Use import.meta.glob to resolve all hero images (robust for dynamic frontmatter paths)
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
-
-// Check if the specific image path exists in the glob result
 if (!allHeroImages[frontmatter.heroImage]) {
-  throw new Error(`Hero image not found for post "${frontmatter.slug}". Path: ${frontmatter.heroImage}. Please ensure the path in frontmatter is correct and the image exists.`);
+  throw new Error(`Hero image not found for post "${frontmatter.slug}". Path: ${frontmatter.heroImage}.`);
 }
-
-// 2. Await the import of the specific hero image for the <Image> component
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 
 // 3. Use getImage to generate the SPECIFIC, optimized URL for the Open Graph image.
 //    This guarantees the correct format (webp) and a consistent size for social media.
 const ogImageUrl = (await getImage({
-  src: heroImageResolved, // Pass the already resolved image data
-  width: 1200, // Standard width for social share images
-  height: 630, // Standard height (1.91:1 aspect ratio)
-  format: 'webp', // Ensure it's always webp
-  quality: 75,
-})).src; // <-- Get the final string URL
-
+  src: heroImageResolved,
+  width: 1200,
+  height: 630,
+  format: 'webp',
+  quality: 80,
+})).src;
 ---
 <BaseLayout 
   title={frontmatter.title}
   description={frontmatter.description}
-  image={ogImageUrl} // <-- Pass the GUARANTEED correct URL here
+  image={ogImageUrl}
   pubDate={frontmatter.pubDate}
   type="article"
 >
@@ -54,7 +48,7 @@ const ogImageUrl = (await getImage({
         <span>{formattedDate}</span>
         <span class="text-gray-400">•</span>
         <div class="flex items-center gap-x-1.5">
-          <Icon name="clock" class="w-4 h-4" />
+          <Icon name="lucide:clock" class="w-4 h-4" />
           <span>{readingTimeText}</span>
         </div>
       </div>

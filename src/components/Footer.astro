@@ -1,29 +1,23 @@
 ---
-// src/components/Footer.astro
-import Icon from './common/Icon.astro';
+// src/components/Footer.astro (FINAL HYBRID VERSION)
+import SocialIcon from './common/SocialIcon.astro'; // <-- Our new manual component
 
-const currentYear = new Date().getFullYear();
 const socialLinks = [
-  { href: "https://x.com/cvjimeno", icon: "x", label: "X/Twitter" }, 
-  { href: "https://linkedin.com/in/carlos-velasco-jimeno/", icon: "linkedin", label: "LinkedIn" },
+  { href: "https://x.com/cvjimeno", name: "x", label: "X/Twitter" }, 
+  { href: "https://linkedin.com/in/carlos-velasco-jimeno/", name: "linkedin", label: "LinkedIn" },
 ];
 ---
 <footer class="border-t border-border-subtle mt-16 md:mt-24">
   <div class="container mx-auto px-4 py-4 md:py-6 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-    
-    {/* THE FIX: Stacks vertically on mobile, row on medium screens and up */}
     <div class="flex flex-col md:flex-row items-center justify-center gap-x-3 gap-y-2 text-text-secondary mb-4 md:mb-0">
       <span class="inline-flex items-center">
         Hecho en mis ratos libres con
-        <Icon name="astro" size="w-5 h-5" class="mx-1.5" />
+        <SocialIcon name="astro" class="w-5 h-5 mx-1.5 fill-current" />
         Astro
       </span>
       <span class="hidden md:inline">·</span>
       <span>© {new Date().getFullYear()} Carlos Velasco. Sin derechos reservados :)</span>
     </div>
-
-
-    {/* Social Icons (no changes here) */}
     <div class="flex space-x-4">
       {socialLinks.map(social => (
         <a 
@@ -33,7 +27,7 @@ const socialLinks = [
           rel="noopener noreferrer"
           class="text-text-secondary hover:text-accent-primary transition-colors duration-150 ease-in-out"
         >
-          <Icon name={social.icon} size="w-5 h-5 md:w-6 md:h-6" />
+          <SocialIcon name={social.name} class="w-5 h-5 md:w-6 md:h-6 fill-current" />
         </a>
       ))}
     </div>

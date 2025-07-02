@@ -6,7 +6,7 @@ import PublicationCard from "../components/career/PublicationCard.astro";
 import Badge from "../components/common/Badge.astro";
 import { Image } from "astro:assets";
 import Icon from '../components/common/Icon.astro';
-
+import SocialIcon from "../components/common/SocialIcon.astro";
 // --- DATA: LOGOS ---
 import philipsLogo from "../assets/images/logos/philips-logo.webp";
 import kclLogo from "../assets/images/logos/kcl-logo.png";
@@ -107,13 +107,13 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
           <h3 class="text-base sm:text-lg font-semibold text-text-primary mb-4">Conecta sobre investigación</h3>
           <div class="flex flex-wrap justify-center md:justify-end items-center gap-x-6 gap-y-3">
             <a href="https://scholar.google.com/citations?user=0gpttXAAAAAJ&hl=es" target="_blank" rel="noopener noreferrer" aria-label="Google Scholar" class="text-text-secondary hover:text-accent-primary transition-colors">
-              <Icon name="google-scholar" size="w-6 h-6" />
+              <SocialIcon name="google-scholar" class="w-6 h-6" />
             </a>
             <a href="https://www.researchgate.net/profile/Carlos-Velasco-Jimeno" target="_blank" rel="noopener noreferrer" aria-label="ResearchGate" class="text-text-secondary hover:text-accent-primary transition-colors">
-              <Icon name="ResearchGate" size="w-6 h-6" />
+              <SocialIcon name="ResearchGate" class="w-6 h-6" />
             </a>
             <a href="https://linkedin.com/in/carlos-velasco-jimeno/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-text-secondary hover:text-accent-primary transition-colors">
-              <Icon name="linkedin" size="w-6 h-6" />
+              <SocialIcon name="linkedin" class="w-6 h-6" />
             </a>
           </div>
         </div>
