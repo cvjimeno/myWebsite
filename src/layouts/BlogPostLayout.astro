@@ -1,13 +1,13 @@
 ---
-// src/layouts/BlogPostLayout.astro (FINAL POLISHED VERSION)
+// src/layouts/BlogPostLayout.astro (FINAL & CORRECTED OG IMAGE URL GENERATION with GLOB)
 import BaseLayout from './BaseLayout.astro';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets'; // <-- Ensure getImage is imported
 import TableOfContents from '../components/TableOfContents.astro';
 import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
 import RelatedPostsCarousel from '../components/blog/RelatedPostsCarousel.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
 import Badge from '../components/common/Badge.astro';
-import Icon from '../components/common/Icon.astro'; // <-- Re-added this import, it was missing.
+import Icon from '../components/common/Icon.astro';
 
 const { frontmatter, headings } = Astro.props;
 
@@ -18,16 +18,32 @@ const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', 
 });
 const readingTimeText = `${frontmatter.readingTime} min de lectura`;
 
+// 1. Use import.meta.glob to resolve all hero images (robust for dynamic frontmatter paths)
 const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
+
+// Check if the specific image path exists in the glob result
 if (!allHeroImages[frontmatter.heroImage]) {
-  throw new Error(`Hero image not found for post "${frontmatter.slug}". Path: ${frontmatter.heroImage}`);
+  throw new Error(`Hero image not found for post "${frontmatter.slug}". Path: ${frontmatter.heroImage}. Please ensure the path in frontmatter is correct and the image exists.`);
 }
+
+// 2. Await the import of the specific hero image for the <Image> component
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
+
+// 3. Use getImage to generate the SPECIFIC, optimized URL for the Open Graph image.
+//    This guarantees the correct format (webp) and a consistent size for social media.
+const ogImageUrl = (await getImage({
+  src: heroImageResolved, // Pass the already resolved image data
+  width: 1200, // Standard width for social share images
+  height: 630, // Standard height (1.91:1 aspect ratio)
+  format: 'webp', // Ensure it's always webp
+  quality: 75,
+})).src; // <-- Get the final string URL
+
 ---
 <BaseLayout 
   title={frontmatter.title}
   description={frontmatter.description}
-  image={heroImageResolved.src}
+  image={ogImageUrl} // <-- Pass the GUARANTEED correct URL here
   pubDate={frontmatter.pubDate}
   type="article"
 >
@@ -38,7 +54,7 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
         <span>{formattedDate}</span>
         <span class="text-gray-400">•</span>
         <div class="flex items-center gap-x-1.5">
-          <Icon name="clock" class="w-4 h-4" /> {/* Changed size prop to class */}
+          <Icon name="clock" class="w-4 h-4" />
           <span>{readingTimeText}</span>
         </div>
       </div>
@@ -50,6 +66,7 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
     </header>
 
     <div class="w-full mb-12 md:mb-16">
+      {/* This <Image> component still uses the heroImageResolved for display on the page itself */}
       <Image src={heroImageResolved} alt={frontmatter.imageAlt} widths={[800, 1200, 1600]} sizes="100vw" class="w-full max-h-[500px] object-cover"/>
     </div>
 
@@ -83,9 +100,8 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
 <script>
 // Your working scroll script remains here...
   const handleScroll = () => {
-    // Select the article body by its ID and cast it to tell TypeScript it's an HTMLElement.
     const articleBody = document.querySelector('#article-body') as HTMLElement;
-    if (!articleBody) return; // Exit if we're not on a page with this element.
+    if (!articleBody) return;
 
     const scrollTop = window.scrollY;
     const articleTop = articleBody.offsetTop;
@@ -99,10 +115,7 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
       return;
     }
     
-    const scrollDistance = scrollTop - articleTop;
-
-    const progress = Math.max(0, Math.min(100, (scrollDistance / scrollableDistance) * 100));
-
+    const progress = Math.max(0, Math.min(100, ((scrollTop - articleTop) / scrollableDistance) * 100));
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
   };
 
