@@ -1,13 +1,14 @@
 ---
-// src/layouts/BlogPostLayout.astro
+// src/layouts/BlogPostLayout.astro (FINAL POLISHED VERSION)
 import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
-import Icon from '../components/common/Icon.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
 import RelatedPostsCarousel from '../components/blog/RelatedPostsCarousel.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
 import Badge from '../components/common/Badge.astro';
+import Icon from '../components/common/Icon.astro'; // <-- Re-added this import, it was missing.
+
 const { frontmatter, headings } = Astro.props;
 
 const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
@@ -23,13 +24,13 @@ if (!allHeroImages[frontmatter.heroImage]) {
 }
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 ---
-{/* THE CRITICAL FIX: Passing unique props from this post to the parent layout. */}
 <BaseLayout 
   title={frontmatter.title}
   description={frontmatter.description}
   image={frontmatter.heroImage}
+  pubDate={frontmatter.pubDate}
+  type="article"
 >
-  
   <article>
     <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">{frontmatter.title}</h1>
@@ -37,13 +38,13 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
         <span>{formattedDate}</span>
         <span class="text-gray-400">•</span>
         <div class="flex items-center gap-x-1.5">
-          <Icon name="clock" size="w-4 h-4" />
+          <Icon name="clock" class="w-4 h-4" /> {/* Changed size prop to class */}
           <span>{readingTimeText}</span>
         </div>
       </div>
       {frontmatter.tags && (
         <div class="flex flex-wrap justify-center gap-2">
-          {frontmatter.tags.map(tag => <Badge variant="color" text={tag} />)}
+          {frontmatter.tags.map(tag => <Badge text={tag} />)}
         </div>
       )}
     </header>
@@ -68,7 +69,6 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
     </main>
   </article>
 
-  {/* These components are already styled correctly for dark mode from our previous steps */}
   <div class="mt-8">
     <RelatedPostsCarousel 
       currentPostSlug={frontmatter.slug} 
@@ -76,12 +76,10 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
     />
   </div>
 
-<div class="mt-8">
-  <NewsletterCTA theme="highlight"/> {/* Change theme="orange" to variant="highlight" */}
-</div>
-
+  <div class="mt-8">
+    <NewsletterCTA theme="highlight"/>
+  </div>
 </BaseLayout>
-
 <script>
 // Your working scroll script remains here...
   const handleScroll = () => {
