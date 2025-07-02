@@ -44,51 +44,36 @@ const pageTitle = "Mi Trayectoria";
 const introText = "Un resumen de mi camino profesional y académico, desde la investigación fundamental hasta la aplicación de la ciencia de datos e IA en entornos clínicos e industriales.";
 ---
 
-
 <BaseLayout title={pageTitle} description={introText}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-
-    <!-- THE DEFINITIVE HEADER SECTION -->
     <header class="grid grid-cols-1 md:grid-cols-5 gap-x-12 gap-y-10 items-center mb-16 md:mb-24">
-      
-      <!-- Left Column: Title & Intro (spans 3 of 5 columns) -->
       <div class="md:col-span-3 text-center md:text-left">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">
-          {pageTitle}
-        </h1>
-        <p class="text-lg sm:text-xl text-text-secondary leading-relaxed max-w-xl">
-          {introText}
-        </p>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">{pageTitle}</h1>
+        <p class="text-lg sm:text-xl text-text-secondary leading-relaxed max-w-xl">{introText}</p>
       </div>
-      
-      <!-- Right Column: Animated Stats (spans 2 of 5 columns) -->
       <div class="md:col-span-2 flex items-center justify-center md:justify-start">
         <ul class="space-y-6">
-            <li class="stat-item flex items-center gap-x-5 opacity-0">
-                <span data-goal="15" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
-                <p class="stat-label text-base text-text-secondary">Años de experiencia</p>
-            </li>
-            <li class="stat-item flex items-center gap-x-5 opacity-0" style="animation-delay: 150ms;">
-                <span data-goal="3" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
-                <p class="stat-label text-base text-text-secondary">Disciplinas conectadas</p>
-            </li>
-            <li class="stat-item flex items-center gap-x-5 opacity-0" style="animation-delay: 300ms;">
-                <span data-goal="9" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
-                <p class="stat-label text-base text-text-secondary">Publicaciones científicas</p>
-            </li>
+          <li class="stat-item flex items-center gap-x-5 opacity-0">
+            <span data-goal="15" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
+            <p class="stat-label text-base text-text-secondary">Años de experiencia</p>
+          </li>
+          <li class="stat-item flex items-center gap-x-5 opacity-0" style="animation-delay: 150ms;">
+            <span data-goal="3" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
+            <p class="stat-label text-base text-text-secondary">Disciplinas conectadas</p>
+          </li>
+          <li class="stat-item flex items-center gap-x-5 opacity-0" style="animation-delay: 300ms;">
+            <span data-goal="9" class="stat-number text-5xl md:text-6xl font-bold text-accent-primary min-w-[80px] text-right">0</span>
+            <p class="stat-label text-base text-text-secondary">Publicaciones científicas</p>
+          </li>
         </ul>
       </div>
     </header>
-    <!-- END FINAL HEADER SECTION -->
 
     <section id="timeline" class="mb-16 ">
-      <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-4 text-center leading-tight">
-        Viaje Profesional
-      </h2>
+      <h2 class="text-3xl md:text-4xl font-semibold text-text-primary mb-12 text-center leading-tight">Viaje Profesional</h2>
       <div class="relative max-w-5xl mx-auto">
-        <div class="absolute top-10 bottom-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-border-subtle/40 -z-20" aria-hidden="true"></div>
-        <div id="timeline-fuse" class="absolute top-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-accent-primary z-0" style="height: 0;"></div> 
-        <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
+        <div id="timeline-background-line" class="absolute top-10 bottom-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-border-subtle/40 -z-20" aria-hidden="true"></div>
+<div id="timeline-fuse" class="absolute top-10 left-10 md:left-1/2 -translate-x-1/2 w-0.5 bg-accent-primary z-0 transition-[height] duration-200 ease-out" style="height: 0;"></div>        <ol class="max-w-5xl mx-auto space-y-8 md:space-y-4">
           {careerPath.map((item, index) => (
               <AlternatingTimelineItem
                 {...item}
@@ -146,11 +131,9 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
     animation: slide-in-up 0.6s ease-out forwards;
   }
 </style>
-
 <script>
-  // This script remains the same as the previous version, as it correctly targets the elements.
   function setupPageAnimations() {
-    // --- PART 1: STATS ANIMATION ---
+    // --- PART 1: STATS ANIMATION (Unchanged and correct) ---
     const statItems = document.querySelectorAll('.stat-item');
     if (statItems.length > 0) {
       const animateCountUp = (el) => {
@@ -161,15 +144,11 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
           const progress = Math.min((timestamp - startTime) / 2000, 1);
           const easeOutProgress = 1 - Math.pow(1 - progress, 3);
           el.textContent = Math.floor(easeOutProgress * goal);
-          if (progress < 1) {
-            window.requestAnimationFrame(step);
-          } else {
-            el.textContent = `${goal}+`;
-          }
+          if (progress < 1) window.requestAnimationFrame(step);
+          else el.textContent = `${goal}+`;
         };
         window.requestAnimationFrame(step);
       };
-
       const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -180,78 +159,81 @@ const introText = "Un resumen de mi camino profesional y académico, desde la in
           }
         });
       }, { threshold: 0.5 });
-
       statItems.forEach(item => statsObserver.observe(item));
     }
 
-    // --- PART 2: TIMELINE ANIMATION ---
+    // --- PART 2: TIMELINE ANIMATION (Completely new, correct logic) ---
     const timelineItems = Array.from(document.querySelectorAll(".timeline-item"));
     const fuse = document.getElementById("timeline-fuse");
+    const backgroundLine = document.getElementById("timeline-background-line");
 
-    if (!timelineItems.length || !fuse) return;
+    if (!timelineItems.length || !fuse || !backgroundLine) return;
+
+    let ticking = false;
 
     const handleScroll = () => {
-      const firstItem = timelineItems[0];
-      const lastItem = timelineItems[timelineItems.length - 1];
-      if (!firstItem || !lastItem) return;
+      // 1. Define the action line at 50% of the viewport height
+      const triggerY = window.innerHeight * 0.7;
+      
+      // 2. Get the current position of the gray background line
+      const backgroundRect = backgroundLine.getBoundingClientRect();
+      
+      // 3. Calculate how tall the colored fuse should be
+      // It's the distance from the trigger line to the top of the gray line
+      let fuseHeight = triggerY - backgroundRect.top;
 
-      const startY = firstItem.offsetTop;
-      const endY = lastItem.offsetTop + lastItem.offsetHeight;
-      const totalHeight = endY - startY;
-      let scrollProgress = window.scrollY - startY;
-      let progressPercentage = (scrollProgress / totalHeight) * 100;
+      // 4. Calculate the maximum possible height for the fuse (the full height of the gray line)
+      const maxFuseHeight = backgroundRect.height;
 
-      const fuseBottom = fuse.getBoundingClientRect().top + fuse.offsetHeight + window.scrollY;
-      let closestActiveId = null;
-      let minDelta = Infinity;
+      // 5. Ensure the fuse doesn't grow when it's not in view and doesn't exceed its max height
+      fuseHeight = Math.max(0, Math.min(fuseHeight, maxFuseHeight));
+      
+      // 6. Set the fuse height. This creates the smooth "growing" effect.
+      fuse.style.height = `${fuseHeight}px`;
 
+      // 7. Determine which item is active
+      let activeItemId = null;
       for (const item of timelineItems) {
+        const logoNode = item.querySelector('.logo-node');
+        if (!logoNode) continue;
+        
+        const logoRect = logoNode.getBoundingClientRect();
+        const logoCenterY = logoRect.top + (logoRect.height / 2);
+        
+        // If the logo's center is above the action line, it's a candidate for being active
+        if (logoCenterY < triggerY) {
+          activeItemId = item.id;
+        }
+      }
+      
+      // 8. Update all items based on the active one
+      timelineItems.forEach(item => {
+        const isActive = item.id === activeItemId;
+        item.classList.toggle('is-active', isActive);
+
         const logoNode = item.querySelector(".logo-node");
-        if (logoNode) {
-          const logoCenter = logoNode.getBoundingClientRect().top + logoNode.clientHeight / 2 + window.scrollY;
-          const delta = fuseBottom - logoCenter;
-          if (delta >= -10 && delta < minDelta) {
-            minDelta = delta;
-            closestActiveId = item.id;
-          }
-          logoNode.style.setProperty("--circle-progress", (item.id === closestActiveId && delta >= -10) ? "1" : "0");
+        if(logoNode) {
+          logoNode.style.setProperty("--circle-progress", isActive ? "1" : "0");
         }
-        const itemRect = item.getBoundingClientRect();
-        const illustrationTriggerPoint = itemRect.top + window.scrollY + itemRect.height * 0.5;
-        item.classList.toggle("is-illustrations-active", fuseBottom >= illustrationTriggerPoint);
-      }
-
-      for (const item of timelineItems) {
-        item.classList.toggle("is-active", item.id === closestActiveId);
-      }
-
-      if (!closestActiveId) {
-        fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
-      } else {
-        const activeLogoNode = document.getElementById(closestActiveId)?.querySelector(".logo-node");
-        if (activeLogoNode) {
-          const circleProgress = parseFloat(getComputedStyle(activeLogoNode).getPropertyValue("--circle-progress") || "0");
-          if (circleProgress >= 0.98) {
-            fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
-          } else {
-            const prevItemIndex = timelineItems.findIndex(el => el.id === closestActiveId) - 1;
-            if (prevItemIndex >= 0) {
-              const prevItem = timelineItems[prevItemIndex];
-              const prevItemBottom = prevItem.offsetTop + prevItem.offsetHeight - startY;
-              progressPercentage = (prevItemBottom / totalHeight) * 100;
-              fuse.style.height = `${Math.max(0, Math.min(100, progressPercentage))}%`;
-            } else {
-              fuse.style.height = "0%";
-            }
-          }
-        }
+        
+        const illustrationTriggerPoint = window.innerHeight * 0.8;
+        item.classList.toggle("is-illustrations-active", item.getBoundingClientRect().top < illustrationTriggerPoint);
+      });
+      
+      ticking = false;
+    };
+    
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScroll);
+        ticking = true;
       }
     };
 
-    document.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true });
     
     document.addEventListener("astro:before-swap", () => {
-      document.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("scroll", onScroll);
     }, { once: true });
     
     handleScroll();
