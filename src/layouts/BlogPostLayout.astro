@@ -27,7 +27,7 @@ const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default
 <BaseLayout 
   title={frontmatter.title}
   description={frontmatter.description}
-  image={frontmatter.heroImage}
+  image={heroImageResolved.src}
   pubDate={frontmatter.pubDate}
   type="article"
 >
