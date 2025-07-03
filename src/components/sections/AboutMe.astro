@@ -1,13 +1,29 @@
 ---
 // src/components/sections/AboutMe.astro
-// CLEANED VERSION: Replaced the Journey Line with a simple placeholder for a future illustration.
-// All associated scripts and styles have been removed.
+// FINAL VERSION: Now using your custom Union.svg illustration.
+import unionSvgRaw from '../../assets/images/illustrations/Union.svg?raw';
+
+// We process the raw SVG string to make it styleable
+// 1. Extract the inner content of the SVG (the <path>, <g>, etc.)
+const contentMatch = unionSvgRaw.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
+let svgContent = '';
+
+if (contentMatch) {
+  // 2. Remove any hardcoded colors so our CSS can take over
+  svgContent = contentMatch[1]
+    .replace(/ fill="[^"]*"/g, '')
+    .replace(/ stroke="[^"]*"/g, '');
+}
+
+// 3. Extract the viewBox for proper scaling
+const viewBoxMatch = unionSvgRaw.match(/viewBox="([^"]*)"/);
+const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 512 512'; // Default if not found
 ---
 <section id="about-me" class="bg-bg-secondary dark:bg-bg-primary py-20 md:py-28">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-20 items-center">
       
-      <!-- Column 1: Text Content (Takes 3 of 5 columns) -->
+      <!-- Column 1: Text Content (Unchanged) -->
       <div class="md:col-span-3 text-center md:text-left">
         <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-6 text-balance">
           ¿Qué hago aquí?
@@ -29,11 +45,15 @@
         </a>
       </div>
 
-      <!-- Column 2: Illustration Placeholder (Takes 2 of 5 columns) -->
+      <!-- Column 2: Your Custom SVG Illustration -->
       <div class="md:col-span-2 flex items-center justify-center">
-        <div class="w-full max-w-sm h-96 bg-bg-card border-2 border-dashed border-border-card rounded-lg flex items-center justify-center">
-            <p class="text-text-secondary">Ilustración personal aquí</p>
-        </div>
+        <svg 
+          class="w-full max-w-sm h-auto text-accent-primary dark:text-accent-primary" 
+          viewBox={viewBox} 
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          set:html={svgContent}
+        />
       </div>
 
     </div>
@@ -41,7 +61,6 @@
 </section>
 
 <style is:global>
-  /* This style remains as it correctly targets the <strong> tags in the text */
   #about-me .prose strong {
     color: var(--color-accent-primary);
     font-weight: 600;

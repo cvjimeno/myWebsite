@@ -1,45 +1,69 @@
 ---
-// src/components/common/SocialIcon.astro
-// A robust component for loading custom local SVGs.
+// src/components/common/SocialIcon.astro (FINAL, ROBUST VERSION)
 
-// 1. Create a map of your social icons.
-//    Astro's import.meta.glob is perfect for this.
 const allSocialIcons = import.meta.glob('/src/assets/icons/*.svg', { as: 'raw' });
 
 export interface Props {
   name: string;
   class?: string;
+  color?: string;
 }
 
-const { name, class: className } = Astro.props;
+const { name, class: className, color } = Astro.props;
 
-// 2. Construct the path and check if the icon exists.
+let svgContent = '';
+let viewBox = '0 0 24 24';
+
 const iconPath = `/src/assets/icons/${name}.svg`;
 if (!allSocialIcons[iconPath]) {
   console.error(`Social icon "${name}" not found in /src/assets/icons/`);
-}
-
-let svgContent = '';
-let viewBox = '0 0 24 24'; // A sensible default
-
-if (allSocialIcons[iconPath]) {
+} else {
   const rawSvg = await allSocialIcons[iconPath]();
-
-  // 3. Extract the inner content (same logic as your old component).
+  
   const contentMatch = rawSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
-  svgContent = contentMatch ? contentMatch[1] : '';
-
-  // 4. Extract the viewBox attribute (same logic as your old component).
   const viewBoxMatch = rawSvg.match(/viewBox="([^"]*)"/);
+
   if (viewBoxMatch) {
     viewBox = viewBoxMatch[1];
   }
+
+  if (contentMatch) {
+    let tempContent = contentMatch[1];
+    
+    // THE CRITICAL LOGIC:
+    // If a specific color is provided (like #0B65C2) OR if no color is provided at all,
+    // we MUST strip any hardcoded colors from the SVG to allow our styles to take over.
+    if (color !== 'original') {
+      tempContent = tempContent
+        .replace(/ fill="[^"]*"/g, '')
+        .replace(/ stroke="[^"]*"/g, '');
+    }
+    svgContent = tempContent;
+  }
+}
+
+// Define the final classes and styles
+const svgClasses = ['inline-block'];
+let svgStyle = '';
+
+if (color && color !== 'original') {
+  // If a specific color hex is provided, use it as an inline style.
+  svgStyle = `color: ${color};`;
+  svgClasses.push('fill-current'); // Add this to ensure the color applies
+} else if (!color) {
+  // If no color is provided, use fill-current to inherit from CSS.
+  svgClasses.push('fill-current');
+}
+// If color is 'original', we do nothing and let the SVG render as-is.
+
+if (className) {
+  svgClasses.push(className);
 }
 ---
-
 <svg 
-  class:list={["inline-block fill-current", className]} 
+  class:list={svgClasses} 
   viewBox={viewBox}  
   xmlns="http://www.w3.org/2000/svg"
+  style={svgStyle}
   set:html={svgContent} 
 />
