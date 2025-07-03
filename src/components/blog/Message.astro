@@ -11,7 +11,7 @@ export interface Props {
 const { from = 'ai', speaker, avatar } = Astro.props;
 const isUser = from === 'user';
 
-const aiAvatar = { icon: 'cpu', class: 'bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-300' };
+const aiAvatar = { icon: 'lucide:cpu', class: 'bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-300' };
 ---
 <div class:list={["flex gap-x-3 sm:gap-x-4 w-full", { 'flex-row-reverse': isUser }]}>
   
