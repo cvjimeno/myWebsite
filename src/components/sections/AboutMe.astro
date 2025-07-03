@@ -1,23 +1,7 @@
 ---
 // src/components/sections/AboutMe.astro
-// FINAL VERSION: Now using your custom Union.svg illustration.
-import unionSvgRaw from '../../assets/images/illustrations/Union.svg?raw';
-
-// We process the raw SVG string to make it styleable
-// 1. Extract the inner content of the SVG (the <path>, <g>, etc.)
-const contentMatch = unionSvgRaw.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
-let svgContent = '';
-
-if (contentMatch) {
-  // 2. Remove any hardcoded colors so our CSS can take over
-  svgContent = contentMatch[1]
-    .replace(/ fill="[^"]*"/g, '')
-    .replace(/ stroke="[^"]*"/g, '');
-}
-
-// 3. Extract the viewBox for proper scaling
-const viewBoxMatch = unionSvgRaw.match(/viewBox="([^"]*)"/);
-const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 512 512'; // Default if not found
+// VERSION MEJORADA: Animaciones sutiles, múltiples capas y más engaging
+import aboutMeIllustrationRaw from '../../assets/images/illustrations/AboutMeIllustration.svg?raw';
 ---
 <section id="about-me" class="bg-bg-secondary dark:bg-bg-primary py-20 md:py-28">
   <div class="container mx-auto px-4">
@@ -46,14 +30,8 @@ const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 512 512'; // Default if no
       </div>
 
       <!-- Column 2: Your Custom SVG Illustration -->
-      <div class="md:col-span-2 flex items-center justify-center">
-        <svg 
-          class="w-full max-w-sm h-auto text-accent-primary dark:text-accent-primary" 
-          viewBox={viewBox} 
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          set:html={svgContent}
-        />
+      <div id="illustration-wrapper" class="md:col-span-2 flex items-center justify-center">
+        <div set:html={aboutMeIllustrationRaw} />
       </div>
 
     </div>
@@ -64,5 +42,129 @@ const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 512 512'; // Default if no
   #about-me .prose strong {
     color: var(--color-accent-primary);
     font-weight: 600;
+  }
+
+  /* --- ANIMACIONES SUTILES Y ENGAGING --- */
+
+  #illustration-wrapper {
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+  }
+
+  #illustration-wrapper svg {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    color: var(--color-accent-primary);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+  
+  /* Hover en el contenedor: lift muy sutil */
+  .dark #illustration-wrapper:hover svg {
+    filter: drop-shadow(0px 6px 20px rgb(133 207 201 / 0.12));
+  }
+
+  /* Elementos principales del cerebro */
+  #Brain, #Icons {
+    fill: currentColor;
+    stroke: none;
+    transition: all 0.4s ease-out;
+  }
+  
+
+  
+  /* Red neuronal: estado por defecto */
+  #Wires line, #Nodes circle {
+    stroke: var(--color-text-secondary);
+    fill: var(--color-text-secondary);
+    opacity: 0.4;
+    transition: all 0.5s ease-out;
+    stroke-width: 1;
+  }
+  
+  #Nodes circle {
+    transform-origin: center;
+  }
+  
+  /* Efecto de "procesamiento cerebral" - desorden controlado */
+#illustration-wrapper:hover #Wires line {
+  stroke: var(--color-accent-highlight);
+  opacity: 0.9;
+  stroke-width: 1.2;
+  animation: neural-chaos-subtle 2.5s linear infinite alternate;
+}
+#illustration-wrapper:hover #Nodes circle {
+  fill: var(--color-accent-highlight);
+  stroke: var(--color-accent-highlight);
+  opacity: 1;
+}
+
+
+/* O si prefieres algo aún más sutil */
+@keyframes neural-chaos-subtle {
+  0% {
+    stroke-dasharray: 6 4;
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+  25% {
+    stroke-dasharray: 8 3;
+    stroke-dashoffset: -10;
+    opacity: 0.7;
+  }
+  50% {
+    stroke-dasharray: 5 5;
+    stroke-dashoffset: -20;
+    opacity: 0.5;
+  }
+  75% {
+    stroke-dasharray: 7 4;
+    stroke-dashoffset: -30;
+    opacity: 0.6;
+  }
+  100% {
+    stroke-dasharray: 4 6;
+    stroke-dashoffset: -40;
+    opacity: 0.8;
+  }
+}
+  /* Animación de los iconos - efecto más sutil */
+  #Icons {
+    transition: all 0.6s ease-out;
+  }
+  
+  #illustration-wrapper:hover #Icons {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+  
+
+  
+  /* Mejoras para accesibilidad */
+  @media (prefers-reduced-motion: reduce) {
+    #illustration-wrapper svg,
+    #Brain, #Icons, #Wires line, #Nodes circle {
+      animation: none !important;
+      transition: none !important;
+    }
+    
+    #illustration-wrapper:hover svg {
+      transform: none !important;
+    }
+  }
+  
+  /* Responsive: animaciones más sutiles en móvil */
+  @media (max-width: 768px) {
+    #illustration-wrapper:hover svg {
+    }
+    
+    #illustration-wrapper:hover #Wires line {
+      animation-duration: 3s;
+    }
+    
+    #illustration-wrapper:hover #Nodes circle {
+      animation-duration: 2.5s;
+    }
   }
 </style>
