@@ -1,35 +1,65 @@
 ---
-// src/components/Footer.astro (FINAL HYBRID VERSION)
-import SocialIcon from './common/SocialIcon.astro'; // <-- Our new manual component
+// src/components/Footer.astro (THE DEFINITIVE 10/10 VERSION)
+import SocialIcon from './common/SocialIcon.astro';
+
+const publicationName = "El Prompt"; 
 
 const socialLinks = [
   { href: "https://x.com/cvjimeno", name: "x", label: "X/Twitter" }, 
   { href: "https://linkedin.com/in/cvjimeno/", name: "linkedin", label: "LinkedIn" },
 ];
 ---
-<footer class="border-t border-border-subtle mt-16 md:mt-24">
-  <div class="container mx-auto px-4 py-4 md:py-6 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-    <div class="flex flex-col md:flex-row items-center justify-center gap-x-3 gap-y-2 text-text-secondary mb-4 md:mb-0">
-      <span class="inline-flex items-center">
-        Hecho en mis ratos libres con
-        <SocialIcon name="astro" class="w-5 h-5 mx-1.5 fill-current" />
-        Astro
-      </span>
-      <span class="hidden md:inline">·</span>
+<footer class="bg-bg-secondary dark:bg-bg-primary border-t border-border-card mt-20 md:mt-28">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Main content row -->
+    <!-- THE FIX #1: Using `md:items-start` for perfect top-alignment on desktop -->
+    <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-y-8">
+      
+      <!-- Left side: Your two-line personal statement -->
+      <div class="text-center md:text-left">
+        <div class="flex items-center justify-center md:justify-start gap-1.5 text-sm text-text-secondary">
+          <span>Hecho en mis ratos libres con</span>
+          <div class="inline-flex items-center gap-1.5 font-medium text-text-secondary">
+            <SocialIcon name="astro" class="w-4 h-4" />
+            <span>Astro</span>
+          </div>
+        </div>
+        <p class="mt-1 text-xs text-text-secondary/80">
+          ... y con ayuda de Gemini 2.5 Pro
+        </p>
+      </div>
+      
+      <!-- Right side: Social links & final CTA -->
+      <div class="flex items-center gap-x-5">
+        <div class="flex items-center gap-x-4">
+          {socialLinks.map(social => (
+            <a 
+              href={social.hastref} 
+              aria-label={social.label}
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-text-secondary hover:text-accent-primary transition-colors duration-200"
+            >
+              <SocialIcon name={social.name} class="w-5 h-5 fill-current" />
+            </a>
+          ))}
+        </div>
+        
+        <span class="hidden md:block h-6 w-px bg-accent-primary/40"></span>
+
+        <!-- THE FIX #2: Changed to `text-text-secondary` for color consistency -->
+        <a href="/#newsletter-cta" class="text-sm font-medium text-text-secondary hover:text-accent-primary transition-colors">
+          Suscríbete a {publicationName}
+        </a>
+      </div>
+
+    </div>
+    
+    <!-- Bottom line: Copyright with your smiley -->
+    <div class="mt-10 pt-8 border-t border-border-card text-center text-xs text-text-secondary">
       <span>© {new Date().getFullYear()} Carlos Velasco. Sin derechos reservados :)</span>
     </div>
-    <div class="flex space-x-4">
-      {socialLinks.map(social => (
-        <a 
-          href={social.href} 
-          aria-label={social.label}
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="text-text-secondary hover:text-accent-primary transition-colors duration-150 ease-in-out"
-        >
-          <SocialIcon name={social.name} class="w-5 h-5 md:w-6 md:h-6 fill-current" />
-        </a>
-      ))}
-    </div>
+
   </div>
 </footer>
