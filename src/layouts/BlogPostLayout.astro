@@ -1,7 +1,7 @@
 ---
-// src/layouts/BlogPostLayout.astro (FINAL & CORRECTED OG IMAGE URL GENERATION with GLOB)
+// src/layouts/BlogPostLayout.astro (FINAL, CORRECTED VERSION)
 import BaseLayout from './BaseLayout.astro';
-import { Image, getImage } from 'astro:assets'; // <-- Ensure getImage is imported
+import { Image, getImage } from 'astro:assets';
 import TableOfContents from '../components/TableOfContents.astro';
 import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
@@ -9,6 +9,7 @@ import Badge from '../components/common/Badge.astro';
 import Icon from '../components/common/Icon.astro';
 import ReadingProgressBar from '../components/blog/ReadingProgressBar.astro';
 import RelatedPosts from '../components/blog/RelatedPosts.astro';
+
 const { frontmatter, headings } = Astro.props;
 
 const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
@@ -24,8 +25,6 @@ if (!allHeroImages[frontmatter.heroImage]) {
 }
 const heroImageResolved = (await allHeroImages[frontmatter.heroImage]()).default;
 
-// 3. Use getImage to generate the SPECIFIC, optimized URL for the Open Graph image.
-//    This guarantees the correct format (webp) and a consistent size for social media.
 const ogImageUrl = (await getImage({
   src: heroImageResolved,
   width: 1200,
@@ -41,7 +40,8 @@ const ogImageUrl = (await getImage({
   pubDate={frontmatter.pubDate}
   type="article"
 >
-  <ReadingProgressBar />
+  <!-- THE FIX #1: The horizontal bar is now hidden on large screens (`lg:`) and up. -->
+  <ReadingProgressBar class="lg:hidden" />
 
   <article>
     <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
@@ -55,10 +55,7 @@ const ogImageUrl = (await getImage({
         </div>
       </div>
       <div class="flex flex-wrap items-center justify-center gap-2">
-        <!-- Display the primary category first, with its distinct style -->
         <Badge text={frontmatter.category} variant="category" />
-        
-        <!-- Then display the neutral secondary tags -->
         {frontmatter.tags && frontmatter.tags.map(tag => (
           <Badge text={tag} variant="tag" />
         ))}
@@ -66,13 +63,13 @@ const ogImageUrl = (await getImage({
     </header>
 
     <div class="w-full mb-12 md:mb-16">
-      {/* This <Image> component still uses the heroImageResolved for display on the page itself */}
       <Image src={heroImageResolved} alt={frontmatter.imageAlt} widths={[800, 1200, 1600]} sizes="100vw" class="w-full max-h-[500px] object-cover"/>
     </div>
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-12">
-        <aside class="lg:col-span-1 mb-12 lg:mb-0">
+        <!-- THE FIX #2: The entire aside (including the "En este post" title) is hidden on small screens. -->
+        <aside class="hidden lg:block lg:col-span-1 mb-12 lg:mb-0">
           <div class="sticky top-24">
             <h2 class="text-lg font-semibold text-text-primary mb-4">En este post</h2>
             <TableOfContents headings={headings} />
@@ -98,17 +95,18 @@ const ogImageUrl = (await getImage({
     <NewsletterCTA theme="highlight"/>
   </div>
 </BaseLayout>
+
 <script>
-// Your working scroll script remains here...
+// THE FIX #3: The script is now more robust and efficient.
   const handleScroll = () => {
-    const articleBody = document.querySelector('#article-body') as HTMLElement;
+    const articleBody = document.querySelector('#article-body');
     if (!articleBody) return;
 
+    // We still calculate the progress value for both indicators
     const scrollTop = window.scrollY;
-    const articleTop = articleBody.offsetTop;
-    const articleHeight = articleBody.offsetHeight;
+    const articleTop = (articleBody as HTMLElement).offsetTop;
+    const articleHeight = articleBody.scrollHeight;
     const viewportHeight = window.innerHeight;
-
     const scrollableDistance = articleHeight - viewportHeight;
 
     if (scrollableDistance <= 0) {
@@ -117,18 +115,29 @@ const ogImageUrl = (await getImage({
     }
     
     const progress = Math.max(0, Math.min(100, ((scrollTop - articleTop) / scrollableDistance) * 100));
+    
+    // Update the vertical ToC bar (it only exists on desktop, but the CSS var is harmless on mobile)
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
-    (document.getElementById('progress-bar') as HTMLElement).style.width = `${progress}%`;
-};
 
-  const tocLinks = document.querySelectorAll('#toc-list li');
-  const headings = document.querySelectorAll('#article-body h2[id], #article-body h3[id]');
+    // Only update the horizontal bar if it actually exists in the DOM
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+      progressBar.style.width = `${progress}%`;
+    }
+  };
 
   const handleActiveLink = () => {
+    // This logic correctly runs only on desktop already. No changes needed.
+    if (window.innerWidth < 1024) return;
+    
+    const tocLinks = document.querySelectorAll('#toc-list li');
+    const headings = document.querySelectorAll('#article-body h2[id], #article-body h3[id]');
+    if (tocLinks.length === 0 || headings.length === 0) return;
+
     let currentActiveId = '';
     for (const heading of headings) {
         const headingTop = heading.getBoundingClientRect().top;
-        if (headingTop < 150) {
+        if (headingTop < 150) { // Using 150px from top as the activation line
             currentActiveId = heading.id;
         } else {
             break;
@@ -136,25 +145,25 @@ const ogImageUrl = (await getImage({
     }
 
     tocLinks.forEach(link => {
-      if (link.id === `toc-${currentActiveId}`) {
-        link.classList.add('toc-active');
-      } else {
-        link.classList.remove('toc-active');
-      }
+      link.classList.toggle('toc-active', link.id === `toc-${currentActiveId}`);
     });
   }
   
   const onScroll = () => {
-    handleScroll();
-    handleActiveLink();
+    // Request animation frame for smoother performance
+    window.requestAnimationFrame(() => {
+      handleScroll();
+      handleActiveLink();
+    });
   }
 
-  document.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('astro:page-load', () => {
-    onScroll();
+  // Set up event listeners correctly for Astro's View Transitions
+  document.addEventListener('astro:page-load', () => {
+    onScroll(); // Run once on load to set initial state
     document.addEventListener('scroll', onScroll, { passive: true });
   });
-  window.addEventListener('astro:before-swap', () => {
+
+  document.addEventListener('astro:before-swap', () => {
     document.removeEventListener('scroll', onScroll);
   });
 </script>

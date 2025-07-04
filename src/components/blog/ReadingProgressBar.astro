@@ -1,15 +1,15 @@
 ---
-// src/components/blog/ReadingProgressBar.astro
+// src/components/blog/ReadingProgressBar.astro (IMPROVED VERSION)
+const { class: className } = Astro.props;
 ---
 <!-- 
-  The container div is fixed to the top of the screen and acts as the "track".
-  It's positioned just below the sticky header.
+  THE FIX: We use class:list to merge the component's default classes 
+  with any extra classes passed in (like `lg:hidden`).
 -->
-<div id="progress-container" class="fixed top-16 left-0 w-full h-[3px] z-40 bg-transparent">
-  <!-- 
-    The inner div is the actual progress bar. Its width will be updated by our script.
-    We use the "highlight" color for maximum impact.
-  -->
+<div id="progress-container" class:list={[
+  "fixed top-16 left-0 w-full h-[3px] z-40 bg-transparent",
+  className
+]}>
   <div 
     id="progress-bar" 
     class="h-full bg-[var(--color-accent-highlight)]" 
