@@ -26,8 +26,10 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', {
 ---
 
 <!-- THE FIX: Added the `relative` class here to contain the stretched link -->
-<article class:list={["relative group bg-bg-card rounded-lg border border-border-card shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full", customClass]}>
-  
+<article 
+  class:list={["relative group bg-bg-card rounded-lg border border-border-card shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full", customClass]}
+  data-category={post.data.category.toLowerCase()}
+>  
   <!-- This link for the image can be removed, as the stretched link will cover it -->
   <div class="block overflow-hidden aspect-video">
     <Image 
