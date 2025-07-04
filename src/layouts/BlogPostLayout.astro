@@ -4,11 +4,11 @@ import BaseLayout from './BaseLayout.astro';
 import { Image, getImage } from 'astro:assets'; // <-- Ensure getImage is imported
 import TableOfContents from '../components/TableOfContents.astro';
 import ArticleEpilogue from '../components/blog/ArticleEpilogue.astro';
-import RelatedPostsCarousel from '../components/blog/RelatedPostsCarousel.astro';
 import NewsletterCTA from '../components/blog/NewsletterCTA.astro';
 import Badge from '../components/common/Badge.astro';
 import Icon from '../components/common/Icon.astro';
-
+import ReadingProgressBar from '../components/blog/ReadingProgressBar.astro';
+import RelatedPosts from '../components/blog/RelatedPosts.astro';
 const { frontmatter, headings } = Astro.props;
 
 const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
@@ -41,6 +41,8 @@ const ogImageUrl = (await getImage({
   pubDate={frontmatter.pubDate}
   type="article"
 >
+  <ReadingProgressBar />
+
   <article>
     <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 md:pt-16 pb-8">
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">{frontmatter.title}</h1>
@@ -52,11 +54,15 @@ const ogImageUrl = (await getImage({
           <span>{readingTimeText}</span>
         </div>
       </div>
-      {frontmatter.tags && (
-        <div class="flex flex-wrap justify-center gap-2">
-          {frontmatter.tags.map(tag => <Badge text={tag} />)}
-        </div>
-      )}
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <!-- Display the primary category first, with its distinct style -->
+        <Badge text={frontmatter.category} variant="category" />
+        
+        <!-- Then display the neutral secondary tags -->
+        {frontmatter.tags && frontmatter.tags.map(tag => (
+          <Badge text={tag} variant="tag" />
+        ))}
+      </div>
     </header>
 
     <div class="w-full mb-12 md:mb-16">
@@ -81,9 +87,10 @@ const ogImageUrl = (await getImage({
   </article>
 
   <div class="mt-8">
-    <RelatedPostsCarousel 
+    <RelatedPosts 
       currentPostSlug={frontmatter.slug} 
-      currentPostTags={frontmatter.tags} 
+      currentPostTags={frontmatter.tags}
+      currentPostCategory={frontmatter.category}
     />
   </div>
 
@@ -111,7 +118,8 @@ const ogImageUrl = (await getImage({
     
     const progress = Math.max(0, Math.min(100, ((scrollTop - articleTop) / scrollableDistance) * 100));
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
-  };
+    (document.getElementById('progress-bar') as HTMLElement).style.width = `${progress}%`;
+};
 
   const tocLinks = document.querySelectorAll('#toc-list li');
   const headings = document.querySelectorAll('#article-body h2[id], #article-body h3[id]');

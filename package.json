@@ -15,8 +15,7 @@
     "astro": "^5.8.0",
     "astro-font": "^1.1.0",
     "astro-icon": "^1.1.5",
-    "tailwindcss": "^4.1.7",
-    "wordcloud": "^1.2.3"
+    "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.54",

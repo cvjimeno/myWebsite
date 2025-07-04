@@ -2,38 +2,17 @@
 // src/components/blog/ReadingProgressBar.astro
 ---
 <!-- 
-  The container div is fixed to the top-left of the screen and acts as the "track".
-  The high z-index (z-50) ensures it sits on top of all other content.
+  The container div is fixed to the top of the screen and acts as the "track".
+  It's positioned just below the sticky header.
 -->
-<div id="progress-container" class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
+<div id="progress-container" class="fixed top-16 left-0 w-full h-[3px] z-40 bg-transparent">
   <!-- 
     The inner div is the actual progress bar. Its width will be updated by our script.
-    We apply our beautiful gradient here using your custom accent colors.
+    We use the "highlight" color for maximum impact.
   -->
   <div 
     id="progress-bar" 
-    class="h-full bg-gradient-to-r from-[var(--color-accent-highlight)] to-[var(--color-accent-primary)]" 
+    class="h-full bg-[var(--color-accent-highlight)]" 
     style="width: 0%;"
   ></div>
 </div>
-
-<script>
-  document.addEventListener('scroll', () => {
-    const progressBar = document.getElementById('progress-bar');
-    if (!progressBar) return; // Exit if the bar isn't on the page
-
-    // 1. Calculate the total scrollable height of the document.
-    // This is the total height of the page minus the height of the viewport.
-    const scrollableHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-
-    // 2. Get the user's current vertical scroll position.
-    const scrollTop = window.scrollY;
-
-    // 3. Calculate the scroll percentage.
-    // We use Math.min and Math.max to clamp the value between 0 and 100.
-    const scrollPercentage = Math.max(0, Math.min(100, (scrollTop / scrollableHeight) * 100));
-
-    // 4. Update the width of the progress bar.
-    progressBar.style.width = `${scrollPercentage}%`;
-  });
-</script>

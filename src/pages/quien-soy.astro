@@ -1,5 +1,5 @@
 ---
-// src/pages/quien-soy.astro (Bento Box with Scoped Styles)
+// src/pages/quien-soy.astro (FINAL VERSION)
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import Icon from '../components/common/Icon.astro';
@@ -9,65 +9,79 @@ import Button from '../components/common/Button.astro';
 import personalPhoto from '../assets/images/hero-main-picture.webp';
 ---
 
-<BaseLayout title="Quién Soy" description="Una mirada personal a mi historia, motivaciones y pasiones en la ciencia y la tecnología.">
+<BaseLayout 
+  title="Quién Soy" 
+  description="Una mirada personal a mi historia, mis motivaciones y las ideas que me impulsan en la ciencia y la tecnología. Conóceme más allá del CV."
+>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
     
     <header class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
       <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">
         Un poco más sobre mí
       </h1>
-      <p class="text-xl text-text-secondary">
-        Más allá del código y la ciencia, estas son algunas de las cosas que me mueven.
+      <p class="text-xl text-text-secondary leading-relaxed">
+        Más allá del código y la ciencia, estas son algunas de las ideas y herramientas que me mueven.
       </p>
     </header>
 
-    <!-- The Bento Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- The NEW Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-      <!-- Bento Item 1: Main Intro (Large) -->
+      <!-- Bento Item 1: Main Intro (Spans 2 columns on lg+) -->
       <div class="bento-card lg:col-span-2 flex flex-col md:flex-row items-center gap-8 p-8">
-        <Image src={personalPhoto} alt="Carlos Velasco" width={150} height={150} class="rounded-full w-32 h-32 md:w-40 md:h-40 flex-shrink-0 shadow-md" />
+        <Image src={personalPhoto} alt="Carlos Velasco" width={150} height={150} format="webp" class="rounded-full w-32 h-32 md:w-40 md:h-40 flex-shrink-0 shadow-lg border-2 border-white dark:border-bg-secondary" />
         <div class="text-center md:text-left">
           <h2 class="text-2xl font-semibold text-text-primary mb-2">Carlos Velasco</h2>
-          <p class="text-text-secondary">Mi misión es simple: explorar la intersección entre la tecnología y la humanidad, y compartir el viaje. Creo en el aprendizaje constante y en construir en público.</p>
-          <div class="mt-4">
-            <Button href="/trayectoria" variant="secondary" size="sm">Ver mi CV interactivo</Button>
-          </div>
+          <p class="text-text-secondary">Soy un físico que acabó programando y un científico que nunca dejó de ser un estudiante. Me fascina desmontar problemas complejos, ya sea en un laboratorio de resonancia magnética o en una línea de código. Este sitio es mi cuaderno de bitácora digital.</p>
         </div>
       </div>
 
-      <!-- Bento Item 2: My Philosophy -->
-      <div class="bento-card p-6">
+      <!-- Bento Item 2: Origin Story -->
+      <div class="bento-card p-6 flex flex-col">
+        <Icon name="lucide:map-pin" class="w-7 h-7 text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-2">Desde Madrid al Mundo</h3>
+        <p class="text-text-secondary text-sm flex-grow">Nací y crecí en Madrid, una ciudad que me enseñó a apreciar la ciencia y el arte. Hoy, mi trabajo y curiosidad me conectan con colaboradores y amigos por todo el planeta.</p>
+      </div>
+
+      <!-- Bento Item 3: Fun Facts -->
+      <div class="bento-card p-6 flex flex-col">
+        <Icon name="lucide:puzzle" class="w-7 h-7 text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-2">Fuera del Laboratorio</h3>
+        <p class="text-text-secondary text-sm flex-grow">Cuando no estoy con datos o código, probablemente me encuentres intentando perfeccionar una receta de ramen, jugando al ajedrez, o montando algún set de LEGO.</p>
+      </div>
+      
+      <!-- Bento Item 4: My Philosophy -->
+      <div class="bento-card p-6 flex flex-col">
         <Icon name="lucide:compass" class="w-7 h-7 text-accent-primary mb-3"/>
         <h3 class="font-semibold text-text-primary mb-2">Mi Filosofía</h3>
-        <ul class="list-disc list-inside text-text-secondary space-y-1 text-sm">
-          <li>Curiosidad > Conveniencia</li>
-          <li>Enseñar es la mejor forma de aprender</li>
-          <li>El progreso está en la intersección</li>
+        <ul class="list-disc list-inside text-text-secondary space-y-1 text-sm flex-grow">
+          <li><strong>Preguntas > Respuestas:</strong> El "por qué" siempre es más interesante que el "qué".</li>
+          <li><strong>Enseñar para Aprender:</strong> La forma más rápida de dominar algo es intentar explicarlo.</li>
+          <li><strong>Conectar los Puntos:</strong> Las mejores ideas viven en la intersección de disciplinas.</li>
         </ul>
       </div>
 
-      <!-- Bento Item 3: My Tools -->
-      <div class="bento-card p-6">
+      <!-- Bento Item 5: My Trajectory (CTA) -->
+      <div class="bento-card is-accented p-6 flex flex-col items-center justify-center text-center">
+        <Icon name="lucide:line-chart" class="w-8 h-8 text-accent-primary mb-3"/>
+        <h3 class="font-semibold text-text-primary mb-3 text-balance">Mi Viaje Profesional</h3>
+        <p class="text-text-secondary text-sm mb-4 flex-grow">Para los curiosos, he documentado mi trayectoria académica y profesional en un timeline interactivo.</p>
+        <Button href="/trayectoria" variant="secondary" size="sm">Ver mi CV interactivo</Button>
+      </div>
+
+      <!-- Bento Item 6: My Tools -->
+      <div class="bento-card p-6 flex flex-col">
         <Icon name="lucide:wrench" class="w-7 h-7 text-accent-primary mb-3"/>
         <h3 class="font-semibold text-text-primary mb-2">Mis Herramientas</h3>
-        <p class="text-text-secondary text-sm">Astro, Tailwind CSS, Figma, VS Code, Notion, y mucho café.</p>
+        <p class="text-text-secondary text-sm flex-grow">Construyo con <strong>Astro</strong> y <strong>Tailwind CSS</strong>, diseño en <strong>Figma</strong>, y pienso en <strong>Notion</strong>. Todo funciona con ingentes cantidades de café.</p>
       </div>
 
-      <!-- Bento Item 4: Currently Reading -->
-      <div class="bento-card p-6">
+      <!-- Bento Item 7: Currently Reading -->
+      <div class="bento-card p-6 flex flex-col">
         <Icon name="lucide:book-open" class="w-7 h-7 text-accent-primary mb-3"/>
         <h3 class="font-semibold text-text-primary mb-2">Actualmente Leyendo</h3>
-        <p class="text-text-secondary text-sm">"Storyworthy" de Matthew Dicks.</p>
+        <p class="text-text-secondary text-sm flex-grow">"Storyworthy" de Matthew Dicks.</p>
       </div>
-
-      <!-- Bento Item 5: Let's Connect (CTA) -->
-      <div class="bento-card is-accented p-6 text-center">
-         <h3 class="font-semibold text-text-primary mb-3">¿Tienes una idea?</h3>
-         <p class="text-text-secondary text-sm mb-4">Me encantaría escucharla. Siempre estoy abierto a nuevas colaboraciones y conversaciones.</p>
-         <Button href="/contacto" variant="primary" size="sm">Hablemos</Button>
-      </div>
-
     </div>
   </div>
 </BaseLayout>
@@ -78,15 +92,32 @@ import personalPhoto from '../assets/images/hero-main-picture.webp';
     background-color: var(--color-bg-card);
     border-radius: 0.75rem; /* rounded-xl */
     border: 1px solid var(--color-border-card);
-    box-shadow: 0 1px 2px 0 rgb(16 24 40 / 0.05);
-    height: 100%;
+    transition: all 0.2s ease-in-out;
+    display: flex; /* Added for flex-grow to work */
+    flex-direction: column; /* Added for flex-grow to work */
+  }
+
+  .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
   }
 
   .bento-card.is-accented {
     /* Special background for the CTA card */
     background-color: var(--color-accent-primary-bg);
+    border-color: var(--color-accent-primary);
   }
+  
   .dark .bento-card.is-accented {
-    background-color: rgb(59 130 246 / 0.2); /* fallback for dark mode */
+    background-color: var(--color-accent-primary-bg);
+    border-color: var(--color-accent-primary);
+  }
+
+  /* Make the primary accented card stand out even more on hover */
+  .bento-card.is-accented:hover {
+      box-shadow: 0 10px 20px -5px rgb(30 107 102 / 0.2);
+  }
+  .dark .bento-card.is-accented:hover {
+      box-shadow: 0 10px 20px -5px rgb(133 207 201 / 0.15);
   }
 </style>

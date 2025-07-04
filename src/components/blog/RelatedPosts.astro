@@ -1,45 +1,51 @@
 ---
-// src/components/blog/RelatedPosts.astro
+// src/components/blog/RelatedPosts.astro (FINAL VERSION)
 import { getCollection } from 'astro:content';
-import RelatedPostCard from './RelatedPostCard.astro';
+import PostCard from '../cards/PostCard.astro'; // <-- Use the new, unified component
 
-// ... (logic for finding posts remains the same, but we now fetch up to 6) ...
 export interface Props {
   currentPostSlug: string;
-  currentPostTags: string[];
+  // This is now just for finding related posts, not for display
+  currentPostTags: string[]; 
+  // We'll also need the category to boost relatedness
+  currentPostCategory: string;
 }
-const { currentPostSlug, currentPostTags = [] } = Astro.props;
+const { currentPostSlug, currentPostTags = [], currentPostCategory } = Astro.props;
 
 const allPosts = await getCollection('blog', (entry) => {
   return entry.slug !== currentPostSlug && !entry.data.draft;
 });
 
+// A more robust sorting algorithm:
+// - A post in the same CATEGORY gets a big point boost.
+// - Each shared TAG gets a smaller point boost.
 const relatedPosts = allPosts.map(post => {
+  let score = 0;
+  if (post.data.category === currentPostCategory) {
+    score += 10; // Major boost for same category
+  }
   const sharedTags = (post.data.tags || []).filter(tag => currentPostTags.includes(tag));
-  return { post, sharedTagsCount: sharedTags.length };
+  score += sharedTags.length; // Minor boost for each shared tag
+  
+  return { post, score };
 })
-.filter(item => item.sharedTagsCount > 0)
-.sort((a, b) => b.sharedTagsCount - a.sharedTagsCount)
-.slice(0, 6); // Get up to 6 posts for a richer carousel
+.filter(item => item.score > 0) // Only include posts with some relevance
+.sort((a, b) => b.score - a.score) // Sort by the highest score
+.slice(0, 3); // Get the top 3 most relevant posts
 
-const shouldRender = relatedPosts.length >= 2;
+const shouldRender = relatedPosts.length > 0;
 ---
 {shouldRender && (
-  <div class="mt-16 bg-bg-secondary py-16">
+  <section class="bg-bg-secondary dark:bg-bg-secondary border-y border-border-card py-16 md:py-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-center text-3xl font-bold mb-8 text-text-primary">
+      <h2 class="text-2xl sm:text-3xl font-bold text-text-primary text-center mb-10">
         Para seguir explorando
       </h2>
-      <!-- THE CAROUSEL FIX: A container with masks for the fadeout effect -->
-      <div class="relative">
-        <div class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4"
-          style="mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);"
-        >
-          {relatedPosts.map(item => (
-              <RelatedPostCard post={item.post} />
-          ))}
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {relatedPosts.map(item => (
+          <PostCard post={item.post} />
+        ))}
       </div>
     </div>
-  </div>
-)}
+  </section>
+)} 

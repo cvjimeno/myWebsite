@@ -1,0 +1,84 @@
+---
+// src/components/cards/PostCard.astro (FINAL, CORRECTED VERSION)
+import { Image } from 'astro:assets';
+import Badge from '../common/Badge.astro';
+import Icon from '../common/Icon.astro';
+
+export interface Props {
+  post: any; // The entire post object from Astro's getCollection
+  class?: string;
+}
+
+const { post, class: customClass } = Astro.props;
+
+// --- Data Preparation ---
+const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
+if (!allHeroImages[post.data.heroImage]) {
+  throw new Error(`[PostCard] Image not found: ${post.data.heroImage}`);
+}
+const heroImageResolved = (await allHeroImages[post.data.heroImage]()).default;
+
+const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+---
+
+<!-- THE FIX: Added the `relative` class here to contain the stretched link -->
+<article class:list={["relative group bg-bg-card rounded-lg border border-border-card shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full", customClass]}>
+  
+  <!-- This link for the image can be removed, as the stretched link will cover it -->
+  <div class="block overflow-hidden aspect-video">
+    <Image 
+      src={heroImageResolved} 
+      alt={post.data.imageAlt} 
+      width={800} height={450} format="webp" quality={80} 
+      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+      class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+    />
+  </div>
+
+  <div class="p-5 flex flex-col flex-grow">
+    <!-- Category Badge -->
+    <div class="mb-3">
+      <Badge text={post.data.category} variant="category" />
+    </div>
+    
+    <!-- Title -->
+    <h3 class="text-xl font-semibold text-text-primary mb-2 leading-snug flex-grow">
+      <!-- THE FIX: This link now has the "stretched-link" class -->
+      <a href={`/blog/${post.slug}/`} class="hover:text-accent-primary transition-colors duration-200 stretched-link">
+        {post.data.title}
+      </a>
+    </h3>
+
+    <!-- Description -->
+    <p class="text-sm text-text-secondary mb-4 leading-relaxed line-clamp-3">
+      {post.data.description}
+    </p>
+    
+    <!-- Footer / Meta -->
+    <div class="mt-auto pt-3 border-t border-border-card flex justify-between items-center text-xs text-text-secondary">
+      <span class="font-medium">{formattedDate}</span>
+      <div class="flex items-center gap-x-1">
+        <Icon name="lucide:hourglass" class="w-3 h-3" />
+        <span>{post.data.readingTime} min</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+/* This makes the entire card clickable, while allowing links inside to still work.
+   The title link gets this class. */
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+}
+</style>

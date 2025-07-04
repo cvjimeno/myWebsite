@@ -209,8 +209,36 @@ const canonicalImage = new URL(image, Astro.url);
           if (mobileToggleBtn) mobileToggleBtn.removeEventListener('click', handleMobileMenuClick);
         }, { once: true });
       }
+      // Add this inside the pageSetup() function in BaseLayout.astro
+        
+        // --- Mobile Submenu Accordion Logic ---
+        const submenuToggleBtn = document.getElementById('mobile-submenu-toggle');
+        const submenu = document.getElementById('mobile-submenu');
+        const submenuChevron = document.getElementById('mobile-submenu-chevron');
+
+        const handleSubmenuToggle = () => {
+          if (!submenu || !submenuChevron) return;
+
+          const isExpanded = submenuToggleBtn.getAttribute('aria-expanded') === 'true';
+          
+          if (isExpanded) {
+            submenuToggleBtn.setAttribute('aria-expanded', 'false');
+            submenuChevron.style.transform = 'rotate(0deg)';
+            submenu.style.maxHeight = '0px';
+          } else {
+            submenuToggleBtn.setAttribute('aria-expanded', 'true');
+            submenuChevron.style.transform = 'rotate(90deg)';
+            // Set max-height to the actual scroll height of the content
+            submenu.style.maxHeight = `${submenu.scrollHeight}px`;
+          }
+        };
+        
+        if (submenuToggleBtn) {
+          submenuToggleBtn.addEventListener('click', handleSubmenuToggle);
+        }
       pageSetup();
       document.addEventListener('astro:after-swap', pageSetup);
     </script>
 </body>
 </html>
+
