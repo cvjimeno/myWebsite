@@ -1,25 +1,24 @@
 ---
-// src/pages/quien-soy.astro (FINAL - Selective Padding & Size Control)
+// src/pages/quien-soy.astro (DEFINITIVE - Background Image Fix)
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { Image } from 'astro:assets';
+import { Image } from 'astro:assets'; // Keep for other cards if needed
 import Icon from '../components/common/Icon.astro';
 import Button from '../components/common/Button.astro';
 
 import personalPhoto from '../assets/images/whoami.webp'; 
 ---
-
 <BaseLayout 
   title="Quién Soy" 
   description="Una mirada personal a mi historia, mis motivaciones y las ideas que me impulsan en la ciencia y la tecnología. Conóceme más allá del CV."
 >
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
     
-    <header class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+    <header class="max-w-4xl mx-auto text-center mb-12 md:mb-16">
       <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">
-        Un poco más sobre mí
+        Más allá del código
       </h1>
-      <p class="text-xl text-text-secondary leading-relaxed">
-        Más allá del código y la ciencia, estas son algunas de las ideas y herramientas que me mueven.
+      <p class="text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
+        Aquí van algunas de las cosas que realmente me definen. No hay LinkedIn aquí, solo yo siendo yo.
       </p>
     </header>
 
@@ -65,32 +64,59 @@ import personalPhoto from '../assets/images/whoami.webp';
         </ul>
       </div>
 
-      <div class="bento-card p-6 flex flex-col">
-        <Icon name="lucide:wrench" class="w-7 h-7 text-accent-primary mb-3"/>
-        <h3 class="font-semibold text-text-primary mb-2">Mis Herramientas</h3>
-        <p class="text-text-secondary text-sm flex-grow">Astro, Tailwind CSS, Figma, VS Code, Notion, y mucho café.</p>
-      </div>
-
-      <div class="bento-card p-6 flex flex-col">
-        <Icon name="lucide:book-open" class="w-7 h-7 text-accent-primary mb-3"/>
-        <h3 class="font-semibold text-text-primary mb-2">Actualmente Leyendo</h3>
-        <p class="text-text-secondary text-sm flex-grow">"Storyworthy" de Matthew Dicks.</p>
-      </div>
-
-      <div class="bento-card is-accented p-6 flex flex-col items-center justify-center text-center">
-        <Icon name="lucide:line-chart" class="w-8 h-8 text-accent-primary mb-3"/>
-        <h3 class="font-semibold text-text-primary mb-3 text-balance">Mi Viaje Profesional</h3>
-        <p class="text-text-secondary text-sm mb-4 flex-grow">Para los curiosos, he documentado mi trayectoria académica y profesional en un timeline interactivo.</p>
-        <Button href="/trayectoria" variant="secondary" size="sm">Ver mi CV interactivo</Button>
+      <!-- Favorite Graphic Card -->
+      <div class="bento-card col-span-1 p-6 flex flex-col">
+        <h3 class="font-bold text-text-primary mb-2">Mi gráfica favorita</h3>
+        <p class="text-text-secondary text-sm mb-4 flex-grow">El Violin Plot. Elegante, denso en información y visualmente impactante.</p>
+        <div class="h-24 flex items-center justify-center bg-bg-secondary rounded-lg border-2 border-dashed border-border-card">
+          <span class="text-xs text-text-secondary">Placeholder</span>
+        </div>
       </div>
       
-      <div class="bento-card p-6 flex flex-col items-center justify-center text-center">
-        <Icon name="lucide:send" class="w-7 h-7 text-accent-primary mb-3"/>
-        <h3 class="font-semibold text-text-primary mb-3">¿Tienes una idea?</h3>
-        <p class="text-text-secondary text-sm mb-4 flex-grow">Me encantaría escucharla. Estoy abierto a nuevas colaboraciones y conversaciones.</p>
-        <Button href="/contacto" variant="secondary" size="sm">Hablemos</Button>
+      <!-- Learning Card (Corrected Span) -->
+      <div class="bento-card col-span-1 md:col-span-2 learning-card p-6 flex flex-col">
+        <h3 class="font-bold mb-4">Aprendiendo ahora</h3>
+        <div class="space-y-3 text-sm flex-grow grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="learning-item"><span class="dot" style="--dot-color: #38ef7d;"></span>Rust</div>
+          <div class="learning-item"><span class="dot" style="--dot-color: #2c5282;"></span>Three.js</div>
+          <div class="learning-item"><span class="dot" style="--dot-color: var(--color-accent-highlight);"></span>Storytelling con datos</div>
+          <div class="learning-item"><span class="dot" style="--dot-color: var(--color-accent-primary);"></span>Diseño de Sistemas</div>
+        </div>
       </div>
 
+      <!-- YouTube Card (Corrected Span) -->
+      <div class="bento-card col-span-1 md:col-span-2 youtube-card p-6 flex flex-col justify-between">
+        <div class="text-left">
+          <h3 class="font-bold text-white">YouTube... Próximamente</h3>
+          <p class="text-white/80 text-sm">Porque todos necesitamos otro canal de tech, ¿verdad?</p>
+        </div>
+        <div class="flex items-center justify-center mt-4">
+          <div class="play-button-bg"></div><div class="play-button-icon"></div>
+        </div>
+      </div>
+      
+      <!-- Personality Card -->
+      <div class="bento-card personality-card p-6 flex flex-col items-center justify-center text-center">
+        <div class="text-4xl mb-3">🧠</div>
+        <h3 class="font-bold mb-2">Personalidad</h3>
+        <div class="mb-3">
+          <div class="text-2xl font-bold mb-1">ENTP-A</div>
+          <div class="text-sm">"El Innovador"</div>
+        </div>
+      </div>
+
+      <!-- AI Questions Card -->
+      <div class="bento-card ai-card p-6 flex flex-col">
+        <div class="flex items-center gap-2 mb-3">
+          <Icon name="lucide:brain" class="w-6 h-6"/>
+          <h3 class="font-bold">Plot Twist</h3>
+        </div>
+        <p class="text-sm flex-grow">Le pedí a una IA que me hiciera 200 preguntas para crear esta página.</p>
+        <div class="mt-4 pt-4 border-t border-white/20 flex justify-between items-baseline">
+          <span class="text-xs">Preguntas usadas:</span>
+          <span class="text-2xl font-bold">1 / 200</span>
+        </div>
+      </div>
     </div>
   </div>
 </BaseLayout>
@@ -98,52 +124,50 @@ import personalPhoto from '../assets/images/whoami.webp';
 <style>
   .bento-card {
     background-color: var(--color-bg-card);
-    border-radius: 0.75rem; /* rounded-xl */
+    border-radius: 1rem;
     border: 1px solid var(--color-border-card);
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
   }
-
-  /* The other cards need to remain flex containers */
-  .bento-card:not(.main-intro-card) {
-    display: flex;
-    flex-direction: column;
-  }
-
   .bento-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.04), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
-  .bento-card.is-accented {
-    background-color: var(--color-accent-primary-bg);
-    border-color: var(--color-accent-primary);
-  }
-  
-  .dark .bento-card.is-accented {
-    background-color: var(--color-accent-primary-bg);
-    border-color: var(--color-accent-primary);
-  }
-
-  .bento-card.is-accented:hover {
-      box-shadow: 0 10px 20px -5px rgb(30 107 102 / 0.2);
-  }
-  .dark .bento-card.is-accented:hover {
-      box-shadow: 0 10px 20px -5px rgb(133 207 201 / 0.15);
-  }
-
+  /* --- DEFINITIVE BIO CARD FIX --- */
   .main-intro-card {
-      display: grid;
+    background-image: var(--bg-image-url);
+    background-repeat: no-repeat;
+    background-position: right -2rem bottom 0rem; /* Position image bottom-right */
+    background-size: 180px auto; /* Control size: width and auto-height */
+  }
+  @media (min-width: 768px) {
+    .main-intro-card {
+      background-position: right -2rem bottom 0rem;
+      background-size: 200px auto;
+    }
+  }
+  @media (min-width: 1024px) {
+    .main-intro-card {
+      background-position: right 0rem bottom 0rem;
+      background-size: 240px auto;
+    }
   }
 
-  @media (max-width: 767px) {
-    .main-intro-card {
-      grid-template-columns: 1fr;
-      justify-items: center;
-      gap: 1.5rem;
-    }
-    /* On mobile, the text column needs less padding */
-    .main-intro-card > div:last-child {
-        padding: 0 1rem 1rem 1rem;
-    }
-  }
+  /* --- Specific Card Theme Styles --- */
+  .coffee-card { background: #4d3a2a; color: #f5eadd; }
+  .youtube-card { background: #181818; }
+  .play-button-bg { width: 5rem; height: 3.5rem; background-color: #ff0000; border-radius: 0.75rem; opacity: 0.9; transition: all 0.2s ease; position: relative; }
+  .play-button-icon { position: absolute; width: 0; height: 0; border-left: 1.25rem solid white; border-top: 0.75rem solid transparent; border-bottom: 0.75rem solid transparent; transition: transform 0.2s ease; }
+  .youtube-card:hover .play-button-bg { transform: scale(1.1); background-color: #ff2525; }
+  .ai-card { background: linear-gradient(135deg, var(--color-accent-primary), #1e293b); color: white; }
+  .personality-card { background: linear-gradient(135deg, var(--color-accent-highlight), #4c1d95); color: white; }
+  
+  /* Learning Card Styles */
+  .learning-card { background-color: var(--color-bg-secondary); }
+  .learning-item { display: flex; align-items: center; gap: 0.75rem; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background-color: var(--dot-color); animation: pulse 2s infinite alternate; }
+  @keyframes pulse { from { opacity: 0.7; transform: scale(0.95); } to { opacity: 1; transform: scale(1.05); } }
 </style>
