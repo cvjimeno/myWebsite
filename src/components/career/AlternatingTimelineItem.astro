@@ -1,4 +1,5 @@
 ---
+// src/components/career/AlternatingTimelineItem.astro
 import { Image } from 'astro:assets';
 
 export interface Props {
@@ -11,6 +12,7 @@ export interface Props {
   dates: string;
   descriptionLines: string[];
   skills?: string[];
+  // NEW: An optional array of images to display in the collage
   illustrations?: any[];
   textOnRight: boolean;
   isLastItem?: boolean;
@@ -19,40 +21,51 @@ export interface Props {
 }
 
 const props = Astro.props;
+const hasIllustrations = props.illustrations && props.illustrations.length > 0;
 ---
 <li id={props.id} class="timeline-item relative group">
   <!-- THE MAIN GRID CONTAINER -->
-  <div class="relative md:grid md:grid-cols-2 md:gap-x-32 items-center w-full pl-32 md:pl-0 py-10">
+  <div class="relative lg:grid lg:grid-cols-2 lg:gap-x-16 xl:gap-x-24 items-center w-full pl-28 lg:pl-0 py-10">
+    
     <!-- GRID CHILD 1: Text Block -->
     <div class:list={[
-      "md:py-4",
-      { 'md:order-last md:col-start-2 md:text-left': props.textOnRight },
-      { 'md:col-start-1 md:text-right': !props.textOnRight }
+      "lg:py-4",
+      { 'lg:order-last lg:col-start-2 lg:text-left': props.textOnRight },
+      { 'lg:col-start-1 lg:text-right': !props.textOnRight }
     ]}>
-      <h3 class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold mb-1 leading-tight" style={`color: ${props.institutionColor}`}>{props.institutionName}</h3>
-      <p class="text-xs sm:text-sm md:text-base lg:text-lg font-medium text-text-primary mb-2 md:mb-4 leading-snug">{props.role}</p>
-      <div class="inline-block bg-bg-secondary text-text-secondary text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 mb-4 md:mb-6 rounded-md border border-border-card">{props.dates}</div>
-      <div class="prose prose-xs sm:prose-sm md:prose-base text-text-secondary max-w-none space-y-2 md:space-y-3 mb-4 md:mb-6">
-        {props.descriptionLines.map(line => <p class="text-xs sm:text-sm md:text-base leading-relaxed" set:html={line} />)}
+      <h3 class="text-xl md:text-2xl font-bold mb-1 leading-tight" style={`color: ${props.institutionColor}`}>{props.institutionName}</h3>
+      <p class="text-base md:text-lg font-medium text-text-primary mb-3 md:mb-4 leading-snug">{props.role}</p>
+      <div class="inline-block bg-bg-secondary text-text-secondary text-sm font-semibold px-3 py-1 mb-4 md:mb-6 rounded-md border border-border-card">{props.dates}</div>
+      <div class="prose text-text-secondary max-w-none space-y-3 mb-6">
+        {props.descriptionLines.map(line => <p class="leading-relaxed" set:html={line} />)}
       </div>
-      <div class:list={[ "flex flex-wrap gap-1 sm:gap-2", { "md:justify-end": !props.textOnRight } ]}>
+      <div class:list={[ "flex flex-wrap gap-2", { "lg:justify-end": !props.textOnRight } ]}>
         {props.skills?.map(skill => (
-          <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-border-card">{skill}</span>
+          <span class="text-xs font-medium bg-bg-secondary dark:bg-bg-primary px-3 py-1.5 rounded-full border border-border-card">{skill}</span>
         ))}
       </div>
     </div>
 
-    <!-- GRID CHILD 2: Illustration/Photo Collage -->
-    {props.illustrations && props.illustrations.length > 0 && (
+    <!-- GRID CHILD 2: The new Photo Collage -->
+    {hasIllustrations && (
       <div class:list={[
-        "hidden md:flex items-center",
-        { "md:justify-start md:col-start-1": props.textOnRight },
-        { "md:justify-end md:col-start-2": !props.textOnRight }
+        "hidden lg:flex items-center group/collage", // Changed from md:flex to lg:flex
+        { "lg:justify-start lg:col-start-1": props.textOnRight },
+        { "lg:justify-end lg:col-start-2": !props.textOnRight }
       ]}>
-        <div class="illustration-collage relative w-64 h-40 md:w-72 lg:w-80 md:h-48 lg:h-56">
+        <div class="illustration-collage relative w80 h-64 lg:w-88 lg:h-72"> 
+          <!-- We map over a slice of the array to show a max of 3 images -->
           {props.illustrations.slice(0, 3).map((illust, index) => (
-            <div class:list={[ "p-1 sm:p-1.5 bg-bg-card rounded-md shadow-lg border border-border-card absolute transition-all duration-400", `collage-img-${index}` ]}>
-              <Image src={illust} alt="" width={120} height={120} class="rounded-sm w-full h-full object-cover" />
+            <div class:list={[ "collage-image-wrapper", `collage-img-${index}` ]}>
+              <Image 
+                src={illust} 
+                alt={`Illustration for ${props.institutionName}`} 
+                width={300} 
+                height={300}
+                format="webp"
+                quality={75}
+                class="w-full h-full object-cover rounded-md" 
+              />
             </div>
           ))}
         </div>
@@ -61,75 +74,60 @@ const props = Astro.props;
   </div>
 
   <!-- The Logo Node and Centerline -->
-  <div class="absolute top-10 left-10 md:left-1/2 -translate-x-1/2">
+  <div class="absolute top-10 left-10 lg:left-1/2 -translate-x-1/2">
     <div class="logo-node w-20 h-20 sm:w-24 sm:h-24 relative transition-transform duration-300 ease-out z-10">
-      <div
-        class="logo-image-wrapper w-full h-full flex items-center justify-center p-2.5 sm:p-3 bg-bg-primary dark:bg-bg-primary transition-all duration-300 relative z-10"
-        style={
-          (props.logoPadding ? `padding:${props.logoPadding};` : '') +
-          (props.logoBorderRadius ? `border-radius:${props.logoBorderRadius};` : 'border-radius:9999px;')
-        }
-      >
-        <Image 
-          src={props.logoSrc}
-          alt={props.logoAlt} 
-          width={128} 
-          height={128} 
-          class="object-contain max-w-full max-h-full"
-        />
-        <!-- Blue progress ring -->
+      <div class="logo-image-wrapper w-full h-full flex items-center justify-center p-2.5 sm:p-3 bg-bg-primary dark:bg-bg-primary transition-all duration-300 relative z-10" style={(props.logoPadding ? `padding:${props.logoPadding};` : '') + (props.logoBorderRadius ? `border-radius:${props.logoBorderRadius};` : 'border-radius:9999px;')}>
+        <Image src={props.logoSrc} alt={props.logoAlt} width={128} height={128} class="object-contain max-w-full max-h-full" />
         <svg class="absolute inset-0 w-full h-full pointer-events-none z-20" viewBox="0 0 100 100">
-          <path
-            d="M 50,2 A 48,48 0 0,0 50,98"
-            fill="none"
-            stroke="var(--color-accent-primary)"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-dasharray="150.796447"
-            stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))"
-            class="transition-all duration-400 ease-out"
-          />
-          <path
-            d="M 50,2 A 48,48 0 0,1 50,98"
-            fill="none"
-            stroke="var(--color-accent-primary)"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-dasharray="150.796447"
-            stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))"
-            class="transition-all duration-400 ease-out"
-          />
+          <path d="M 50,2 A 48,48 0 0,0 50,98" fill="none" stroke="var(--color-accent-primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="150.796447" stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))" class="transition-all duration-400 ease-out" />
+          <path d="M 50,2 A 48,48 0 0,1 50,98" fill="none" stroke="var(--color-accent-primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="150.796447" stroke-dashoffset="calc(150.796447 * (1 - var(--circle-progress, 0)))" class="transition-all duration-400 ease-out" />
         </svg>
       </div>
     </div>
   </div>
 </li>
 <style>
-  .logo-node {
-    --circle-progress: 0;
-  }
-  
-  .illustration-collage {
+  .logo-node { --circle-progress: 0; }
+
+  /* --- Collage Styles --- */
+  .collage-image-wrapper {
+    position: absolute;
+    padding: 0.375rem; /* p-1.5 */
+    background-color: var(--color-bg-card);
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border: 1px solid var(--color-border-card);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     filter: grayscale(100%);
+    /* REMOVED: aspect-ratio: 1/1; */
   }
-  
-  .timeline-item.is-illustrations-active .illustration-collage {
+
+  /* We apply a max-height to the actual <img> tag inside the wrapper as a safeguard */
+  .collage-image-wrapper img {
+    max-height: 250px;
+    width: auto; /* Allow width to adjust based on image's aspect ratio */
+  }
+  .group:hover .collage-image-wrapper,
+  .timeline-item.is-illustrations-active .collage-image-wrapper {
     filter: grayscale(0%);
-    transform: scale(1.2);
   }
-  
-  /* Collage positioning - can't be done with Tailwind dynamic classes */
-  .collage-img-0 { top: 0; left: 60px; transform: rotate(-12deg) scale(0.95); z-index: 1; }
-  .collage-img-1 { bottom: 16px; left: 0; transform: rotate(3deg) scale(0.95); z-index: 2; }
-  .collage-img-2 { top: 32px; right: 0; transform: rotate(10deg) scale(0.9); z-index: 0; }
-  
+
+  /* Default positions for up to 3 images */
+  .collage-img-0 { width: 60%; top: 0; left: 0; transform: rotate(-8deg); z-index: 1; }
+  .collage-img-1 { width: 55%; top: 45%; left: 45%; transform: rotate(5deg); z-index: 2; }
+  .collage-img-2 { width: 50%; top: 10%; left: 60%; transform: rotate(12deg); z-index: 0; }
+
+  /* Expanded positions on hover/activation */
+  .group:hover .collage-img-0,
   .timeline-item.is-illustrations-active .collage-img-0 { 
-    left: -10px; top: -10px; transform: rotate(0deg) scale(1); 
+    transform: rotate(-6deg) scale(1.05) translate(-10%, 0%); 
   }
+  .group:hover .collage-img-1,
   .timeline-item.is-illustrations-active .collage-img-1 { 
-    left: 80px; top: 70px; transform: rotate(0deg) scale(1); 
+    transform: rotate(2deg) scale(1.05) translate(10%, 5%); 
   }
+  .group:hover .collage-img-2,
   .timeline-item.is-illustrations-active .collage-img-2 { 
-    right: -10px; top: 20px; transform: rotate(0deg) scale(1); 
+    transform: rotate(8deg) scale(1.05) translate(5%, -5%); 
   }
 </style>
