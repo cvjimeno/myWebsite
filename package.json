@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
+    "@astrojs/preact": "^4.1.0",
     "@astrojs/sitemap": "^3.4.1",
     "@tailwindcss/vite": "^4.1.7",
     "astro": "^5.11.0",
     "astro-font": "^1.1.0",
     "astro-icon": "^1.1.5",
+    "plotly.js-dist-min": "^3.0.1",
+    "preact": "^10.26.9",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
