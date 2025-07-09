@@ -1,53 +1,61 @@
 ---
-// src/components/blog/NewsletterCTA.astro
+// src/components/blog/NewsletterCTA.astro (FINAL POLISHED VERSION)
 import Icon from "../common/Icon.astro";
 
 export interface Props {
-  theme?: 'accent' | 'highlight' ; // Added 'orange' as a theme option
+  theme?: 'accent' | 'highlight' ;
 }
 const { theme = 'accent' } = Astro.props;
 
-// Determine colors based on the theme prop
-const isHighlightTheme = theme === 'highlight'; // 'highlight' is the new orange theme
+const isHighlightTheme = theme === 'highlight';
 const accentColorClass = isHighlightTheme ? 'text-accent-highlight' : 'text-accent-primary';
-const accentBgClass = isHighlightTheme ? 'bg-orange-100 dark:bg-accent-highlight/20' : 'bg-blue-100 dark:bg-accent-primary/20';
+const accentBgClass = isHighlightTheme ? 'bg-accent-highlight/10' : 'bg-accent-primary-bg';
 const buttonBgClass = isHighlightTheme ? 'bg-accent-highlight hover:opacity-90' : 'bg-accent-primary hover:bg-[var(--color-accent-primary-hover)]';
 const focusRingClass = isHighlightTheme ? 'focus:ring-accent-highlight/50' : 'focus:ring-accent-primary/50';
-
 ---
-{/* THE FIX: The outer section now provides a consistent background context */}
-<section class="starlight-field bg-bg-secondary dark:bg-bg-primary py-16 md:py-20 border-y border-border-card dark:border-border-card"
-         class:list={[{'theme-orange': isHighlightTheme}]}>
+<section 
+  id="newsletter-cta"
+  class="starlight-field bg-bg-secondary dark:bg-bg-primary py-16 md:py-20 border-y border-border-card"
+  class:list={[{'theme-orange': isHighlightTheme}]}
+>
   
   <div class="starlight-canvas" id={`starlightCanvas-${theme}`}></div>
   
   <div class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    {/* THE FIX: The inner card now uses our semantic variable for its background */}
-    <div class="bg-[var(--color-bg-card)] p-8 md:p-10 rounded-xl shadow-lg border border-border-card dark:border-border-subtle">
+    <div class="bg-bg-card p-8 md:p-10 rounded-xl shadow-lg border border-border-card">
       
       <div class:list={["inline-flex items-center justify-center w-16 h-16 rounded-full mb-6", accentBgClass]}>
         <Icon name="lucide:mail" size={32} class:list={[accentColorClass]}/>
       </div>
 
-      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Suscríbete a El Prompt</h2>
-<p class="text-lg text-text-secondary mb-8 leading-relaxed">Cada semana, una idea sobre IA, una herramienta que estoy probando y el mejor contenido que he encontrado. Directo a tu email.</p>      
+      <!-- THE FIX: The heading is now branded with the logomark -->
+      <h2 class="flex flex-wrap items-baseline justify-center gap-x-2.5 text-3xl md:text-4xl font-bold text-text-primary mb-4 text-balance">
+        <span>Únete a</span>
+        <span class="flex items-baseline gap-x-1.5">
+          <span class:list={[accentColorClass]}>>>></span>
+          <span>El Prompt</span>
+        </span>
+      </h2>
+      <p class="text-lg text-text-secondary mb-8 leading-relaxed">
+        Cada viernes comparto una idea sobre IA, un paper que me ha parecido interesante y una herramienta que estoy probando. Sin spam, solo contenido de alto valor.
+      </p>
+      
       <form class="max-w-md mx-auto">
         <div class="flex flex-col sm:flex-row gap-3">
-          {/* THE FIX: Input fields also use the correct inset background color */}
           <input 
             type="email" 
             name="email" 
             placeholder="tu@email.com" 
             required 
             class:list={[
-              "flex-grow w-full bg-bg-secondary dark:bg-bg-primary text-text-primary border border-border-card dark:border-border-subtle rounded-lg px-4 py-3 focus:border-transparent transition-all",
+              "flex-grow w-full bg-bg-secondary dark:bg-bg-primary text-text-primary border border-border-card rounded-lg px-4 py-3 focus:border-transparent transition-all",
               focusRingClass
             ]}
           />
           <button 
             type="submit" 
             class:list={[
-              "px-6 py-3 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105",
+              "px-6 py-3 text-white font-semibold rounded-lg shadow-md transition-all duration-300",
               buttonBgClass,
               focusRingClass
             ]}
@@ -57,8 +65,6 @@ const focusRingClass = isHighlightTheme ? 'focus:ring-accent-highlight/50' : 'fo
     </div>
   </div>
 </section>
-
-
 
 <!-- The script is almost identical, but now uses a unique canvas ID -->
 <script define:vars={{ theme }}>

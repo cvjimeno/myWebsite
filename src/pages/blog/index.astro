@@ -1,125 +1,222 @@
 ---
-// src/pages/blog/index.astro (FINAL, DYNAMIC & ROBUST VERSION)
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/cards/PostCard.astro';
-import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
-import carlosProfilePic from '../../assets/images/hero-main-picture.webp';
+// src/pages/blog/index.astro (FINAL POLISHED VERSION)
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/cards/PostCard.astro";
+import { getCollection } from "astro:content";
 
 const publicationName = "El Prompt";
-const pageTitle = `${publicationName}`;
+const pageTitle = `>>> ${publicationName}`;
 const pageDescription = `El archivo completo de ${publicationName}. Artículos sobre Inteligencia Artificial, ciencia y productividad para darte la señal, no el ruido. Una publicación de Carlos Velasco.`;
 
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-
-// THE FIX #1: Dynamically generate the list of filter buttons.
-// 1. Get all categories from all posts.
-// 2. Use `new Set()` to get only the unique values.
-// 3. Convert back to an array and sort it alphabetically.
-const usedCategories = [...new Set(allPosts.map(post => post.data.category))].sort();
-// 4. Prepend "Todos" to the beginning of the list.
-const allFilterOptions = ['Todos', ...usedCategories];
-
-// Data fetching for cards remains the same.
-const allHeroImages = import.meta.glob('/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}');
-const postsWithImages = await Promise.all(
-  allPosts.map(async (post) => {
-    const imagePath = post.data.heroImage;
-    if (!allHeroImages[imagePath]) {
-      throw new Error(`[blog/index.astro] Hero image for post "${post.slug}" not found. Path: "${imagePath}"`);
-    }
-    const resolvedImage = (await allHeroImages[imagePath]()).default;
-    return { 
-      ...post, 
-      data: { ...post.data, heroImageResolved: resolvedImage } 
-    };
-  })
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const usedCategories = [
+  ...new Set(allPosts.map((post) => post.data.category)),
+].sort();
+const allFilterOptions = ["Todos", ...usedCategories];
+const postsWithData = allPosts.map((post) => ({
+  ...post,
+  dataset: { category: post.data.category.toLowerCase() },
+}));
+const sortedPosts = postsWithData.sort(
+  (a, b) =>
+    new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
 );
-const sortedPosts = postsWithImages.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-    
     <header class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-      <a href="/quien-soy/" class="inline-block mb-6 group">
-        <Image 
-            src={carlosProfilePic} 
-            alt="Foto de Carlos Velasco"
-            width={120} height={120} format="webp"
-            class="w-24 h-24 md:w-28 md:h-28 rounded-full shadow-lg border-2 border-transparent group-hover:border-accent-primary transition-all duration-200" 
-        />
-      </a>
-      <h1 class="text-5xl md:text-6xl font-bold text-text-primary mb-4">
-        {publicationName}
+      <h1
+        id="blog-title-container"
+        class="flex items-baseline justify-center gap-x-2 md:gap-x-4 text-5xl md:text-7xl font-bold text-text-primary mb-6"
+        data-text-to-type={publicationName}
+      >
+        <span class="prompt-prefix text-accent-primary">>>></span>
+        <span id="prompt-container" class="prompt-text relative">
+          <span id="typewriter-text"></span>
+        </span>
       </h1>
       <p class="text-lg text-text-secondary leading-relaxed">
-        El lugar donde la curiosidad se encuentra con el código. Cada semana, desmonto temas complejos sobre Inteligencia Artificial y productividad para darte la señal, no el ruido.
+        Mi Blog donde cada semana iré compartiendo lo que descubro experimentando con la IA: novedades, herammientas y modelos que funcionan, prompts útiles, y todo
+        lo que vaya aprendiendo por el camino. Sin hype, solo mi experiencia, con un poco de tecnología. ¿Te quedas a descubrir conmigo?
       </p>
     </header>
 
-  <div id="filter-buttons" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16">
-    {allFilterOptions.map((category, index) => {
-      const baseClasses = "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200";
-      const inactiveClasses = "bg-bg-secondary text-text-secondary hover:bg-gray-200 dark:bg-bg-secondary dark:text-text-primary dark:hover:bg-gray-700";
-      const activeClasses = "bg-accent-primary text-button-text";
-
-      return (
-        <button 
-          class:list={[ baseClasses, index === 0 ? activeClasses : inactiveClasses ]}
-          data-category={category.toLowerCase()}
-        >
-          {category}
-        </button>
-      )
-    })}
-  </div>
-
-    <main id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-      {sortedPosts.map((post) => (
-        <PostCard post={post} />
-      ))}
+    <div
+      id="filter-buttons"
+      class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16"
+    >
+      {
+        allFilterOptions.map((category, index) => (
+          <button
+            class:list={[
+              "filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200",
+              index === 0
+                ? "bg-accent-primary text-button-text"
+                : "bg-bg-secondary text-text-secondary hover:bg-gray-200 dark:bg-bg-secondary dark:text-text-primary dark:hover:bg-gray-700",
+            ]}
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        ))
+      }
+    </div>
+    <main
+      id="blog-grid"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+    >
+      {
+        sortedPosts.map((post) => (
+          <div data-category={post.dataset.category}>
+            <PostCard post={post} />
+          </div>
+        ))
+      }
     </main>
   </div>
 </BaseLayout>
 
+<style>
+  @keyframes modern-blink {
+    0% {
+      transform: scaleY(0);
+    }
+    5% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    55% {
+      transform: scaleY(0);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+  .prompt-prefix {
+    font-weight: 600;
+    opacity: 0.8;
+  }
+  .prompt-text {
+    min-height: 5rem;
+    display: inline-block;
+  }
+  @media (max-width: 768px) {
+    .prompt-text {
+      min-height: 3.5rem;
+    }
+  }
+  .prompt-text::after {
+    content: "";
+    position: absolute;
+    right: -1rem;
+    top: 15%;
+    height: 70%;
+    width: 0.5rem;
+    background-color: var(--color-accent-highlight);
+    transform-origin: center;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .prompt-text.blinking::after {
+    opacity: 1;
+    /* THE FIX: Changed blink duration to 1.2s */
+    animation: modern-blink 1.2s infinite;
+  }
+  @media (max-width: 768px) {
+    .prompt-text::after {
+      right: -0.75rem;
+      width: 0.4rem;
+    }
+  }
+</style>
+
 <script>
-  // THE FIX #2: The simple, robust script that works with the dynamic buttons.
+  let typewriterTimers = [];
+
+  function cleanupTypewriter() {
+    typewriterTimers.forEach(clearTimeout);
+    typewriterTimers = [];
+  }
+
+  function setupTypewriter() {
+    cleanupTypewriter();
+
+    const titleContainer = document.getElementById("blog-title-container");
+    const promptContainer = titleContainer?.querySelector("#prompt-container");
+    const textTarget = titleContainer?.querySelector("#typewriter-text");
+    const textToType = titleContainer?.dataset.textToType;
+
+    if (!promptContainer || !textTarget || !textToType) return;
+
+    const typingDelay = 120;
+    let charIndex = 0;
+
+    const typeChar = () => {
+      if (charIndex < textToType.length) {
+        textTarget.textContent += textToType.charAt(charIndex);
+        charIndex++;
+        const timerId = setTimeout(typeChar, typingDelay);
+        typewriterTimers.push(timerId);
+      } else {
+        // THE FIX: Changed timeout to 6000ms (5 blinks at 1.2s each)
+        const timerId = setTimeout(() => {
+          promptContainer.classList.remove("blinking");
+        }, 6000);
+        typewriterTimers.push(timerId);
+      }
+    };
+
+    textTarget.textContent = "";
+    promptContainer.classList.add("blinking");
+    typeChar();
+  }
+
   function setupBlogFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const blogCards = document.querySelectorAll('#blog-grid > article');
-    if (filterButtons.length === 0) return;
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    if (!filterButtons.length) return;
+    const blogCardWrappers = document.querySelectorAll("#blog-grid > div");
 
-    const activeClasses = ['bg-accent-primary', 'text-button-text'];
-    const inactiveClasses = ['bg-bg-secondary', 'text-text-secondary', 'hover:bg-gray-200', 'dark:bg-bg-secondary', 'dark:text-text-primary', 'dark:hover:bg-gray-700'];
+    const activeClasses = ["bg-accent-primary", "text-button-text"];
+    const inactiveClasses = [
+      "bg-bg-secondary",
+      "text-text-secondary",
+      "hover:bg-gray-200",
+      "dark:bg-bg-secondary",
+      "dark:text-text-primary",
+      "dark:hover:bg-gray-700",
+    ];
 
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const selectedCategory = button.dataset.category;
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedCategory = (button as HTMLElement).dataset.category;
+        filterButtons.forEach(
+          (btn) =>
+            (btn.className =
+              button === btn
+                ? `filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200 ${activeClasses.join(" ")}`
+                : `filter-btn px-4 py-2 font-medium rounded-lg transition-colors duration-200 ${inactiveClasses.join(" ")}`)
+        );
 
-        // Update button styles
-        filterButtons.forEach(btn => {
-          btn.classList.remove(...activeClasses);
-          btn.classList.add(...inactiveClasses);
-        });
-        button.classList.add(...activeClasses);
-        button.classList.remove(...inactiveClasses);
-
-        // Filter cards using the reliable `data-category` attribute
-        blogCards.forEach(card => {
-          const cardElement = card as HTMLElement;
-          const postCategory = cardElement.dataset.category;
-          
-          if (selectedCategory === 'todos' || postCategory === selectedCategory) {
-            cardElement.classList.remove('hidden');
-          } else {
-            cardElement.classList.add('hidden');
-          }
+        blogCardWrappers.forEach((wrapper) => {
+          const wrapperElement = wrapper as HTMLElement;
+          const postCategory = wrapperElement.dataset.category;
+          wrapperElement.style.display =
+            selectedCategory === "todos" || postCategory === selectedCategory
+              ? "block"
+              : "none";
         });
       });
     });
   }
-  
-  // This ensures the script re-runs after every page navigation
-  document.addEventListener('astro:page-load', setupBlogFilters);
+
+  function runPageScripts() {
+    setupTypewriter();
+    setupBlogFilters();
+  }
+
+  document.addEventListener("astro:before-swap", cleanupTypewriter);
+  document.addEventListener("astro:page-load", runPageScripts);
 </script>
