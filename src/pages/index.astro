@@ -24,8 +24,8 @@ const latestPosts = sortedPosts.slice(0, 3);
 
   {/* THE FIX: Added `overflow-x-hidden` to this section tag */}
   <section class="overflow-x-hidden py-12 md:py-20 px-4 sm:px-6 lg:px-8">
-    <div class="container mx-auto">
-      <div class="text-center mb-10 md:mb-16">
+    <div class="container mx-auto max-w-6xl">
+      <div class="text-center mb-10 md:mb-12">
         <h2
           class="flex flex-wrap items-baseline justify-center gap-x-2.5 text-3xl md:text-5xl font-semibold text-text-primary mb-2"
         >
@@ -57,15 +57,13 @@ const latestPosts = sortedPosts.slice(0, 3);
             </svg>
           </div>
         </div>
-        <p class="text-text-secondary text-lg mt-4 md:mt-5 max-w-3xl mx-auto">
+        <p class="text-text-secondary text-lg my-12 md:mt-5 max-w-3xl mx-auto">
           En mi Blog sobre Inteligencia Artificial y tecnología podrás explorar,
-          compartir y descubrir novedades de la IA conmigo. ¡Échale un vistazo!
+          compartir y descubrir novedades de la IA conmigo.  ChatGPT, Claude, Gemini, prompts, automatizaciones, IA Generativa, ingeniería de contexto... ¡Echa un vistazo a los últimos posts!
         </p>
       </div>
 
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
-      >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-7xl mx-auto">
         {latestPosts.map((post) => <PostCard post={post} />)}
       </div>
     </div>

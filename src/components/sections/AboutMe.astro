@@ -1,36 +1,57 @@
 ---
 // src/components/sections/AboutMe.astro
 // VERSION MEJORADA: Animaciones sutiles, múltiples capas y más engaging
-import aboutMeIllustrationRaw from '../../assets/images/illustrations/AboutMeIllustration.svg?raw';
+import aboutMeIllustrationRaw from "../../assets/images/illustrations/AboutMeIllustration.svg?raw";
 ---
-<section id="about-me" class="bg-bg-secondary dark:bg-bg-primary py-20 md:py-28">
+
+<section
+  id="about-me"
+  class="bg-bg-secondary dark:bg-bg-primary py-20 md:py-28"
+>
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-20 items-center">
-      
       <!-- Column 1: Text Content (Unchanged) -->
       <div class="md:col-span-3 text-center md:text-left">
-        <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-6 text-balance">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-text-primary mb-6 text-balance"
+        >
           ¿Qué hago aquí?
         </h2>
-        <div class="prose prose-lg text-text-secondary max-w-none space-y-4"> 
+        <div class="prose prose-lg text-text-secondary max-w-none space-y-4">
           <p>
-            Si sólo pudiera hacer dos cosas en la vida, lo tendría claro: <strong>aprender y enseñar</strong>. Es lo que he hecho desde que tengo memoria. De pequeño ya sabía que quería estudiar Física para entender cómo funciona el mundo. Y desde entonces no he dejado de moverme: de un campo a otro, de una técnica a la siguiente. De la física de partículas a los cultivos celulares. De la bioquímica al código. Del ratón de ordenador al ratón de laboratorio. De la pipeta a la resonancia magnética.
+            Si solo pudiera hacer dos cosas en la vida, lo tendría claro: <strong
+              >aprender y enseñar</strong
+            >. Es lo que he hecho desde que tengo memoria. Desde muy pequeño ya sabía
+            que quería estudiar Física para entender cómo funciona el mundo. Y
+            desde entonces no he dejado de moverme: de un campo a otro, de una
+            técnica a la siguiente. De la física de partículas a los cultivos
+            celulares, de la bioquímica al código, del ratón de ordenador al
+            ratón de laboratorio de la pipeta a la resonancia magnética...
           </p>
           <p>
-            Hoy, en plena irrupción de la inteligencia artificial, he vuelto a empezar desde abajo. He vuelto a aprender. Pero esta vez también he querido compartir lo que voy descubriendo. Como siempre, cada respuesta abre nuevas preguntas: ¿canal de YouTube o blog?, ¿escribir primero o grabar?, ¿dónde alojar todo esto? Ya lo tengo: haré <strong>mi propia web</strong>. Así además aprendo a construirla desde cero.
+            Hoy, en plena irrupción de la inteligencia artificial, he vuelto a
+            empezar a aprender desde abajo. Pero esta vez también he
+            querido compartir lo que voy descubriendo. Como siempre, cada
+            respuesta que consigo me genera nuevas preguntas: ¿cómo comparto mi camino? ¿canal de YouTube o blog?,
+            ¿escribir primero o grabar?, ¿dónde alojar todo esto? Ya lo tengo:
+            haré <strong>mi propia web</strong>. Así además aprendo a
+            construirla desde cero =D.
           </p>
           <p>
-            Así que aquí estoy. <strong>Aquí estamos</strong>. En mi web, donde iré guardando todo lo que aprendo, y compartiendo todo lo que pueda enseñar. De momento, ya he empezado el blog.
+            Así que aquí estoy. <strong>Aquí estamos</strong>. En mi web, donde
+            iré guardando todo lo que aprendo, y compartiendo todo lo que pueda
+            enseñar. De momento, ya he empezado el blog. ¡Pásate a verlo y aprendamos juntos!
           </p>
         </div>
- 
       </div>
 
       <!-- Column 2: Your Custom SVG Illustration -->
-      <div id="illustration-wrapper" class="md:col-span-2 flex items-center justify-center">
+      <div
+        id="illustration-wrapper"
+        class="md:col-span-2 flex items-center justify-center"
+      >
         <div set:html={aboutMeIllustrationRaw} />
       </div>
-
     </div>
   </div>
 </section>
@@ -55,110 +76,110 @@ import aboutMeIllustrationRaw from '../../assets/images/illustrations/AboutMeIll
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: center;
   }
-  
+
   /* Hover en el contenedor: lift muy sutil */
   .dark #illustration-wrapper:hover svg {
     filter: drop-shadow(0px 6px 20px rgb(133 207 201 / 0.12));
   }
 
   /* Elementos principales del cerebro */
-  #Brain, #Icons {
+  #Brain,
+  #Icons {
     fill: currentColor;
     stroke: none;
     transition: all 0.4s ease-out;
   }
-  
 
-  
   /* Red neuronal: estado por defecto */
-  #Wires line, #Nodes circle {
+  #Wires line,
+  #Nodes circle {
     stroke: var(--color-text-secondary);
     fill: var(--color-text-secondary);
     opacity: 0.4;
     transition: all 0.5s ease-out;
     stroke-width: 1;
   }
-  
+
   #Nodes circle {
     transform-origin: center;
   }
-  
+
   /* Efecto de "procesamiento cerebral" - desorden controlado */
-#illustration-wrapper:hover #Wires line {
-  stroke: var(--color-accent-highlight);
-  opacity: 0.9;
-  stroke-width: 1.2;
-  animation: neural-chaos-subtle 2.5s linear infinite alternate;
-}
-#illustration-wrapper:hover #Nodes circle {
-  fill: var(--color-accent-highlight);
-  stroke: var(--color-accent-highlight);
-  opacity: 1;
-}
-
-
-/* O si prefieres algo aún más sutil */
-@keyframes neural-chaos-subtle {
-  0% {
-    stroke-dasharray: 6 4;
-    stroke-dashoffset: 0;
+  #illustration-wrapper:hover #Wires line {
+    stroke: var(--color-accent-highlight);
     opacity: 0.9;
+    stroke-width: 1.2;
+    animation: neural-chaos-subtle 2.5s linear infinite alternate;
   }
-  25% {
-    stroke-dasharray: 8 3;
-    stroke-dashoffset: -10;
-    opacity: 0.7;
+  #illustration-wrapper:hover #Nodes circle {
+    fill: var(--color-accent-highlight);
+    stroke: var(--color-accent-highlight);
+    opacity: 1;
   }
-  50% {
-    stroke-dasharray: 5 5;
-    stroke-dashoffset: -20;
-    opacity: 0.5;
+
+  /* O si prefieres algo aún más sutil */
+  @keyframes neural-chaos-subtle {
+    0% {
+      stroke-dasharray: 6 4;
+      stroke-dashoffset: 0;
+      opacity: 0.9;
+    }
+    25% {
+      stroke-dasharray: 8 3;
+      stroke-dashoffset: -10;
+      opacity: 0.7;
+    }
+    50% {
+      stroke-dasharray: 5 5;
+      stroke-dashoffset: -20;
+      opacity: 0.5;
+    }
+    75% {
+      stroke-dasharray: 7 4;
+      stroke-dashoffset: -30;
+      opacity: 0.6;
+    }
+    100% {
+      stroke-dasharray: 4 6;
+      stroke-dashoffset: -40;
+      opacity: 0.8;
+    }
   }
-  75% {
-    stroke-dasharray: 7 4;
-    stroke-dashoffset: -30;
-    opacity: 0.6;
-  }
-  100% {
-    stroke-dasharray: 4 6;
-    stroke-dashoffset: -40;
-    opacity: 0.8;
-  }
-}
   /* Animación de los iconos - efecto más sutil */
   #Icons {
     transition: all 0.6s ease-out;
   }
-  
+
   #illustration-wrapper:hover #Icons {
     opacity: 0.8;
     filter: brightness(1.2);
   }
-  
 
-  
   /* Mejoras para accesibilidad */
   @media (prefers-reduced-motion: reduce) {
     #illustration-wrapper svg,
-    #Brain, #Icons, #Wires line, #Nodes circle {
+    #Brain,
+    #Icons,
+    #Wires line,
+    #Nodes circle {
       animation: none !important;
       transition: none !important;
     }
-    
+
     #illustration-wrapper:hover svg {
       transform: none !important;
     }
   }
-  
+
   /* Responsive: animaciones más sutiles en móvil */
   @media (max-width: 768px) {
     #illustration-wrapper:hover svg {
     }
-    
+
     #illustration-wrapper:hover #Wires line {
       animation-duration: 3s;
     }
-    
+
     #illustration-wrapper:hover #Nodes circle {
       animation-duration: 2.5s;
     }
