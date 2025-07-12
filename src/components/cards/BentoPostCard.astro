@@ -1,7 +1,6 @@
 ---
-// src/components/cards/BentoPostCard.astro (REFINED & ROBUST VERSION)
+// src/components/cards/BentoPostCard.astro (FINAL POLISHED VERSION)
 import { Image } from "astro:assets";
-import Badge from "../common/Badge.astro";
 import Icon from "../common/Icon.astro";
 
 export interface Props {
@@ -15,26 +14,37 @@ if (!allHeroImages[post.data.heroImage]) {
   throw new Error(`[BentoPostCard] Image not found: ${post.data.heroImage}`);
 }
 const heroImageResolved = (await allHeroImages[post.data.heroImage]()).default;
+
+// Format the date
+const formattedDate = new Date(post.data.pubDate).toLocaleDateString('es-ES', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
 ---
-<a href={`/blog/${post.slug}/`} class="group w-full h-full flex flex-col p-4 md:p-5">
-  <div class="flex items-center gap-2 mb-3">
-    <Icon name="lucide:rss" class="w-5 h-5 text-accent-primary" />
-    <h3 class="font-semibold text-text-primary text-base">
-      Último post del blog
-    </h3>
+<a href={`/blog/${post.slug}/`} class="group w-full h-full flex flex-col p-4 md:p-6 max-h-[400px] sm:max-h-[350px] md:max-h-none">
+  
+  {/* THE FIX: Header now includes the date */}
+  <div class="flex items-center justify-between gap-4 mb-4 md:mb-8">
+    <div class="flex items-center gap-2">
+      <Icon name="lucide:rss" class="w-5 h-5 text-accent-primary" />
+      <h3 class="font-semibold text-text-primary text-base">
+        Último post del blog
+      </h3>
+    </div>
+    <span class="text-xs text-text-secondary flex-shrink-0">{formattedDate}</span>
   </div>
 
-  <!-- THE FIX: A flexible container that stacks on mobile and goes side-by-side on desktop -->
-  <div class="flex-grow flex flex-col sm:flex-row gap-4">
+  <!-- THE FIX: Content now has more top margin for breathing room -->
+  <div class="flex-grow flex flex-col sm:flex-row gap-3 md:gap-4 min-h-0">
     
-    <!-- Image Column -->
     <div class="w-full sm:w-1/3 flex-shrink-0">
-      <div class="aspect-square rounded-lg overflow-hidden">
+      <div class="aspect-[16/9] sm:aspect-[4/3] rounded-lg overflow-hidden">
         <Image
           src={heroImageResolved}
           alt={post.data.imageAlt}
-          width={400}
-          height={400}
+          width={300}
+          height={225}
           format="webp"
           quality={75}
           class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -42,17 +52,14 @@ const heroImageResolved = (await allHeroImages[post.data.heroImage]()).default;
       </div>
     </div>
 
-    <!-- Text Column -->
-    <div class="w-full sm:w-2/3 flex flex-col">
+    <div class="w-full sm:w-2/3 flex flex-col min-h-0">
       <h4 class="font-semibold text-text-primary group-hover:text-accent-primary transition-colors leading-tight mb-2 line-clamp-2">
         {post.data.title}
       </h4>
       <p class="text-sm text-text-secondary line-clamp-3 sm:line-clamp-4 flex-grow">
         {post.data.description}
       </p>
-      <div class="mt-3">
-        <Badge text={post.data.category} variant="category" />
-      </div>
+      {/* The category badge has been removed from the bottom */}
     </div>
   </div>
 </a>

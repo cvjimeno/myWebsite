@@ -1,18 +1,16 @@
 ---
-// src/pages/quien-soy.astro (with Latest Post Card)
+// src/pages/quien-soy.astro (FINAL, TRUE RESPONSIVE VERSION)
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import Icon from "../components/common/Icon.astro";
-import SocialIcon from "../components/common/SocialIcon.astro";
-import InteractiveViolinPlot from "../components/InteractiveViolinPlot.jsx";
+import CoffeeCard from "../components/cards/CoffeeCard.astro";
+import BentoPostCard from "../components/cards/BentoPostCard.astro";
 import ColorPickerGame from "../components/ColorPickerGame.jsx";
-import BentoPostCard from "../components/cards/BentoPostCard.astro"; // <-- Import the new card
+import InteractiveViolinPlot from "../components/InteractiveViolinPlot.jsx";
 import { getCollection } from "astro:content";
-
 import personalPhoto from "../assets/images/whoami.webp";
 import personalityPhoto from "../assets/images/whoami_16.webp";
 
-// Fetch the latest post
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const sortedPosts = allPosts.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
 const latestPost = sortedPosts[0];
@@ -28,91 +26,75 @@ const latestPost = sortedPosts[0];
         Un poco sobre mí
       </h1>
       <p class="text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
-        Más allá del CV y los papers, estas son algunas de las cosas que me
-        mueven. Si buscas la parte profesional, la tienes <a
+        Qué me define, qué estoy haciendo ahora, y alguna curiosidad sobre mí. Si buscas la parte profesional, la tienes <a
           href="/trayectoria/"
           class="font-medium text-accent-primary hover:underline">aquí</a>.
       </p>
     </header>
 
     <div class="max-w-[1092px] mx-auto">
+      {/* THE DEFINITIVE RESPONSIVE GRID: 1-col (mobile), 2-col (tablet), 12-col (desktop) */}
       <div
-        class="bento-grid-container grid grid-cols-1 md:grid-cols-12 md:auto-rows-[120px] gap-3"
+        class="bento-grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 md:auto-rows-[120px] gap-3"
       >
-        <!-- Main Intro Card: 9 cols, 4 rows -->
-        <div class="bento-card md:col-span-9 md:row-span-4 grid md:grid-cols-[auto_1fr] gap-x-6 md:gap-x-8 items-center p-6 md:p-8">
-          <div class="hidden md:flex justify-center md:justify-start">
-            <Image src={personalPhoto} alt="Carlos Velasco" width={300} height={400} format="webp" quality={90} class="max-w-[120px] lg:max-w-[130px] w-full h-auto self-center"/>
+        {/* Main Intro Card */}
+        <div class="bento-card md:col-span-2 lg:col-span-9 md:row-span-4 relative flex p-6 md:p-8">
+          <div class="absolute -bottom-6 left-4 hidden md:block">
+            <Image src={personalPhoto} alt="Carlos Velasco" width={300} height={400} format="webp" quality={90} class="max-w-[120px] lg:max-w-[160px] w-full h-auto"/>
           </div>
-          <div class="text-center md:text-left">
-            <div class="prose prose-lg text-text-secondary max-w-none space-y-4 text-sm md:text-base mb-3 md:mb-4">
-              <p>Hola! Soy <strong class="text-accent-primary">Carlos Velasco</strong>, y se me da mal escribir autobiografías.</p>
+          <div class="text-center md:text-left flex flex-col h-full w-full md:pl-[140px] lg:pl-[160px] md:ml-6">
+            <div class="prose prose-lg text-text-secondary max-w-none space-y-4 text-base leading-relaxed flex-grow">
+              <p class="lead !text-lg !text-text-primary !mb-4 lg:!mb-16">Hola! Soy <strong class="text-accent-primary font-semibold">Carlos Velasco</strong>, y se me da mal escribir autobiografías.</p>
               <p>No tengo grandes hobbies, solo sé que desde pequeño mi mayor afición era aprender sobre cualquier cosa y entender cómo o por qué funcionaba. Era el típico niño que cuando se rompía un objeto electrónico en su casa, tenía que abrirlo antes de tirarlo y ver cómo era en el interior.</p>
               <p>Mi misión es convertir todo lo que aprendo y compartirlo con quien quiera unirse. Si te interesa, date una vuelta virtual por el resto de mi web :).</p>
             </div>
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6">
-              <a href="/trayectoria/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">Mi trayectoria profesional<span class="arrow transition-transform duration-200">→</span></a>
-              <a href="/blog/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">Mi blog<span class="arrow transition-transform duration-200">→</span></a>
+            <div class="mt-auto pt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <a href="/trayectoria/" class="custom-group-link">Mi trayectoria profesional<span class="arrow">→</span></a>
+              <a href="/blog/" class="custom-group-link">Leer mi blog<span class="arrow">→</span></a>
             </div>
           </div>
         </div>
-
-        <!-- Projects Card: 3 cols, 3 rows -->
-        <div class="bento-card md:col-span-3 md:row-span-3 p-6 flex flex-col">
-          <div class="flex items-center gap-2 mb-2"><Icon name="lucide:lightbulb" class="w-6 h-6 text-accent-primary" /><h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3></div>
-          <p class="text-sm text-text-secondary mb-4">Cosas que estoy construyendo y en las que invierto mi tiempo.</p>
-          <div class="space-y-3 mt-auto">
-            <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-primary"><span class="font-medium">Esta web</span><br />Construida con Astro & Tailwind.</div>
-            <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-highlight"><span class="font-medium">ElPrompt.com</span><br />Mi blog sobre IA.</div>
+        
+        {/* Projects Card */}
+        <div class="bento-card md:col-span-2 lg:col-span-3 md:row-span-3 p-4 md:px-4 md:py-6 flex flex-col">
+          <div class="flex items-center gap-x-2 mb-4"><Icon name="lucide:lightbulb" class="w-5 h-5 text-accent-primary" /><h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3></div>
+          <div class="space-y-4 flex-grow flex flex-col justify-start mt-2 md:mt-6">
+            <div><p class="font-medium text-text-primary">1. Esta Web</p><p class="text-sm text-text-secondary">Desde Julio 2025.</p></div>
+            <a href="https://elprompt.com" target="_blank" rel="noopener noreferrer" class="block group"><p class="font-medium text-text-primary group-hover:text-accent-primary transition-colors flex items-center gap-1.5">2. >>> El Prompt<Icon name="lucide:arrow-up-right" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></p><p class="text-sm text-text-secondary">Mi blog sobre IA.</p></a>
+            <div><p class="font-medium text-text-primary">3. Segundo Cerebro</p><p class="text-sm text-text-secondary">Mi sistema de organización en Notion.</p></div>
           </div>
         </div>
         
-        <!-- Color Game Card: 3 cols, 2 row -->
-        <div class="bento-card md:col-span-3 md:row-span-2 p-0">
-          <ColorPickerGame client:load />
+        <!-- Color Game Card -->
+        <div class="bento-card md:col-span-2 lg:col-span-3 md:row-span-2 p-0"><ColorPickerGame client:load /></div>
+        
+        <!-- Violin Plot Card -->
+        <div class="bento-card md:col-span-2 lg:col-span-4 md:row-span-3 p-6 flex flex-col">
+          <h3 class="font-bold text-text-primary mb-2">Datos y gráficas</h3>
+          <p class="text-text-secondary text-sm mb-0 flex-grow">Me gusta todo lo que sea datos, gráficas y visualizaciones. Aquí tienes un ejemplo de una de mis gráficas favoritas: el violin plot.</p>
+          <InteractiveViolinPlot client:load caption="¿A que es bonita?" />
         </div>
         
-        <!-- Violin Plot Card: 4 cols, 3 rows -->
-        <div class="bento-card md:col-span-4 md:row-span-3 p-6 flex flex-col">
-          <h3 class="font-bold text-text-primary mb-2">Mi gráfica favorita</h3>
-          <p class="text-text-secondary text-sm mb-4 flex-grow">El Violin Plot. Una forma elegante de visualizar la distribución de los datos.</p>
-          <InteractiveViolinPlot client:load />
+        <!-- YouTube Card -->
+        <div class="bento-card md:col-span-2 lg:col-span-5 md:row-span-2 youtube-card p-6 flex flex-col justify-between text-center aspect-video md:aspect-auto">
+          <div><h3 class="font-bold text-white">Mi canal de YouTube...</h3></div>
+          <div class="flex items-center justify-center my-2"><a class="relative" aria-label="Ir al canal de YouTube (próximamente)"><div class="play-button-bg"></div><div class="play-button-icon"></div></a></div>
+          <div><p class="text-white/80 text-sm">Aún no tengo, pero es uno de mis próximos proyectos, así que ya dejo aquí el hueco para cuando lo cree.</p></div>
         </div>
         
-        <!-- YouTube Card: 5 cols, 2 rows 16:9 -->
-        <div class="bento-card md:col-span-5 md:row-span-2 youtube-card p-6 flex flex-col justify-between text-center aspect-video md:aspect-auto">
-          <div><h3 class="font-bold text-white">Próximamente en YouTube...</h3></div>
-          <div class="flex items-center justify-center my-2"><a href="#" class="relative" aria-label="Ir al canal de YouTube (próximamente)"><div class="play-button-bg"></div><div class="play-button-icon"></div></a></div>
-          <div><p class="text-white/80 text-sm">Mostrando, no solo contando, lo que aprendo.</p></div>
-        </div>
+        <!-- Coffee Card -->
+        <div class="bento-card md:col-span-2 lg:col-span-3 md:row-span-1 overflow-hidden"><CoffeeCard /></div>
         
-        <!-- Personality Card: 3 cols, 1 row -->
-        <div class="bento-card md:col-span-3 md:row-span-1 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
-          <div class="text-center p-4"><h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3><div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div></div>
-          <div class="flex pr-4 py-4 justify-center"><Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/></div>
-        </div>
+        <!-- Latest Post Card -->
+        <div class="bento-card md:col-span-2 lg:col-span-5 md:row-span-2"><BentoPostCard post={latestPost} /></div>
         
-        
-        
-        
-        <!-- NEW: Latest Post Card: 5 cols, 2 rows -->
-        <div class="bento-card md:col-span-5 md:row-span-2">
-          <BentoPostCard post={latestPost} />
-        </div>
-        
-        <!-- Placeholder for the future
-        <div class="bento-card md:col-span-3 md:row-span-2 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
-          <div class="text-center p-4"><h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3><div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div></div>
-          <div class="flex pr-4 py-4 justify-center"><Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/></div>
-        </div> -->
-
       </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  /* Base styles (unchanged) */
+  /* All existing styles remain the same */
   .prose strong { color: var(--color-accent-primary); font-weight: 600; }
   .bento-card { background-color: var(--color-bg-card); border-radius: 1rem; border: 1px solid var(--color-border-card); transition: all 0.3s ease; position: relative; overflow: hidden; }
   @media (hover: hover) { .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05); border-color: var(--color-border-subtle); } }
@@ -120,6 +102,9 @@ const latestPost = sortedPosts[0];
   .youtube-card .play-button-bg { width: 4rem; height: 2.75rem; background-color: #ff0000; border-radius: 0.75rem; opacity: 0.9; transition: all 0.2s ease; }
   .youtube-card .play-button-icon { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0; border-left: 1rem solid white; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; transition: transform 0.2s ease; }
   .youtube-card a:hover .play-button-bg { transform: scale(1.1); background-color: #ff2525; }
-  .personality-card { background: linear-gradient(135deg, #f4c730, #bb7e13); color: white; }
-  .group-link:hover .arrow { transform: translateX(4px); }
+  .prose p.lead { line-height: 1.5; }
+  .custom-group-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-accent-primary); font-weight: 500; font-size: 0.875rem; }
+  @media (min-width: 768px) { .custom-group-link { font-size: 1rem; } }
+  .custom-group-link .arrow { transition: transform 0.2s; }
+  .custom-group-link:hover .arrow { transform: translateX(4px); }
 </style>

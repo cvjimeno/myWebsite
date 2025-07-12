@@ -1,0 +1,69 @@
+---
+// src/components/cards/CoffeeCard.astro (FINAL SINGLE-LINE VERSION)
+import { Image } from "astro:assets";
+import Icon from "../common/Icon.astro";
+import Mokka from "../../assets/images/illustrations/mokka.webp";
+
+const startDate = new Date('2008-09-15');
+---
+<div class="relative w-full h-full p-4 flex flex-col overflow-hidden" style="background: linear-gradient(135deg, #D7C7B6, #B09A81);">
+  
+  <!-- Header: Stays at the top -->
+  <div class="flex items-center gap-x-2 z-10">
+    <Icon name="lucide:coffee" class="w-5 h-5 text-[#4a2c2a]" />
+    <h3 class="font-semibold text-[#4a2c2a] text-sm">
+      Cafés tomados en mi vida...
+    </h3>
+  </div>
+
+  <!-- Main Content: Perfectly centered in the remaining space -->
+  <div class="flex-grow flex items-center justify-center text-center z-10">
+    <!-- THE FIX: A single, horizontally aligned paragraph -->
+    <p class="flex items-baseline text-md text-[#4a2c2a]/90">
+      <span id="coffee-counter" class="font-bold text-2xl text-[#4a2c2a] leading-none mr-2">
+      </span>
+      <span>y subiendo.</span>
+    </p>
+  </div>
+
+  <!-- Illustration: Watermark in the corner -->
+  <div class="absolute -bottom-5 -right-5 z-0">
+    <Image 
+      src={Mokka} 
+      alt="Ilustración de una cafetera Moka" 
+      width={100} 
+      height={100}
+      format="webp"
+      quality={80}
+      class="w-24 h-auto opacity-30 dark:opacity-25"
+    />
+  </div>
+</div>
+
+<script define:vars={{ startDate: startDate.toISOString() }}>
+  const counterElement = document.getElementById('coffee-counter');
+  
+  if (counterElement) {
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffTime = Math.abs(now - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    const coffeesPerDay = 1.4;
+    const totalCoffees = Math.ceil( diffDays * coffeesPerDay);
+    
+    let startValue = Math.max(0, totalCoffees - 200);
+    const step = () => {
+      if (startValue < totalCoffees) {
+        startValue += 5;
+        if (startValue > totalCoffees) {
+          startValue = totalCoffees;
+        }
+        counterElement.textContent = startValue.toLocaleString('es-ES');
+        requestAnimationFrame(step);
+      }
+    };
+    
+    requestAnimationFrame(step);
+  }
+</script>
