@@ -1,0 +1,58 @@
+---
+// src/components/cards/BentoPostCard.astro (REFINED & ROBUST VERSION)
+import { Image } from "astro:assets";
+import Badge from "../common/Badge.astro";
+import Icon from "../common/Icon.astro";
+
+export interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+const allHeroImages = import.meta.glob("/src/assets/images/blog/hero/*.{jpeg,jpg,png,gif,webp}");
+
+if (!allHeroImages[post.data.heroImage]) {
+  throw new Error(`[BentoPostCard] Image not found: ${post.data.heroImage}`);
+}
+const heroImageResolved = (await allHeroImages[post.data.heroImage]()).default;
+---
+<a href={`/blog/${post.slug}/`} class="group w-full h-full flex flex-col p-4 md:p-5">
+  <div class="flex items-center gap-2 mb-3">
+    <Icon name="lucide:rss" class="w-5 h-5 text-accent-primary" />
+    <h3 class="font-semibold text-text-primary text-base">
+      Último post del blog
+    </h3>
+  </div>
+
+  <!-- THE FIX: A flexible container that stacks on mobile and goes side-by-side on desktop -->
+  <div class="flex-grow flex flex-col sm:flex-row gap-4">
+    
+    <!-- Image Column -->
+    <div class="w-full sm:w-1/3 flex-shrink-0">
+      <div class="aspect-square rounded-lg overflow-hidden">
+        <Image
+          src={heroImageResolved}
+          alt={post.data.imageAlt}
+          width={400}
+          height={400}
+          format="webp"
+          quality={75}
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+    </div>
+
+    <!-- Text Column -->
+    <div class="w-full sm:w-2/3 flex flex-col">
+      <h4 class="font-semibold text-text-primary group-hover:text-accent-primary transition-colors leading-tight mb-2 line-clamp-2">
+        {post.data.title}
+      </h4>
+      <p class="text-sm text-text-secondary line-clamp-3 sm:line-clamp-4 flex-grow">
+        {post.data.description}
+      </p>
+      <div class="mt-3">
+        <Badge text={post.data.category} variant="category" />
+      </div>
+    </div>
+  </div>
+</a>

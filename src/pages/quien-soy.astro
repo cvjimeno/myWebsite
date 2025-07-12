@@ -1,99 +1,111 @@
 ---
-// src/pages/quien-soy.astro (THE FINAL UNIFIED & CONTROLLABLE BENTO GRID)
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { Image } from 'astro:assets';
-import Icon from '../components/common/Icon.astro';
-import SocialIcon from '../components/common/SocialIcon.astro';
-import InteractiveViolinPlot from '../components/InteractiveViolinPlot.jsx';
-import ColorPickerGame from '../components/ColorPickerGame.jsx';
-import personalPhoto from '../assets/images/whoami.webp';
-import personalityPhoto from '../assets/images/whoami_16.webp';
+// src/pages/quien-soy.astro (with Latest Post Card)
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import Icon from "../components/common/Icon.astro";
+import SocialIcon from "../components/common/SocialIcon.astro";
+import InteractiveViolinPlot from "../components/InteractiveViolinPlot.jsx";
+import ColorPickerGame from "../components/ColorPickerGame.jsx";
+import BentoPostCard from "../components/cards/BentoPostCard.astro"; // <-- Import the new card
+import { getCollection } from "astro:content";
+
+import personalPhoto from "../assets/images/whoami.webp";
+import personalityPhoto from "../assets/images/whoami_16.webp";
+
+// Fetch the latest post
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
+const latestPost = sortedPosts[0];
 ---
-<BaseLayout 
-  title="Quién Soy" 
+
+<BaseLayout
+  title="Quién Soy"
   description="Una mirada personal a mi historia, mis motivaciones y las ideas que me impulsan en la ciencia y la tecnología. Conóceme más allá del CV."
 >
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    
     <header class="max-w-4xl mx-auto text-center mb-12 md:mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">Un poco sobre mí</h1>
-        <p class="text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
-            Más allá del CV y los papers, estas son algunas de las cosas que me mueven.
-            Si buscas la parte profesional, la tienes <a href="/trayectoria/" class="font-medium text-accent-primary hover:underline">aquí</a>.
-        </p>
+      <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">
+        Un poco sobre mí
+      </h1>
+      <p class="text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
+        Más allá del CV y los papers, estas son algunas de las cosas que me
+        mueven. Si buscas la parte profesional, la tienes <a
+          href="/trayectoria/"
+          class="font-medium text-accent-primary hover:underline">aquí</a>.
+      </p>
     </header>
 
-    <div class="max-w-6xl mx-auto">
-      <!-- 
-        =============================================
-             YOUR BENTO GRID CONTROL CENTER         
-        =============================================
-        CONTROLS:
-        1. Grid Debugger: Add/Remove the "debug-grid" class below to see grid lines.
-        2. Gaps: Modify "gap-4 md:gap-6" to change spacing.
-        3. Card Sizes: Modify "md:col-span-*" and "md:row-span-*" on each card div.
-      -->
-      <div class="bento-grid-container grid grid-cols-1 md:grid-cols-12 md:auto-rows-[minmax(100px,auto)] gap-4 md:gap-4 ">
-
-        <!-- Main Intro Card: Spans 12 columns wide, 2 rows tall -->
-        <div class="bento-card md:col-span-9 md:row-span-4 grid md:grid-cols-[auto_1fr] gap-x-6 md:gap-x-8 items-end p-6 md:p-8">
+    <div class="max-w-[1092px] mx-auto">
+      <div
+        class="bento-grid-container grid grid-cols-1 md:grid-cols-12 md:auto-rows-[120px] gap-3"
+      >
+        <!-- Main Intro Card: 9 cols, 4 rows -->
+        <div class="bento-card md:col-span-9 md:row-span-4 grid md:grid-cols-[auto_1fr] gap-x-6 md:gap-x-8 items-center p-6 md:p-8">
           <div class="hidden md:flex justify-center md:justify-start">
-              <Image src={personalPhoto} alt="Carlos Velasco" width={350} height={525} format="webp" quality={90} class="max-w-[120px] lg:max-w-[160px] w-full h-auto" />
+            <Image src={personalPhoto} alt="Carlos Velasco" width={300} height={400} format="webp" quality={90} class="max-w-[120px] lg:max-w-[130px] w-full h-auto self-center"/>
           </div>
           <div class="text-center md:text-left">
-              <h2 class="text-xl md:text-2xl font-semibold text-text-primary mb-2">Carlos Velasco</h2>
-              <p class="text-sm md:text-base text-text-secondary mb-3 md:mb-4">Mi misión es simple: explorar la intersección entre la tecnología y la humanidad, y compartir el viaje. Creo en el aprendizaje constante y en construir en público. Esta tarjeta ahora es parte de la cuadrícula, pero su altura está controlada por `row-span`.</p>
-              <div class="flex flex-col items-center md:items-start">
-                  <a href="/trayectoria/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">
-                    Mi trayectoria profesional
-                    <span class="arrow transition-transform duration-200">→</span>
-                  </a>
-              </div>
+            <div class="prose prose-lg text-text-secondary max-w-none space-y-4 text-sm md:text-base mb-3 md:mb-4">
+              <p>Hola! Soy <strong class="text-accent-primary">Carlos Velasco</strong>, y se me da mal escribir autobiografías.</p>
+              <p>No tengo grandes hobbies, solo sé que desde pequeño mi mayor afición era aprender sobre cualquier cosa y entender cómo o por qué funcionaba. Era el típico niño que cuando se rompía un objeto electrónico en su casa, tenía que abrirlo antes de tirarlo y ver cómo era en el interior.</p>
+              <p>Mi misión es convertir todo lo que aprendo y compartirlo con quien quiera unirse. Si te interesa, date una vuelta virtual por el resto de mi web :).</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6">
+              <a href="/trayectoria/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">Mi trayectoria profesional<span class="arrow transition-transform duration-200">→</span></a>
+              <a href="/blog/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">Mi blog<span class="arrow transition-transform duration-200">→</span></a>
+            </div>
           </div>
         </div>
 
-        <!-- Projects Card: Spans 4 columns wide, 2 rows tall -->
+        <!-- Projects Card: 3 cols, 3 rows -->
         <div class="bento-card md:col-span-3 md:row-span-3 p-6 flex flex-col">
-          <div class="flex items-center gap-2 mb-2"> <Icon name="lucide:lightbulb" class="w-6 h-6 text-accent-primary"/> <h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3> </div>
+          <div class="flex items-center gap-2 mb-2"><Icon name="lucide:lightbulb" class="w-6 h-6 text-accent-primary" /><h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3></div>
           <p class="text-sm text-text-secondary mb-4">Cosas que estoy construyendo y en las que invierto mi tiempo.</p>
-          <div class="space-y-3 mt-auto"> <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-primary"><span class="font-medium">Esta web</span><br/>Construida con Astro & Tailwind.</div> <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-highlight"><span class="font-medium">ElPrompt.com</span><br/>Mi blog sobre IA.</div> </div>
+          <div class="space-y-3 mt-auto">
+            <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-primary"><span class="font-medium">Esta web</span><br />Construida con Astro & Tailwind.</div>
+            <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-highlight"><span class="font-medium">ElPrompt.com</span><br />Mi blog sobre IA.</div>
+          </div>
         </div>
         
-
-                <!-- Color Game Card: Spans 3 columns wide, 1 row tall -->
-        <div class="bento-card md:col-span-3 md:row-span-1 p-0"> {/* Remove padding */}
+        <!-- Color Game Card: 3 cols, 2 row -->
+        <div class="bento-card md:col-span-3 md:row-span-2 p-0">
           <ColorPickerGame client:load />
         </div>
-
-        <!-- Violin Plot Card: Spans 8 columns wide, 2 rows tall -->
+        
+        <!-- Violin Plot Card: 4 cols, 3 rows -->
         <div class="bento-card md:col-span-4 md:row-span-3 p-6 flex flex-col">
           <h3 class="font-bold text-text-primary mb-2">Mi gráfica favorita</h3>
           <p class="text-text-secondary text-sm mb-4 flex-grow">El Violin Plot. Una forma elegante de visualizar la distribución de los datos.</p>
-          {/* THE FIX: No more props. The component controls itself. */}
           <InteractiveViolinPlot client:load />
         </div>
-
-        <!-- YouTube Card: Spans 6 columns wide, 2 rows tall -->
-        <div class="bento-card md:col-span-5 md:row-span-2 youtube-card p-6 flex flex-col justify-between text-center aspect-video">
+        
+        <!-- YouTube Card: 5 cols, 2 rows 16:9 -->
+        <div class="bento-card md:col-span-5 md:row-span-2 youtube-card p-6 flex flex-col justify-between text-center aspect-video md:aspect-auto">
           <div><h3 class="font-bold text-white">Próximamente en YouTube...</h3></div>
-          <div class="flex items-center justify-center my-2"> <a href="#" class="relative" aria-label="Ir al canal de YouTube (próximamente)"> <div class="play-button-bg"></div> <div class="play-button-icon"></div> </a> </div>
+          <div class="flex items-center justify-center my-2"><a href="#" class="relative" aria-label="Ir al canal de YouTube (próximamente)"><div class="play-button-bg"></div><div class="play-button-icon"></div></a></div>
           <div><p class="text-white/80 text-sm">Mostrando, no solo contando, lo que aprendo.</p></div>
         </div>
-                <!-- Personality Card: Spans 3 columns wide, 1 row tall -->
+        
+        <!-- Personality Card: 3 cols, 1 row -->
         <div class="bento-card md:col-span-3 md:row-span-1 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
-          <div class="text-center p-4"> <h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3> <div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div> </div>
-          <div class="flex pr-4 py-4 justify-center"> <Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/> </div>
-        </div>
-
-        <!-- Personality Card: Spans 3 columns wide, 1 row tall -->
-        <div class="bento-card md:col-span-7 md:row-span-1 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
-          <div class="text-center p-4"> <h3 class="font-bold mb-2 text-sm">Personalidad</h3> <div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div> </div>
-          <div class="flex pr-4 py-4 justify-center"> <Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/> </div>
+          <div class="text-center p-4"><h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3><div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div></div>
+          <div class="flex pr-4 py-4 justify-center"><Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/></div>
         </div>
         
-
-  
         
+        
+        
+        <!-- NEW: Latest Post Card: 5 cols, 2 rows -->
+        <div class="bento-card md:col-span-5 md:row-span-2">
+          <BentoPostCard post={latestPost} />
+        </div>
+        
+        <!-- Placeholder for the future
+        <div class="bento-card md:col-span-3 md:row-span-2 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
+          <div class="text-center p-4"><h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3><div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div></div>
+          <div class="flex pr-4 py-4 justify-center"><Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/></div>
+        </div> -->
+
       </div>
     </div>
   </div>
@@ -101,53 +113,13 @@ import personalityPhoto from '../assets/images/whoami_16.webp';
 
 <style>
   /* Base styles (unchanged) */
+  .prose strong { color: var(--color-accent-primary); font-weight: 600; }
   .bento-card { background-color: var(--color-bg-card); border-radius: 1rem; border: 1px solid var(--color-border-card); transition: all 0.3s ease; position: relative; overflow: hidden; }
   @media (hover: hover) { .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05); border-color: var(--color-border-subtle); } }
   .youtube-card { background: #181818; }
   .youtube-card .play-button-bg { width: 4rem; height: 2.75rem; background-color: #ff0000; border-radius: 0.75rem; opacity: 0.9; transition: all 0.2s ease; }
   .youtube-card .play-button-icon { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0; border-left: 1rem solid white; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; transition: transform 0.2s ease; }
   .youtube-card a:hover .play-button-bg { transform: scale(1.1); background-color: #ff2525; }
-  .personality-card { background: linear-gradient(135deg, #F4C730, #BB7E13); color: white; }
+  .personality-card { background: linear-gradient(135deg, #f4c730, #bb7e13); color: white; }
   .group-link:hover .arrow { transform: translateX(4px); }
-
-  /* ============================================= */
-  /*        THE DEFINITIVE VISUAL DEBUGGER         */
-  /* ============================================= */
-  .debug-grid {
-    position: relative;
-  }
-  .debug-grid::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1000;
-
-    --gap: 1.5rem;
-    --row-height: 140px;
-    --num-cols: 12;
-    --col-width: calc((100% - (11 * var(--gap))) / var(--num-cols));
-
-    --debug-col-color: hsla(346, 100%, 85%, 0.2);
-    --debug-row-color: hsla(175, 55%, 90%, 0.2);
-
-    background-image:
-      repeating-linear-gradient( to right,
-        transparent, transparent var(--col-width),
-        var(--debug-col-color) var(--col-width),
-        var(--debug-col-color) calc(var(--col-width) + var(--gap))
-      ),
-      repeating-linear-gradient( to bottom,
-        transparent, transparent var(--row-height),
-        var(--debug-row-color) var(--row-height),
-        var(--debug-row-color) calc(var(--row-height) + var(--gap))
-      );
-    background-position: calc(var(--col-width) - 1px) -1px, -1px calc(var(--row-height) - 1px);
-  }
-
-  /* THE DEFINITIVE FIX: Use the PAGE background color for dark mode */
-  .dark .debug-grid::before {
-    --debug-col-color: var(--color-bg-primary);
-    --debug-row-color: var(--color-bg-primary);
-  }
 </style>
