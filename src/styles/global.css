@@ -14,17 +14,16 @@
   --color-accent-highlight: #C64F6C;      /* Darker Rose for highlights (Passes AA) */
   --color-accent-highlight-bg: #F9EBEF;    /* Very light Rose for backgrounds */
   
-  /* --- Base colors remain the same --- */
-  --color-bg-primary: #FFFFFF;
+  --color-bg-primary: #F9F9F6;
   --color-bg-secondary: #F3F4F6;
-  --color-bg-card: #FFFFFF;
+  --color-bg-card: #FFFFFF; /* Now this pure white will contrast nicely */
 
   --color-text-primary: #1F2937;
   --color-text-secondary: #6B7280;
   
   --color-border-card: #E5E7EB;
   --color-border-subtle: #D1D5DB;
-  --color-button-text: #FFFFFF; /* White text on dark primary button */
+  --color-button-text: #FFFFFF;/* White text on dark primary button */
 
 }
 

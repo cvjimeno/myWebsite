@@ -1,11 +1,11 @@
 ---
-// src/pages/quien-soy.astro (FINAL - Full-Width Bio + New Bento)
+// src/pages/quien-soy.astro (THE FINAL UNIFIED & CONTROLLABLE BENTO GRID)
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import Icon from '../components/common/Icon.astro';
-import Button from '../components/common/Button.astro';
+import SocialIcon from '../components/common/SocialIcon.astro';
 import InteractiveViolinPlot from '../components/InteractiveViolinPlot.jsx';
-
+import ColorPickerGame from '../components/ColorPickerGame.jsx';
 import personalPhoto from '../assets/images/whoami.webp';
 import personalityPhoto from '../assets/images/whoami_16.webp';
 ---
@@ -16,96 +16,138 @@ import personalityPhoto from '../assets/images/whoami_16.webp';
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
     
     <header class="max-w-4xl mx-auto text-center mb-12 md:mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">¿Quién es Carlos Velasco?</h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4 text-balance">Un poco sobre mí</h1>
         <p class="text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
-            Aquí van algunas cosas que me definen. Si te interesa la parte más profesional, puedes ir 
-            <a href="/trayectoria/" class="font-medium text-accent-primary hover:underline">directamente aquí</a>.
+            Más allá del CV y los papers, estas son algunas de las cosas que me mueven.
+            Si buscas la parte profesional, la tienes <a href="/trayectoria/" class="font-medium text-accent-primary hover:underline">aquí</a>.
         </p>
     </header>
 
-    <div class="max-w-[70rem] mx-auto space-y-4 md:space-y-6">
+    <div class="max-w-6xl mx-auto">
+      <!-- 
+        =============================================
+             YOUR BENTO GRID CONTROL CENTER         
+        =============================================
+        CONTROLS:
+        1. Grid Debugger: Add/Remove the "debug-grid" class below to see grid lines.
+        2. Gaps: Modify "gap-4 md:gap-6" to change spacing.
+        3. Card Sizes: Modify "md:col-span-*" and "md:row-span-*" on each card div.
+      -->
+      <div class="bento-grid-container grid grid-cols-1 md:grid-cols-12 md:auto-rows-[minmax(100px,auto)] gap-4 md:gap-4 ">
 
-      <!-- ============================================= -->
-      <!--      THE NEW FULL-WIDTH BIO CARD (ABOVE)      -->
-      <!-- ============================================= -->
-      <div class="bento-card main-intro-card grid md:grid-cols-[auto_1fr] gap-x-6 md:gap-x-8 md:items-end p-6 md:p-8">
+        <!-- Main Intro Card: Spans 12 columns wide, 2 rows tall -->
+        <div class="bento-card md:col-span-9 md:row-span-4 grid md:grid-cols-[auto_1fr] gap-x-6 md:gap-x-8 items-end p-6 md:p-8">
           <div class="hidden md:flex justify-center md:justify-start">
               <Image src={personalPhoto} alt="Carlos Velasco" width={350} height={525} format="webp" quality={90} class="max-w-[120px] lg:max-w-[160px] w-full h-auto" />
           </div>
           <div class="text-center md:text-left">
               <h2 class="text-xl md:text-2xl font-semibold text-text-primary mb-2">Carlos Velasco</h2>
-              <p class="text-sm md:text-base text-text-secondary mb-3 md:mb-4">Mi misión es simple: explorar la intersección entre la tecnología y la humanidad, y compartir el viaje. Creo en el aprendizaje constante y en construir en público.</p>
+              <p class="text-sm md:text-base text-text-secondary mb-3 md:mb-4">Mi misión es simple: explorar la intersección entre la tecnología y la humanidad, y compartir el viaje. Creo en el aprendizaje constante y en construir en público. Esta tarjeta ahora es parte de la cuadrícula, pero su altura está controlada por `row-span`.</p>
               <div class="flex flex-col items-center md:items-start">
-                  <a href="/trayectoria/" class="inline-flex items-center gap-x-2 text-accent-primary font-medium group text-sm md:text-base">Mi trayectoria profesional<span class="transition-transform group-hover:translate-x-1">→</span></a>
+                  <a href="/trayectoria/" class="group-link inline-flex items-center gap-x-2 text-accent-primary font-medium text-sm md:text-base">
+                    Mi trayectoria profesional
+                    <span class="arrow transition-transform duration-200">→</span>
+                  </a>
               </div>
           </div>
-      </div>
-
-      <!-- ============================================= -->
-      <!--      THE NEW 12-COLUMN BENTO GRID BELOW       -->
-      <!-- ============================================= -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-
-        <!-- Projects Card -->
-        <div class="bento-card md:col-span-7 p-6 flex flex-col">
-          <div class="flex items-center gap-2 mb-2">
-            <Icon name="lucide:lightbulb" class="w-6 h-6 text-accent-primary"/>
-            <h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3>
-          </div>
-          <div class="space-y-2 mt-2">
-            <div class="text-sm bg-bg-secondary p-2 rounded border-l-2 border-accent-primary"><span class="font-medium">Esta web</span> - Construida con Astro y mi curiosidad.</div>
-            <div class="text-sm bg-bg-secondary p-2 rounded border-l-2 border-accent-highlight"><span class="font-medium">ElPrompt.com</span> - Mi blog sobre IA.</div>
-          </div>
         </div>
 
-        <!-- Violin Plot Card -->
-        <div class="bento-card md:col-span-6 md:col-start-8 md:row-span-2 p-6 flex flex-col">
-          <h3 class="font-bold text-text-primary mb-2">Mi gráfica favorita</h3>
-          <p class="text-text-secondary text-sm mb-4 flex-grow">Violin Plot. Juega con los parámetros y mira cómo cambia la distribución.</p>
-          <InteractiveViolinPlot client:load caption="¿A que es preciosa?" />
+        <!-- Projects Card: Spans 4 columns wide, 2 rows tall -->
+        <div class="bento-card md:col-span-3 md:row-span-3 p-6 flex flex-col">
+          <div class="flex items-center gap-2 mb-2"> <Icon name="lucide:lightbulb" class="w-6 h-6 text-accent-primary"/> <h3 class="font-semibold text-text-primary text-base">Proyectos Activos</h3> </div>
+          <p class="text-sm text-text-secondary mb-4">Cosas que estoy construyendo y en las que invierto mi tiempo.</p>
+          <div class="space-y-3 mt-auto"> <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-primary"><span class="font-medium">Esta web</span><br/>Construida con Astro & Tailwind.</div> <div class="text-sm bg-bg-secondary p-3 rounded-lg border-l-2 border-accent-highlight"><span class="font-medium">ElPrompt.com</span><br/>Mi blog sobre IA.</div> </div>
         </div>
         
-        <!-- Color Card -->
-        <div class="bento-card md:col-span-2 p-6 flex flex-col items-center justify-center">
-          <h3 class="font-bold text-text-primary mb-4">Mi color favorito</h3>
-          <div class="flex gap-2">
-            <div class="w-8 h-8 rounded-full" style="background-color: #fd6a02;" title="#fd6a02"></div>
-            <div class="w-8 h-8 rounded-full" style="background-color: #ff7b00;" title="#ff7b00"></div>
-            <div class="w-8 h-8 rounded-full" style="background-color: hsl(34, 100%, 50%);" title="#ff8000"></div>
-          </div>
+
+                <!-- Color Game Card: Spans 3 columns wide, 1 row tall -->
+        <div class="bento-card md:col-span-3 md:row-span-1 p-0"> {/* Remove padding */}
+          <ColorPickerGame client:load />
         </div>
 
-        <!-- YouTube Card -->
-        <div class="bento-card md:col-span-5 youtube-card p-6 flex flex-col justify-between text-center">
+        <!-- Violin Plot Card: Spans 8 columns wide, 2 rows tall -->
+        <div class="bento-card md:col-span-4 md:row-span-2 p-6 flex flex-col">
+          <h3 class="font-bold text-text-primary mb-2">Mi gráfica favorita</h3>
+          <p class="text-text-secondary text-sm mb-4 flex-grow">El Violin Plot. Una forma elegante de visualizar la distribución de los datos.</p>
+          {/* THE FIX: No more props. The component controls itself. */}
+          <InteractiveViolinPlot client:load />
+        </div>
+
+        <!-- YouTube Card: Spans 6 columns wide, 2 rows tall -->
+        <div class="bento-card md:col-span-5 md:row-span-2 youtube-card p-6 flex flex-col justify-between text-center aspect-video">
           <div><h3 class="font-bold text-white">Próximamente en YouTube...</h3></div>
-          <div class="flex items-center justify-center my-2">
-            <div class="play-button-bg"></div><div class="play-button-icon"></div>
-          </div>
-          <div><p class="text-white/80 text-sm">Mostrando lo que aprendo.</p></div>
+          <div class="flex items-center justify-center my-2"> <a href="#" class="relative" aria-label="Ir al canal de YouTube (próximamente)"> <div class="play-button-bg"></div> <div class="play-button-icon"></div> </a> </div>
+          <div><p class="text-white/80 text-sm">Mostrando, no solo contando, lo que aprendo.</p></div>
+        </div>
+                <!-- Personality Card: Spans 3 columns wide, 1 row tall -->
+        <div class="bento-card md:col-span-3 md:row-span-1 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
+          <div class="text-center p-4"> <h3 class="font-bold mb-2 text-sm">Aparentemente soy...</h3> <div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div> </div>
+          <div class="flex pr-4 py-4 justify-center"> <Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/> </div>
         </div>
 
-        <!-- Personality Card -->
-        <div class="bento-card md:col-span-4 md:col-start-10 personality-card p-0 grid grid-cols-[1fr_auto] gap-x-4 items-center">
-          <div class="text-center p-4">
-            <h3 class="font-bold mb-2 text-sm">Personalidad</h3>
-            <div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div><div class="text-xs">"Virtuoso"</div></div>
-          </div>
-          <div class="flex pr-4 py-4 justify-center">
-            <Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/>
-          </div>
+        <!-- Personality Card: Spans 3 columns wide, 1 row tall -->
+        <div class="bento-card md:col-span-7 md:row-span-1 personality-card p-0 grid grid-cols-[1fr_auto] items-center">
+          <div class="text-center p-4"> <h3 class="font-bold mb-2 text-sm">Personalidad</h3> <div class="mb-1"><div class="text-2xl font-bold">ISTP-A</div></div> </div>
+          <div class="flex pr-4 py-4 justify-center"> <Image src={personalityPhoto} alt="Personality illustration" width={200} height={200} format="webp" quality={90} class="max-w-[70px] w-full h-auto"/> </div>
         </div>
+        
+
+  
+        
       </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  /* All your existing styles are correct and do not need changes */
-  .bento-card { background-color: var(--color-bg-card); border-radius: 1rem; border: 1px solid var(--color-border-card); transition: all 0.3s ease; position: relative; overflow: hidden; min-height: 180px; }
-  .bento-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.04), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+  /* Base styles (unchanged) */
+  .bento-card { background-color: var(--color-bg-card); border-radius: 1rem; border: 1px solid var(--color-border-card); transition: all 0.3s ease; position: relative; overflow: hidden; }
+  @media (hover: hover) { .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05); border-color: var(--color-border-subtle); } }
   .youtube-card { background: #181818; }
-  .play-button-bg { width: 3.5rem; height: 2.5rem; background-color: #ff0000; border-radius: 0.5rem; opacity: 0.9; transition: all 0.2s ease; position: relative; }
-  .play-button-icon { position: absolute; width: 0; height: 0; border-left: 1rem solid white; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; transition: transform 0.2s ease; }
-  .youtube-card:hover .play-button-bg { transform: scale(1.1); background-color: #ff2525; }
+  .youtube-card .play-button-bg { width: 4rem; height: 2.75rem; background-color: #ff0000; border-radius: 0.75rem; opacity: 0.9; transition: all 0.2s ease; }
+  .youtube-card .play-button-icon { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0; border-left: 1rem solid white; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; transition: transform 0.2s ease; }
+  .youtube-card a:hover .play-button-bg { transform: scale(1.1); background-color: #ff2525; }
   .personality-card { background: linear-gradient(135deg, #F4C730, #BB7E13); color: white; }
+  .group-link:hover .arrow { transform: translateX(4px); }
+
+  /* ============================================= */
+  /*        THE DEFINITIVE VISUAL DEBUGGER         */
+  /* ============================================= */
+  .debug-grid {
+    position: relative;
+  }
+  .debug-grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+
+    --gap: 1.5rem;
+    --row-height: 140px;
+    --num-cols: 12;
+    --col-width: calc((100% - (11 * var(--gap))) / var(--num-cols));
+
+    --debug-col-color: hsla(346, 100%, 85%, 0.2);
+    --debug-row-color: hsla(175, 55%, 90%, 0.2);
+
+    background-image:
+      repeating-linear-gradient( to right,
+        transparent, transparent var(--col-width),
+        var(--debug-col-color) var(--col-width),
+        var(--debug-col-color) calc(var(--col-width) + var(--gap))
+      ),
+      repeating-linear-gradient( to bottom,
+        transparent, transparent var(--row-height),
+        var(--debug-row-color) var(--row-height),
+        var(--debug-row-color) calc(var(--row-height) + var(--gap))
+      );
+    background-position: calc(var(--col-width) - 1px) -1px, -1px calc(var(--row-height) - 1px);
+  }
+
+  /* THE DEFINITIVE FIX: Use the PAGE background color for dark mode */
+  .dark .debug-grid::before {
+    --debug-col-color: var(--color-bg-primary);
+    --debug-row-color: var(--color-bg-primary);
+  }
 </style>
