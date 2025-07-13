@@ -11,7 +11,7 @@ const BASE_PALETTE = [
 ];
 
 const MAX_GUESSES = 3;
-const personalityPhotoSrc = '/src/assets/images/whoami_16.webp'; 
+import personalityPhotoSrc from "../assets/images/whoami_16.webp";
 
 const ColorPickerGame = () => {
   const [gameState, setGameState] = useState('playing');
