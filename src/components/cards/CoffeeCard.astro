@@ -1,25 +1,23 @@
 ---
-// src/components/cards/CoffeeCard.astro (CONTRAST FIX)
+// src/components/cards/CoffeeCard.astro (FINAL, WITH QUINTIC EASING)
 import { Image } from "astro:assets";
 import Icon from "../common/Icon.astro";
 import Mokka from "../../assets/images/illustrations/mokka.webp";
 
 const startDate = new Date('2008-09-15');
 ---
-<div class="relative w-full h-full p-4 flex flex-col overflow-hidden" style="background: linear-gradient(135deg, #EAE2D8, #C8B6A2);">
+<div class="relative w-full h-full p-4 flex flex-col overflow-hidden" style="background: linear-gradient(135deg, #D7C7B6, #B09A81);">
   
-  <!-- THE FIX: Using a much darker, higher-contrast color for text -->
   <div class="flex items-center gap-x-2 z-10">
-    <Icon name="lucide:coffee" class="w-5 h-5 text-[#3D2B1F]" />
-    <h3 class="font-semibold text-[#3D2B1F] text-sm">
+    <Icon name="lucide:coffee" class="w-5 h-5 text-[#4a2c2a]" />
+    <h3 class="font-semibold text-[#4a2c2a] text-sm">
       Cafés tomados en mi vida...
     </h3>
   </div>
 
   <div class="flex-grow flex items-center justify-center text-center z-10">
-    <p class="flex items-baseline text-md text-[#3D2B1F]/90">
-      <!-- THE FIX: Made the number bolder and darker -->
-      <span id="coffee-counter" class="font-bold text-3xl text-[#3D2B1F] leading-none mr-2">
+    <p class="flex items-baseline text-md text-[#4a2c2a]/90">
+      <span id="coffee-counter" class="font-bold text-2xl text-[#4a2c2a] leading-none mr-2">
       </span>
       <span>y subiendo.</span>
     </p>
@@ -33,35 +31,57 @@ const startDate = new Date('2008-09-15');
       height={100}
       format="webp"
       quality={80}
-      class="w-24 h-auto opacity-25"
+      class="w-24 h-auto opacity-30 dark:opacity-25"
     />
   </div>
 </div>
 
 <script define:vars={{ startDate: startDate.toISOString() }}>
-  const counterElement = document.getElementById('coffee-counter');
-  
-  if (counterElement) {
+  function setupCoffeeCounter() {
+    const counterElement = document.getElementById('coffee-counter');
+    if (!counterElement) return;
+
+    const DURATION = 2000; // Animate over 2 seconds
+    
     const start = new Date(startDate);
     const now = new Date();
     const diffTime = Math.abs(now - start);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
     const coffeesPerDay = 1.4;
-    const totalCoffees = Math.ceil( diffDays * coffeesPerDay);
-    
-    let startValue = Math.max(0, totalCoffees - 200);
-    const step = () => {
-      if (startValue < totalCoffees) {
-        startValue += 5;
-        if (startValue > totalCoffees) {
-          startValue = totalCoffees;
-        }
-        counterElement.textContent = startValue.toLocaleString('es-ES');
+    const totalCoffees = Math.ceil(diffDays * coffeesPerDay);
+
+    const startValue = 0;
+    const range = totalCoffees - startValue;
+    let startTime = null;
+
+    // --- THE REFINED EASING FUNCTION ---
+    // This provides a more pronounced slowdown at the end.
+    const easeOutQuint = t => 1 - Math.pow(1 - t, 5);
+
+    const step = (timestamp) => {
+      if (!startTime) {
+        startTime = timestamp;
+      }
+      
+      const elapsedTime = timestamp - startTime;
+      const progress = Math.min(elapsedTime / DURATION, 1);
+      // Use the new, more dramatic easing function
+      const easedProgress = easeOutQuint(progress);
+      
+      const currentValue = Math.floor(easedProgress * range) + startValue;
+      
+      counterElement.textContent = currentValue.toLocaleString('es-ES');
+
+      if (progress < 1) {
         requestAnimationFrame(step);
+      } else {
+        counterElement.textContent = totalCoffees.toLocaleString('es-ES');
       }
     };
     
     requestAnimationFrame(step);
   }
+
+  document.addEventListener('astro:page-load', setupCoffeeCounter);
+  setupCoffeeCounter();
 </script>
