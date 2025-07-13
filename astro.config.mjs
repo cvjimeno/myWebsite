@@ -12,6 +12,9 @@ export default defineConfig({
   site: 'https://mywebsitecvcv.netlify.app',
   
   vite: {
+    build: {
+      chunkSizeWarningLimit: 1000, // Increase limit to 1000kb
+    },
     plugins: [tailwindcss()],
   },
 

@@ -101,7 +101,7 @@ const ColorPickerGame = () => {
             <div className="mb-1"><div className="text-2xl font-bold">ISTP-A</div></div>
           </div>
           <div className="flex pr-4 py-4 justify-center">
-            <img src={personalityPhotoSrc} alt="Personality illustration" width="70" height="70" class="max-w-[70px] w-full h-auto"/>
+            <img src={personalityPhotoSrc.src} alt="Personality illustration" width="70" height="70" class="max-w-[70px] w-full h-auto"/>
           </div>
         </div>
 

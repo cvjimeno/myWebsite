@@ -25,8 +25,15 @@ export default function InteractiveViolinPlot({ caption }) {
 
   // This effect runs once on the client to set up the theme listener
   useEffect(() => {
-    import('plotly.js-dist-min').then(plotlyModule => setPlotly(plotlyModule));
+    // Only load Plotly when the component is actually rendered
+    const timer = setTimeout(() => {
+      import('plotly.js-dist-min').then(plotlyModule => setPlotly(plotlyModule));
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
+  useEffect(() => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
