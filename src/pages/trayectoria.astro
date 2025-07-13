@@ -85,6 +85,7 @@ const careerPath = [
       "Mi tesis se centró en el desarrollo de nuevas técnicas de imagen multimodal (PET/CT) en un entorno altamente multidisciplinario.",
       "Implementé el uso de un nuevo radiotrazador (<sup>68</sup>Ga-DOTA) para estudios de perfusión, desarrollé hardware para análisis de sangre y trabajé en proyectos desde bioquímica hasta análisis de imagen.",
     ],
+    thesisLink: "https://docta.ucm.es/entities/publication/69475632-a3a4-4fb9-817a-c746717682e8",
     skills: [
       "PET/CT Multimodal",
       "Estudios farmacocinéticos",
@@ -105,7 +106,7 @@ const careerPath = [
     institutionColor: "#708090",
     dates: "2008 - 2014",
     descriptionLines: [
-      "<strong>Máster en Física Biomédica (2013-2014):</strong> Especialización en las bases físicas de las técnicas de imagen médica, radioterapia y instrumentación biomédica. Trabajo de Fin de Máster sobre simulación y análisis de imagen y dosimetría para radioterapia intraoperatoria.",
+      "<strong>Máster en Física Biomédica (2013-2014):</strong> Especialización en las bases físicas de las técnicas de imagen médica, radioterapia e instrumentación biomédica. Trabajo de Fin de Máster sobre simulación y análisis de imagen y dosimetría para radioterapia intraoperatoria.",
       "<strong>Licenciatura en Física (2008-2013):</strong> con especialización en física teórica. Trabajos de investigación sobre materia negra y el bosón de Higgs.",
     ],
     skills: [
@@ -118,14 +119,7 @@ const careerPath = [
   },
 ];
 
-// --- PHD THESIS DATA ---
-const phdThesis = {
-  title:
-    "Técnicas de Imagen Avanzada Aplicadas a la Investigación Cardiovascular",
-  link: "https://docta.ucm.es/entities/publication/69475632-a3a4-4fb9-817a-c746717682e8",
-  impactStatement:
-    "Mi tesis se centró en el desarrollo de nuevas técnicas de imagen multimodal (PET/CT) en un entorno altamente multidisciplinario. Implementé el uso de un nuevo radiotrazador (68Ga-DOTA) para estudios de perfusión, desarrollé hardware para análisis de sangre y trabajé en proyectos desde bioquímica hasta análisis de imagen.",
-};
+
 
 // --- PUBLICATIONS DATA ---
 const publications = [
@@ -318,25 +312,7 @@ const introText =
         >
           Publicaciones Destacadas
         </h2>
-        <div
-          class="max-w-3xl mx-auto p-4 sm:p-6 bg-bg-card rounded-lg shadow-sm border-l-4 border-accent-primary mb-10 md:mb-12"
-        >
-          <h3 class="text-base sm:text-lg font-semibold text-text-primary mb-2">
-            Mi Tesis Doctoral
-          </h3>
-          <p
-            class="text-sm sm:text-base text-text-secondary mb-3 leading-relaxed"
-          >
-            {phdThesis.impactStatement}
-          </p>
-          <a
-            href={phdThesis.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-sm sm:text-base text-accent-primary font-medium hover:underline"
-            >Ver Tesis Completa →</a
-          >
-        </div>
+
         <div
           id="publication-grid"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"

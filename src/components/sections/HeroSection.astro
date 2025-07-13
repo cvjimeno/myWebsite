@@ -23,9 +23,10 @@ import Button from '../common/Button.astro';
         <Image 
           src={heroImageCarlos} 
           alt="Carlos Velasco - Foto de perfil con efecto pincelada"
-          widths={[400, 600, 800]}
+          widths={[400, 600, 800, 1200]}  
           sizes="(max-width: 768px) 80vw, 60vw" 
           format="webp"
+          quality={80} 
           loading="eager"
           fetchpriority="high"
           class="w-full max-w-sm mx-auto md:max-w-xl lg:max-w-2xl drop-shadow-xl" 
