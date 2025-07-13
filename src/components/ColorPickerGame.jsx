@@ -71,6 +71,7 @@ const ColorPickerGame = () => {
                   return (
                     <button
                       key={color}
+                      aria-label={`Select color ${color.name}`}
                       onClick={() => handleSelectColor(color)}
                       disabled={isGuessed || gameState !== 'playing'}
                       className={`w-10 h-10 mx-auto aspect-square rounded-full border-2 transition-all duration-200

@@ -2,8 +2,7 @@
 
 // System 1: Automatically import all .svg files from the icons directory.
 // `as: 'raw'` tells Astro to import the file content as a raw text string.
-const fileBasedIcons = import.meta.glob('/src/assets/icons/*.svg', { as: 'raw' });
-
+const fileBasedIcons = import.meta.glob('/src/assets/icons/*.svg', { query: '?raw' });
 // System 2: A map for simple, hardcoded icons.
 
 const hardcodedIcons = {
@@ -53,11 +52,11 @@ const hardcodedIcons = {
 export async function getIcon(name) {
   const iconPath = `/src/assets/icons/${name}.svg`;
 
-  // Priority 1: Check if a file exists for this icon name.
   if (fileBasedIcons[iconPath]) {
-    const rawSvg = await fileBasedIcons[iconPath]();
+    // THE FIX: Access the .default property from the imported module
+    const importedModule = await fileBasedIcons[iconPath]();
+    const rawSvg = importedModule.default;
     
-    // Extract the inner content and viewBox from the raw SVG file.
     const viewBoxMatch = rawSvg.match(/viewBox="([^"]*)"/);
     const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 24 24';
 
@@ -66,7 +65,6 @@ export async function getIcon(name) {
 
     return { svgContent, viewBox };
   }
-
   // Priority 2: If no file, check the hardcoded map.
   if (hardcodedIcons[name]) {
     return hardcodedIcons[name];

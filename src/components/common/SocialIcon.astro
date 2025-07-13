@@ -1,7 +1,7 @@
 ---
-// src/components/common/SocialIcon.astro (FINAL, ROBUST VERSION)
+// src/components/common/SocialIcon.astro (CORRECTED FOR VITE'S NEW GLOB IMPORT)
 
-const allSocialIcons = import.meta.glob('/src/assets/icons/*.svg', { as: 'raw' });
+const allSocialIcons = import.meta.glob('/src/assets/icons/*.svg', { query: '?raw' });
 
 export interface Props {
   name: string;
@@ -18,8 +18,11 @@ const iconPath = `/src/assets/icons/${name}.svg`;
 if (!allSocialIcons[iconPath]) {
   console.error(`Social icon "${name}" not found in /src/assets/icons/`);
 } else {
-  const rawSvg = await allSocialIcons[iconPath]();
-  
+  // The imported result is a module, not a raw string
+  const importedModule = await allSocialIcons[iconPath]();
+  // THE FIX: The raw SVG string is now in the .default property
+  const rawSvg = importedModule.default;
+
   const contentMatch = rawSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
   const viewBoxMatch = rawSvg.match(/viewBox="([^"]*)"/);
 
@@ -30,9 +33,6 @@ if (!allSocialIcons[iconPath]) {
   if (contentMatch) {
     let tempContent = contentMatch[1];
     
-    // THE CRITICAL LOGIC:
-    // If a specific color is provided (like #0B65C2) OR if no color is provided at all,
-    // we MUST strip any hardcoded colors from the SVG to allow our styles to take over.
     if (color !== 'original') {
       tempContent = tempContent
         .replace(/ fill="[^"]*"/g, '')
@@ -42,19 +42,15 @@ if (!allSocialIcons[iconPath]) {
   }
 }
 
-// Define the final classes and styles
 const svgClasses = ['inline-block'];
 let svgStyle = '';
 
 if (color && color !== 'original') {
-  // If a specific color hex is provided, use it as an inline style.
   svgStyle = `color: ${color};`;
-  svgClasses.push('fill-current'); // Add this to ensure the color applies
+  svgClasses.push('fill-current');
 } else if (!color) {
-  // If no color is provided, use fill-current to inherit from CSS.
   svgClasses.push('fill-current');
 }
-// If color is 'original', we do nothing and let the SVG render as-is.
 
 if (className) {
   svgClasses.push(className);

@@ -1,4 +1,13 @@
 /* src/styles/global.css */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-variable.woff2') format('woff2 supports variations'),
+       url('/fonts/inter-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900; /* This tells the browser the file supports all weights from 100 to 900 */
+  font-display: swap;
+}
+
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 
@@ -83,6 +92,17 @@
     font-style: normal;
     font-size: 1em;
     line-height: inherit;
+  }
+    .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 

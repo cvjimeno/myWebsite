@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 // --- Component Configuration ---
 const VIOLIN_WIDTH = 0.4; 

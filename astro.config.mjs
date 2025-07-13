@@ -4,7 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
-
+// --- FIX 1: Correct the import to be a default import ---
+//import font from 'astro-font'; 
 import preact from '@astrojs/preact';
 
 // https://astro.build/config
@@ -13,20 +14,24 @@ export default defineConfig({
   
   vite: {
     build: {
-      chunkSizeWarningLimit: 1000, // Increase limit to 1000kb
+      chunkSizeWarningLimit: 1000,
     },
     plugins: [tailwindcss()],
+    // --- FIX 2: Add the SSR configuration as hinted by the error message ---
+    ssr: {
+      noExternal: ['astro-font'],
+    },
   },
 
   integrations: [
+    preact(),    
     mdx(),
     sitemap(),
-    // We only need the Lucide pack now. The custom collection is gone.
     icon({
       include: {
         'lucide': ['*'],
       }
     }),
-    preact(),
+
   ],
 });

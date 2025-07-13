@@ -1,32 +1,30 @@
 ---
-// src/components/cards/CoffeeCard.astro (FINAL SINGLE-LINE VERSION)
+// src/components/cards/CoffeeCard.astro (CONTRAST FIX)
 import { Image } from "astro:assets";
 import Icon from "../common/Icon.astro";
 import Mokka from "../../assets/images/illustrations/mokka.webp";
 
 const startDate = new Date('2008-09-15');
 ---
-<div class="relative w-full h-full p-4 flex flex-col overflow-hidden" style="background: linear-gradient(135deg, #D7C7B6, #B09A81);">
+<div class="relative w-full h-full p-4 flex flex-col overflow-hidden" style="background: linear-gradient(135deg, #EAE2D8, #C8B6A2);">
   
-  <!-- Header: Stays at the top -->
+  <!-- THE FIX: Using a much darker, higher-contrast color for text -->
   <div class="flex items-center gap-x-2 z-10">
-    <Icon name="lucide:coffee" class="w-5 h-5 text-[#4a2c2a]" />
-    <h3 class="font-semibold text-[#4a2c2a] text-sm">
+    <Icon name="lucide:coffee" class="w-5 h-5 text-[#3D2B1F]" />
+    <h3 class="font-semibold text-[#3D2B1F] text-sm">
       Cafés tomados en mi vida...
     </h3>
   </div>
 
-  <!-- Main Content: Perfectly centered in the remaining space -->
   <div class="flex-grow flex items-center justify-center text-center z-10">
-    <!-- THE FIX: A single, horizontally aligned paragraph -->
-    <p class="flex items-baseline text-md text-[#4a2c2a]/90">
-      <span id="coffee-counter" class="font-bold text-2xl text-[#4a2c2a] leading-none mr-2">
+    <p class="flex items-baseline text-md text-[#3D2B1F]/90">
+      <!-- THE FIX: Made the number bolder and darker -->
+      <span id="coffee-counter" class="font-bold text-3xl text-[#3D2B1F] leading-none mr-2">
       </span>
       <span>y subiendo.</span>
     </p>
   </div>
 
-  <!-- Illustration: Watermark in the corner -->
   <div class="absolute -bottom-5 -right-5 z-0">
     <Image 
       src={Mokka} 
@@ -35,7 +33,7 @@ const startDate = new Date('2008-09-15');
       height={100}
       format="webp"
       quality={80}
-      class="w-24 h-auto opacity-30 dark:opacity-25"
+      class="w-24 h-auto opacity-25"
     />
   </div>
 </div>

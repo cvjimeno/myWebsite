@@ -14,6 +14,8 @@ import Conversation from '../../components/blog/Conversation.astro';
 import Message from '../../components/blog/Message.astro';
 import Callout from '../../components/blog/Callout.astro';
 import KeyTakeaways from '../../components/blog/KeyTakeaways.astro'; // <-- IMPORT THE COMPONENT
+import { Image } from 'astro:assets'; // Step 1: Import the component
+import teoriaInnovadoresImg from '/src/assets/images/blog/01-TeoriaInnovadores.png'; // Step 2: Import the image
  
 
 Mayo de 2025. La Inteligencia Artificial ya no es un concepto futurista. Es una realidad cotidiana que se está integrando en nuestras vidas a una velocidad asombrosa. Hoy, millones de personas usan ChatGPT y otras herramientas cada día para trabajar, aprender, crear o resolver problemas. Todo el mundo la utiliza en mayor o menor medida, consciente o inconscientemente.  ¿Quién, en los últimos meses, no ha *preguntado a chatGPT* alguna duda que hace algunos años habría googleado?
@@ -46,7 +48,7 @@ Como hemos visto, no todo el mundo se adhiere en el mismo momento a una innovaci
 - Rezagados
 
 (insertar aqui imagen html de teoria de difusion)
-![Teoria de difusion de innovaciones](</src/assets/images/blog/01-TeoriaInnovadores.png>)
+<Image src={teoriaInnovadoresImg} alt="Diagrama de la Teoría de difusión de innovaciones de Everett Rogers" class="rounded-lg shadow-md" />
 
 Aplicando esta teoría a la IA Generativa, los Innovadores fueron aquellos investigadores y desarrolladores que crearon los modelos y quienes, al momento de su lanzamiento público, se lanzaron de inmediato a explorar sus capacidades. Los Adoptantes Tempranos, visionarios en campos creativos, tecnológicos y de servicios, la incorporaron experimentalmente en sus flujos de trabajo para obtener una ventaja competitiva o explorar nuevas formas de crear, a menudo sirviendo de ejemplo y fuente de información para sus pares. Ahora, ¿en qué punto estamos tú y yo? Muchos nos encontramos en la Mayoría Temprana, empezando a ver que esto va en serio, que las herramientas son más fáciles y que los beneficios son tangibles. La Mayoría Tardía la incorporará más adelante, casi por obligación, cuando su uso sea requerido sus profesiones o se integre de manera transparente en el software que ya utilizan habitualmente. Finalmente, los Rezagados serán aquellos que se resistan a su uso por escepticismo, desconfianza en sus resultados o una fuerte preferencia por métodos tradicionales, siendo los últimos, si es que lo hacen, en experimentar con estas capacidades generativas. Entender esto no es solo teoría; es clave para posicionarte y no dejar pasar esta oportunidad única.
 
