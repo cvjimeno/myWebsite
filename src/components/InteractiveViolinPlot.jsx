@@ -91,8 +91,8 @@ export default function InteractiveViolinPlot({ caption }) {
 
   return (
     <div className="w-full font-sans flex flex-col h-full">
-      <div ref={plotContainer} className="w-full flex-grow min-h-[150px]"></div>
-      
+<div ref={plotContainer} className="w-full min-h-0 h-48 md:h-auto md:flex-1"></div>
+
       <div className="flex-shrink-0 grid grid-cols-2 gap-x-6 gap-y-2 mt-2 mb-2 text-xs items-center">
         <label htmlFor="mean1" className="block font-medium text-text-secondary">Media 1: <span className="font-bold">{params.mean1}</span></label>
         <label htmlFor="mean2" className="block font-medium text-text-secondary">Media 2: <span className="font-bold">{params.mean2}</span></label>

@@ -56,17 +56,15 @@ const ColorPickerGame = () => {
       <div className={`card-flipper ${isFlipped ? 'is-flipped' : ''}`}>
         
         <div className="card-face card-front">
-          <div class="w-full h-full flex flex-col p-4 md:p-6">
+          <div class="w-full h-full flex flex-col p-2 md:p-6">
             <div class="flex items-center gap-x-2 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-accent-primary"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996a3.375 3.375 0 0 0 3.375-3.375V12c0-5.5-4.5-10-10-10z"></path></svg>
               <h3 class="font-semibold text-text-primary text-base">Mi color favorito</h3>
             </div>
-            <p class="text-sm text-text-secondary mb-4 h-10">{getFeedbackMessage()}</p>
-            
+<p class="text-md md:text-lg lg:text-sm text-text-secondary mb-2 h-10 flex items-center justify-center text-center">{getFeedbackMessage()}</p>            
             {/* THE FIX: This entire block is now hidden on win */}
             {gameState !== 'won' && (
-              <div className={`grid grid-cols-4 gap-2 flex-grow items-center ${isWiggling ? 'is-wiggling' : ''}`}>
-                {shuffledPalette.map(color => {
+<div className={`flex-grow grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-2 sm:gap-3 w-full place-content-center ${isWiggling ? 'is-wiggling' : ''}`}>                {shuffledPalette.map(color => {
                   const isGuessed = guesses.includes(color);
                   return (
                     <button
@@ -74,7 +72,7 @@ const ColorPickerGame = () => {
                       aria-label={`Select color ${color.name}`}
                       onClick={() => handleSelectColor(color)}
                       disabled={isGuessed || gameState !== 'playing'}
-                      className={`w-10 h-10 mx-auto aspect-square rounded-full border-2 transition-all duration-200
+                      className={`w-8 h-8 sm:w-10 sm:h-10 mx-auto aspect-square rounded-full border-2 transition-all duration-200
                         ${isGuessed ? 'opacity-20 cursor-not-allowed' : 'hover:scale-110 hover:border-accent-primary cursor-pointer'}
                         border-border-card
                       `}

@@ -54,15 +54,33 @@ const latestPost = sortedPosts[0];
           class="bento-card md:col-span-2 lg:col-span-9 md:row-span-4 relative flex p-6 md:p-8"
         >
           <div class="absolute -bottom-6 left-4 hidden md:block">
-            <Image 
-              src={personalPhoto} 
-              alt="Carlos Velasco" 
-              width="160" 
-              height="213" 
-              format="webp" 
-              quality={80} 
-              widths={[120, 160, 240, 320]} /* Give Astro more options for smaller sizes */
-              sizes="(max-width: 1023px) 120px, 160px" /* Tell the browser which size to use */
+            <Image
+              src={personalPhoto}
+              alt="Carlos Velasco"
+              width="160"
+              height="213"
+              format="webp"
+              quality={80}
+              widths={[120, 160, 240, 320]}
+              *
+              Give
+              Astro
+              more
+              options
+              for
+              smaller
+              sizes
+              *
+              sizes="(max-width: 1023px) 120px, 160px"
+              *
+              Tell
+              the
+              browser
+              which
+              size
+              to
+              use
+              *
               class="max-w-[120px] lg:max-w-[160px] w-full h-auto"
             />
           </div>
@@ -104,10 +122,8 @@ const latestPost = sortedPosts[0];
         </div>
 
         {/* Projects Card */}
-        <div
-          class="bento-card md:col-span-2 lg:col-span-3 md:row-span-3 p-4 md:px-4 md:py-6 flex flex-col"
-        >
-          <div class="flex items-center gap-x-2 mb-4">
+<div class="bento-card md:col-span-2 lg:col-span-3 md:row-span-2 lg:row-span-3 p-4 md:px-4 md:py-6 flex flex-col">
+          <div class="flex items-center gap-x-2 mb-2">
             <Icon
               name="lucide:lightbulb"
               class="w-5 h-5 text-accent-primary"
@@ -116,7 +132,7 @@ const latestPost = sortedPosts[0];
             </h3>
           </div>
           <div
-            class="space-y-4 flex-grow flex flex-col justify-start mt-2 md:mt-6"
+            class="space-y-4 flex-grow flex flex-col justify-start mt-2 md:mt-2"
           >
             <div>
               <p class="font-medium text-text-primary">1. Esta Web</p><p
@@ -152,9 +168,10 @@ const latestPost = sortedPosts[0];
         </div>
 
         <!-- Color Game Card -->
-          <div class="bento-card md:col-span-2 lg:col-span-3 md:row-span-2 p-0 h-96 md:h-auto">
-            <ColorPickerGame client:visible />
-          </div>
+        <div
+<div class="bento-card md:col-span-2 lg:col-span-3 sm:row-span-1 md:row-span-2 p-0 h-64 md:h-auto">
+          <ColorPickerGame client:visible />
+        </div>
         <!-- Violin Plot Card -->
         <div
           class="bento-card md:col-span-2 lg:col-span-4 md:row-span-3 p-6 flex flex-col"
@@ -176,15 +193,26 @@ const latestPost = sortedPosts[0];
           </div>
 
           {/* The link is now a div. It is not clickable. */}
-          <div class="relative group/youtube-cta cursor-pointer" aria-label="Canal de YouTube (próximamente)">
+          <div
+            tabindex="0"
+            class="relative group/youtube-cta cursor-pointer"
+            aria-label="Canal de YouTube (próximamente)"
+          >
             {/* THE FIX: The inner structure is now simpler */}
             <div class="play-button-bg">
               <div class="play-button-icon"></div>
             </div>
-            
+
             {/* This is the "Próximamente" message that appears on hover */}
-            <div class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-lg opacity-0 group-hover/youtube-cta:opacity-100 transition-opacity duration-300">
-              <span class="font-semibold text-white tracking-wider">PRÓXIMAMENTE</span>
+            <div
+              class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-lg opacity-0
+            group-hover/youtube-cta:opacity-100
+            group-focus/youtube-cta:opacity-100
+            transition-opacity duration-300"
+            >
+              <span class="font-semibold text-white tracking-wider"
+                >PRÓXIMAMENTE</span
+              >
             </div>
           </div>
 
@@ -236,11 +264,11 @@ const latestPost = sortedPosts[0];
       border-color: var(--color-border-subtle);
     }
   }
-   /* --- START: YOUTUBE CARD STYLES (COMPLETE) --- */
+  /* --- START: YOUTUBE CARD STYLES (COMPLETE) --- */
   .youtube-card {
     background: #181818;
   }
-  
+
   /* This is the missing class that creates the red background */
   .youtube-card .play-button-bg {
     width: 4rem;
@@ -249,7 +277,7 @@ const latestPost = sortedPosts[0];
     border-radius: 0.75rem;
     opacity: 0.9;
     transition: all 0.2s ease;
-    
+
     /* These properties center the triangle icon */
     display: flex;
     align-items: center;
